@@ -1,0 +1,57 @@
+[2026-01-13 10:33:31] INFO: ----------- Loading Dataset -----------
+[2026-01-13 10:33:35] INFO: Computing Normalization
+[2026-01-13 10:33:44] INFO: Class Name Order Data Loading (Class Weight): ['left_cut_in' 'no_hazard' 'object_crossing' 'object_stopping'
+ 'object_turning' 'right_cut_in']
+[2026-01-13 10:33:44] INFO: Indice Example (Class Weight): [2 2 2 2 2 2 2 2 2 2]
+[2026-01-13 10:33:44] INFO: Class Name Order (Data Loading ): ['left_cut_in' 'no_hazard' 'object_crossing' 'object_stopping'
+ 'object_turning' 'right_cut_in']
+[2026-01-13 10:33:44] INFO: Encoded Example (Data Loading ): 0
+[2026-01-13 10:33:44] INFO: cfg.loss.class_weights tensor([1.3250, 0.4896, 1.9336, 1.4987, 1.2600, 0.8165])
+[2026-01-13 10:33:44] INFO: cfg.data.sampler <torch.utils.data.sampler.WeightedRandomSampler object at 0x0000014FFA588DF0>
+[2026-01-13 10:33:44] INFO: Train batches: 785
+[2026-01-13 10:33:44] INFO: 
+----------- Train Statistics -----------
+[2026-01-13 10:33:44] INFO: Train videos total samples: 526
+[2026-01-13 10:33:44] INFO: Train videos samples per class:
+
+[2026-01-13 10:33:44] INFO: object_crossing                  :       48   9.13%
+[2026-01-13 10:33:44] INFO: right_cut_in                     :       90   17.11%
+[2026-01-13 10:33:44] INFO: left_cut_in                      :       48   9.13%
+[2026-01-13 10:33:44] INFO: object_turning                   :       40   7.60%
+[2026-01-13 10:33:44] INFO: object_stopping                  :       50   9.51%
+[2026-01-13 10:33:44] INFO: no_hazard                        :      250   47.53%
+[2026-01-13 10:33:44] INFO: Train sequences total samples: 25106
+[2026-01-13 10:33:44] INFO: Train sequence per class:
+
+[2026-01-13 10:33:44] INFO: object_crossing                  :     2164   8.62%
+[2026-01-13 10:33:44] INFO: right_cut_in                     :     5125   20.41%
+[2026-01-13 10:33:44] INFO: left_cut_in                      :     3158   12.58%
+[2026-01-13 10:33:44] INFO: object_stopping                  :     2792   11.12%
+[2026-01-13 10:33:44] INFO: object_turning                   :     3321   13.23%
+[2026-01-13 10:33:44] INFO: no_hazard                        :     8546   34.04%
+[2026-01-13 10:33:48] INFO: Loading Normalization
+[2026-01-13 10:33:49] INFO: Test batches: 182
+[2026-01-13 10:33:49] INFO: 
+----------- Test Statistics -----------
+[2026-01-13 10:33:49] INFO: Test videos total samples: 122
+[2026-01-13 10:33:49] INFO: Test videos samples per class:
+
+[2026-01-13 10:33:49] INFO: object_crossing                  :       12     9.84%
+[2026-01-13 10:33:49] INFO: right_cut_in                     :       23    18.85%
+[2026-01-13 10:33:49] INFO: left_cut_in                      :       13    10.66%
+[2026-01-13 10:33:49] INFO: object_turning                   :       11     9.02%
+[2026-01-13 10:33:49] INFO: object_stopping                  :       13    10.66%
+[2026-01-13 10:33:49] INFO: no_hazard                        :       50    40.98%
+[2026-01-13 10:33:49] INFO: Test sequences total samples: 5805
+[2026-01-13 10:33:49] INFO: Test sequence per class:
+
+[2026-01-13 10:33:49] INFO: object_crossing                  :      455   7.84%
+[2026-01-13 10:33:49] INFO: right_cut_in                     :     1469   25.31%
+[2026-01-13 10:33:49] INFO: left_cut_in                      :      887   15.28%
+[2026-01-13 10:33:49] INFO: object_turning                   :      572   9.85%
+[2026-01-13 10:33:49] INFO: object_stopping                  :      638   10.99%
+[2026-01-13 10:33:49] INFO: no_hazard                        :     1784   30.73%
+[2026-01-13 10:33:49] INFO: Dataset initialization completed successfully
+[2026-01-13 10:33:57] INFO: ----------- Getting Loss Function -----------
+[2026-01-13 10:33:57] INFO: Loss Function: FocalLoss
+[2026-01-13 10:33:57] INFO: Class weights: tensor([1.3250, 0.4896, 1.9336, 1.4987, 1.2600, 0.8165], device='cuda:0')

@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.env
+.venv/
+.ipynb_checkpoints
+*.ipynb
+Excel Results/
+models - Copy/
+Project Diagrams/
+Notes for Deep Learning Architecture.docx
+c3d-pretrained.pth
+pytorch_action.pth.tar
+wandb/
+output/
