@@ -55,3 +55,14 @@
 [2026-01-13 10:33:57] INFO: ----------- Getting Loss Function -----------
 [2026-01-13 10:33:57] INFO: Loss Function: FocalLoss
 [2026-01-13 10:33:57] INFO: Class weights: tensor([1.3250, 0.4896, 1.9336, 1.4987, 1.2600, 0.8165], device='cuda:0')
+[2026-01-13 11:53:11] INFO: ---- Average execution times ----
+[2026-01-13 11:53:11] INFO: create_temporal_sequences: 5.2561 s over 2 calls
+[2026-01-13 11:53:11] INFO: __init__: 9.2250 s over 2 calls
+[2026-01-13 11:53:11] INFO: RoadHazardDataset: 9.2250 s over 2 calls
+[2026-01-13 11:53:11] INFO: create_or_load_dataset: 18.5069 s over 1 calls
+[2026-01-13 11:53:11] INFO: build_img_tensor: 0.1356 s over 30943 calls
+[2026-01-13 11:53:11] INFO: __getitem__: 0.1367 s over 30943 calls
+[2026-01-13 11:53:11] INFO: load_model: 7.2552 s over 1 calls
+[2026-01-13 11:53:11] INFO: forward_pass: 0.0124 s over 967 calls
+[2026-01-13 11:53:11] INFO: run_epoch: 2372.6971 s over 2 calls
+[2026-01-13 11:53:11] INFO: log_results: 0.0023 s over 2 calls
