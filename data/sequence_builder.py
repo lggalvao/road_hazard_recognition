@@ -98,15 +98,18 @@ def create_temporal_sequences(
             group['input_img'] = group.img_path.apply(lambda x: x.replace('img_original_size', cfg.data.input_img_type1))
             img_path_root_hist = group.img_path.to_list()
 
-        # test but i think it should use input_img instead of img_path
         if cfg.data.input_feature_type == 'multi_img_input' or cfg.data.input_feature_type == 'explicit_and_multi_img_input':
             group['input_img_2'] = group.img_path.apply(lambda x: x.replace('img_original_size', cfg.data.input_img_type2))
+            group['input_img_2'] = group.input_img_2.apply(lambda x: x.replace('C:/Projects/RoadHazardDataset/frame_sequences/', cfg.data.dataset_folder_path))
             img_paths_2 = group["input_img_2"].to_list()
             
             if cfg.data.num_of_input_imgs == 3:
                 group['input_img_3'] = group.img_path.apply(lambda x: x.replace('img_original_size', cfg.data.input_img_type3))
+                group['input_img_3'] = group.input_img_3.apply(lambda x: x.replace('C:/Projects/RoadHazardDataset/frame_sequences/', cfg.data.dataset_folder_path))
                 img_paths_3 = group["input_img_3"].to_list()
 
+        group['input_img'] = group.input_img.apply(lambda x: x.replace('\\', '/'))
+        group['input_img'] = group.input_img.apply(lambda x: x.replace('C:/Projects/RoadHazardDataset/frame_sequences/', cfg.data.dataset_folder_path))
         # Iterate temporal windows. Note: need to decrese -1 from the seq length to consider the last frame as prediction
         for start in range(0, len(group) - (seq_len +1), stride):
 

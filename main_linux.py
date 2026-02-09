@@ -3,7 +3,7 @@ python main_linux.py --device 0 --model TimeSeriesTransformer --input_feature_ty
 
 python main_linux.py --device 0 --model Embedding_Temporal_LSTM --input_feature_type explicit_feature --input_img_type1 img_local_context_ROI_1 --input_img_type2 None --classes_type motion_towards
 
-python main_linux.py --device 0 --model CNN_LSTM --input_feature_type single_img_input --input_img_type1 img_local_context_ROI_0 --input_img_type2 None --classes_type literature_classes
+python main_linux.py --device 0 --model CNN_LSTM --input_feature_type single_img_input --input_img_type1 img_local_context_ROI_preserved_scale_0 --input_img_type2 None --classes_type all_classes
 
 python main_linux.py --device 0 --model TimeSformerNet --input_feature_type single_img_input --input_img_type1 img_local_context_ROI_1 --input_img_type2 None --classes_type literature_classes
 
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     from pathlib import Path
     from early_stopping_pytorch import EarlyStopping
     import wandb
-    from tensorflow.keras.callbacks import ReduceLROnPlateau
+    #from tensorflow.keras.callbacks import ReduceLROnPlateau
     from train.trainer import train_model, estimate_training_time
     from train.tester import test_model
     from train.losses import get_loss_function
@@ -102,7 +102,7 @@ if __name__ == '__main__':
 
     get_devie(cfg, cmd_args)
 
-    for parameter_1 in ["FocalLoss"]:  #, "weighted_FocalLoss", "weighted_CELoss", "CELoss"]:
+    for parameter_1 in ["FocalLoss"]:  #FocalLoss, "weighted_FocalLoss", "weighted_CELoss", "CELoss"]:
 
         cfg.loss.loss_function = parameter_1
         for parameter_2 in [""]:

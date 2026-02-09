@@ -45,7 +45,7 @@ def debug_observation_sequence(all_together_hist, original_frame_path_hist, vide
         cv2.waitKey(0)
         #cv2.imwrite(''./image_debug/' + str(video_nu_all[0]).zfill(4) + '_' + str(temp_frame_all[y]).zfill(5) + '.png', frame)
 
-def debug_input_img_sequence(img_path, img):
+def debug_input_img_sequence(cfg, img_path, img):
     """
     Function to visualise input image transformation. It is the actual image
     that is input into the network.
@@ -66,7 +66,7 @@ def debug_input_img_sequence(img_path, img):
     input_img_tansformed_path_dir.mkdir(parents=True, exist_ok=True)
     
     # Sanitize image filename
-    img_path = img_path.replace("C:/Projects/RoadHazardDataset/frame_sequences/", "")
+    img_path = img_path.replace(cfg.data.dataset_folder_path, "")
     img_path = img_path.replace("/", "_")
     img_filename = Path(img_path)
     save_path = input_img_tansformed_path_dir / img_filename

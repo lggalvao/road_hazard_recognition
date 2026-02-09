@@ -214,6 +214,7 @@ class RoadHazardDataset(Dataset):
     
             for img_list in img_inputs:
                 imgs = build_img_tensor(
+                    self.cfg,
                     img_list,
                     img_transforms,
                     debug
@@ -636,7 +637,7 @@ def split_roadHazardDataset(cfg):
     
     road_hazard_train = pd.DataFrame()
     road_hazard_test = pd.DataFrame()
-    dataset_timings_data_frame = dataset_timings_data_frame[dataset_timings_data_frame['put_all_samples_together_done'] == True]
+    #dataset_timings_data_frame = dataset_timings_data_frame[dataset_timings_data_frame['put_all_samples_together_done'] == True]
     for nu_hazard in dataset_timings_data_frame.hazard_type.unique():
         if nu_hazard in hazard_list: #and len(dataset_timings_data_frame[dataset_timings_data_frame['hazard_type'] == nu_hazard]) >= 18:
             temp_hazard_df = dataset_timings_data_frame[dataset_timings_data_frame['hazard_type'] == nu_hazard]
@@ -650,7 +651,7 @@ def split_roadHazardDataset(cfg):
     if cfg.data.with_no_hazard_samples_flag == True:
         # Merge the hazard samples with the no hazard samples
         road_hazard_train = road_hazard_train[['new_clip_name','hazard_type', 'hazard_type_int']]
-        no_hazard_samples_train_set = pd.read_csv(cfg.system.root + "Projects/RoadHazardDataset/frame_sequences/manually_checked_no_hazard_samples_train.csv")
+        no_hazard_samples_train_set = pd.read_csv(cfg.data.dataset_folder_path + "manually_checked_no_hazard_samples_train.csv")
         no_hazard_samples_train_set = no_hazard_samples_train_set.video_n.unique()
         no_hazard_samples_train_set = pd.DataFrame(no_hazard_samples_train_set, columns=['new_clip_name']) 
         no_hazard_samples_train_set['hazard_type'] = 'no_hazard'
@@ -659,7 +660,7 @@ def split_roadHazardDataset(cfg):
         road_hazard_train = pd.concat([road_hazard_train, no_hazard_samples_train_set])
         
         road_hazard_test = road_hazard_test[['new_clip_name','hazard_type', 'hazard_type_int']]
-        no_hazard_samples_test_set = pd.read_csv(cfg.system.root + "Projects/RoadHazardDataset/frame_sequences/manually_checked_no_hazard_samples_test.csv")
+        no_hazard_samples_test_set = pd.read_csv(cfg.data.dataset_folder_path + "manually_checked_no_hazard_samples_test.csv")
         no_hazard_samples_test_set = no_hazard_samples_test_set.video_n.unique()
         no_hazard_samples_test_set = pd.DataFrame(no_hazard_samples_test_set, columns=['new_clip_name']) 
         no_hazard_samples_test_set['hazard_type'] = 'no_hazard'
@@ -714,7 +715,7 @@ def safe_load_image(path, resize, transform):
 
 
 @timeit
-def build_img_tensor(seq_paths, transform, debug):
+def build_img_tensor(cfg, seq_paths, transform, debug):
     # Pre-size Frames When Sequence Length is Fixed
     frames = [None] * len(seq_paths)
     for i, p in enumerate(seq_paths):
@@ -724,7 +725,7 @@ def build_img_tensor(seq_paths, transform, debug):
                 img = img.convert("RGB")
             
             if debug:
-                debug_input_img_sequence(p, transform(img))
+                debug_input_img_sequence(cfg, p, transform(img))
 
             frames[i] = transform(img)
     return torch.stack(frames)

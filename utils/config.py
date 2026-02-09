@@ -173,7 +173,7 @@ def save_config(cfg: Config, path: str):
 def build_paths(cfg: Config):
     root = cfg.system.root.rstrip("/") + "/"
 
-    cfg.data.dataset_folder_path = root + "Projects/RoadHazardDataset/frame_sequences/"
+    cfg.data.dataset_folder_path = root + "Projects/RoadHazardDataset_OK/frame_sequences/"
     cfg.data.dataset_csv_file_path = cfg.data.dataset_folder_path  + "/all_roadHazardDataset_videos.csv"
     
     cfg.data.no_hazard_samples_train_csv_file_path = cfg.data.dataset_folder_path + "manually_checked_no_hazard_samples_train.csv"
