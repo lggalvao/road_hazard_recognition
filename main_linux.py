@@ -3,7 +3,7 @@ python main_linux.py --device 0 --model TimeSeriesTransformer --input_feature_ty
 
 python main_linux.py --device 0 --model Embedding_Temporal_LSTM --input_feature_type explicit_feature --input_img_type1 img_local_context_ROI_1 --input_img_type2 None --classes_type motion_towards
 
-python main_linux.py --device 0 --model CNN_LSTM --input_feature_type single_img_input --input_img_type1 img_local_context_ROI_preserved_scale_0 --input_img_type2 None --classes_type all_classes
+python main_linux.py --device 0 --model CNN_LSTM --input_feature_type single_img_input --input_img_type1 img_local_context_ROI_0 --input_img_type2 None --classes_type all_classes
 
 python main_linux.py --device 0 --model TimeSformerNet --input_feature_type single_img_input --input_img_type1 img_local_context_ROI_1 --input_img_type2 None --classes_type literature_classes
 
