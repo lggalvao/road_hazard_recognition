@@ -29,7 +29,7 @@ def add_no_hazard_samples(cfg, df: pd.DataFrame) -> pd.DataFrame:
 
 def save_or_load_normalization(cfg, df: pd.DataFrame, phase: str, keys: List[str]) -> Dict[str, float]:
     """Save normalization stats during training, or load for val/test."""
-    file_path = Path(cfg.system.root) / "normalization_info.json"
+    file_path = "./normalization_info.json"
     if phase == "train" and not(cfg.data.load_normalization):
         info = compute_normalization_info(df, keys)
         with open(file_path, "w") as f:
