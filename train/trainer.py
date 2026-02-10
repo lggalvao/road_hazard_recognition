@@ -8,7 +8,7 @@ from data.dataset import prepare_inputs
 from train.losses import compute_loss
 import torch.nn as nn
 from utils.timing import timeit, print_average_timings
-
+import time
 
 
 
@@ -64,45 +64,60 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
 
 @timeit
 def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train):
-    """Run a single training/validation epoch."""
-    if is_train:
-        net.train()
-    else:
-        net.eval()
 
+    net.train() if is_train else net.eval()
+
+    data_time = 0.0
+    gpu_time = 0.0
     epoch_loss = 0.0
+
     epoch_preds, epoch_targets = [], []
 
+    end = time.time()
+
     for data in tqdm(dataloader, desc="Training..." if is_train else "Validating..."):
+
+        # ---- DataLoader wait time ----
+        start = time.time()
+        data_time += (start - end)
+
         inputs, targets = prepare_inputs(data, cfg)
 
         if is_train:
             optimizer.zero_grad()
 
+        # ---- GPU compute time ----
+        torch.cuda.synchronize()
+        t1 = time.time()
+
         with torch.set_grad_enabled(is_train):
             preds = forward_pass(net, inputs)
-            targets = targets.float()
-            targets = torch.argmax(targets, dim=1)
-           
+            targets = torch.argmax(targets.float(), dim=1)
             loss = compute_loss(criterion, preds, targets, cfg)
-            epoch_loss += loss.item()
 
             if is_train:
                 loss.backward()
                 torch.nn.utils.clip_grad_norm_(net.parameters(), cfg.training.clip_grad)
                 optimizer.step()
 
-        # Convert predictions to numpy labels
-        y_true = targets.detach().cpu().numpy()
+        torch.cuda.synchronize()
+        t2 = time.time()
+        gpu_time += (t2 - t1)
 
-        y_pred = preds.detach().cpu().numpy()
-        y_pred = np.argmax(y_pred, axis=1)
+        epoch_loss += loss.item()
 
-        epoch_targets.extend(y_true)
-        epoch_preds.extend(y_pred)
+        # ---- Metrics ----
+        epoch_targets.extend(targets.detach().cpu().numpy())
+        epoch_preds.extend(torch.argmax(preds, dim=1).detach().cpu().numpy())
+
+        end = time.time()
+
+    print(f"\nEpoch DataLoader wait time: {data_time:.2f}s")
+    print(f"Epoch GPU compute time: {gpu_time:.2f}s")
 
     avg_loss = epoch_loss / len(dataloader)
     return avg_loss, epoch_targets, epoch_preds
+
 
 @timeit
 def forward_pass(net, inputs):

@@ -2,6 +2,16 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Dict
 import torch
 import json
+import os
+import logging
+from pathlib import Path
+
+logger = logging.getLogger("hazard_recognition")
+
+#Automatically get the root dir
+current_file = Path(__file__).resolve()
+project_root = current_file.parents[3]  # adjust [1] depending on your folder depth
+
 
 
 @dataclass
@@ -9,7 +19,7 @@ class SystemConfig:
     multi_gpu: bool = False
     device: Optional[str] = None
     seed: int = 100
-    root: str = "/data/home/r2049970/"  # C:/ or /data/home/r2049970/ or /home/ubuntu/
+    root: str = str(project_root)  # C:/ or /data/home/r2049970/ or /home/ubuntu/
 
 
 @dataclass
@@ -51,7 +61,13 @@ class DataConfig:
     dataset_event_time_csv_file_path: str = ""
     dataset_csv_file_path: str = ""
     saved_dataloader: bool = True
-    num_workers: int = 16
+    
+    if os.name == "nt":  # Windows
+        num_workers: int = int(os.cpu_count() * 0.6)
+        pin_memory = False
+    else:
+        num_workers: int = int(os.cpu_count() * 0.75)
+        pin_memory = True
 
 
 
@@ -172,6 +188,8 @@ def save_config(cfg: Config, path: str):
 
 def build_paths(cfg: Config):
     root = cfg.system.root.rstrip("/") + "/"
+    logger.info(f"Suggested DataLoader workers: {cfg.data.num_workers}")
+    logger.info(f"[INFO] Detected root Dir: {root}")
 
     cfg.data.dataset_folder_path = root + "Projects/RoadHazardDataset_OK/frame_sequences/"
     cfg.data.dataset_csv_file_path = cfg.data.dataset_folder_path  + "/all_roadHazardDataset_videos.csv"

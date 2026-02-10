@@ -48,7 +48,7 @@ import torch.nn as nn
 logger = logging.getLogger("hazard_recognition")
 
 
-@timeit
+#@timeit
 class RoadHazardDataset(Dataset):
     """
     PyTorch Dataset for the Road Hazard Recognition project.
@@ -462,7 +462,7 @@ def _build_dataloader(dataset, cfg, shuffle, drop_last, sampler):
         shuffle=False,#shuffle if cfg.data.sampler is None else False,
         sampler=sampler,
         drop_last=drop_last,
-        pin_memory=True,
+        pin_memory=cfg.data.pin_memory,
         persistent_workers= False #cfg.data.num_workers > 0,
     )
 
@@ -593,14 +593,14 @@ def create_or_load_dataset___(cfg):
     
         logger.info('\n-----------Loading Dataset-----------')
         trSet = RoadHazardDataset(cfg, cfg.data.train_csv_set_output_path, phase='train')
-        trDataloader = DataLoader(trSet,batch_size=cfg.training.batch_size, num_workers=8, shuffle=False, drop_last = True, sampler=cfg.data.sampler) 
+        trDataloader = DataLoader(trSet,batch_size=cfg.training.batch_size, num_workers=cfg.data.num_workers, shuffle=True, drop_last = True, sampler=cfg.data.sampler) 
         torch.save(trDataloader, './output/dataloader/' + root_file_name + '_trDataloader.pth')
         print("\nNumber of Train Video Samples:", len(cfg.data.train_videos_number))
         print("Number of Train Sequence Samples:", len(trSet))
         print("Number of Train batches:", len(trDataloader))
 
         tsSet = RoadHazardDataset(cfg, cfg.data.test_csv_set_output_path, phase = 'val')
-        tsDataloader = DataLoader(tsSet,batch_size=cfg.training.batch_size, shuffle=False, num_workers=8, drop_last = False)
+        tsDataloader = DataLoader(tsSet,batch_size=cfg.training.batch_size, shuffle=False, num_workers=cfg.data.num_workers, drop_last = False)
         torch.save(tsDataloader, './output/dataloader/' + root_file_name + '_tsDataloader.pth')
         print("\nNumber of Test Video Samples:", len(cfg.data.test_videos_number))
         print("Number of Test Sequence Samples:", len(tsSet))

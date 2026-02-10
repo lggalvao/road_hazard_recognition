@@ -289,7 +289,7 @@ if __name__ == '__main__':
                     ## Note: It is required to re-load the test dataset to put the videos in sequence
                     cfg.training.batch_size = 840
                     tsSet = RoadHazardDataset(cfg, test_output_dir, phase = 'test')
-                    tsDataloader = DataLoader(tsSet,batch_size= cfg.training.batch_size, shuffle=False, num_workers=1, drop_last = True)
+                    tsDataloader = DataLoader(tsSet,batch_size= cfg.training.batch_size, shuffle=False, num_workers=cfg.data.num_workers, drop_last = True)
 
                     print("Test Sequence Samples:",len(tsSet))
                     print("Number of test batches:",len(tsDataloader))
