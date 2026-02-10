@@ -9,7 +9,7 @@ class SystemConfig:
     multi_gpu: bool = False
     device: Optional[str] = None
     seed: int = 100
-    root: str = "/data/home/r2049970/"  # C:/ or /data/home/r2049970/
+    root: str = "/home/ubuntu/"  # C:/ or /data/home/r2049970/ or /home/ubuntu/
 
 
 @dataclass
