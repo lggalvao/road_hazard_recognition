@@ -17,7 +17,8 @@ def augment_numeric_timeseries(
     Numeric time-series augmentation with optional debugging plots.
     """
 
-    augment_save_path = Path("./output/visualizations/Numeric Time Series Augmentation")
+    augment_save_path = Path(r"./output/visualizations/Numeric Time Series Augmentation")
+    augment_save_path.mkdir(parents=True, exist_ok=True)
     
     # -------------------------
     # Preserve originals
