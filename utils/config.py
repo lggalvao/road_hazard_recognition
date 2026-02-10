@@ -51,7 +51,7 @@ class DataConfig:
     dataset_event_time_csv_file_path: str = ""
     dataset_csv_file_path: str = ""
     saved_dataloader: bool = True
-    num_workers: int = 0
+    num_workers: int = 16
 
 
 
