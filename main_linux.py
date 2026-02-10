@@ -14,6 +14,9 @@ python main_linux.py --device 1 --model Multi_Stream_CNN_LSTM --input_feature_ty
 python main_linux.py --device 1 --model Embedding_Multi_Stream_CNN_LSTM --input_feature_type explicit_and_multi_img_input --input_img_type1 img_local_context --input_img_type2 img_local_context_with_motion --classes_type all_classes
 '''
 
+#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
+
+
 from __future__ import print_function
 if __name__ == '__main__':
     import os
