@@ -593,7 +593,7 @@ def create_or_load_dataset___(cfg):
     
         logger.info('\n-----------Loading Dataset-----------')
         trSet = RoadHazardDataset(cfg, cfg.data.train_csv_set_output_path, phase='train')
-        trDataloader = DataLoader(trSet,batch_size=cfg.training.batch_size,num_workers=8, shuffle=False, drop_last = True, sampler=cfg.data.sampler) 
+        trDataloader = DataLoader(trSet,batch_size=cfg.training.batch_size, num_workers=8, shuffle=False, drop_last = True, sampler=cfg.data.sampler) 
         torch.save(trDataloader, './output/dataloader/' + root_file_name + '_trDataloader.pth')
         print("\nNumber of Train Video Samples:", len(cfg.data.train_videos_number))
         print("Number of Train Sequence Samples:", len(trSet))

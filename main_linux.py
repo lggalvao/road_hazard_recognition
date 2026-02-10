@@ -66,6 +66,10 @@ if __name__ == '__main__':
     from utils.timing import timeit
     import logging
 
+    logger = setup_logging("./output/training.log", level=logging.INFO)
+    logger = logging.getLogger("hazard_recognition")
+    
+    
     config_file_path = "C:/Projects/hazard_prediction_project/output/trained_models/explicit_feature_5/config.json"
 
     cfg = Config()
@@ -116,7 +120,6 @@ if __name__ == '__main__':
                     #log_file_path =  './output/trained_models/official_results_v2/' + 'explicit_feature' + '/'+ cfg.logging.test_name
                     log_file_path = './output/trained_models/' + cfg.logging.test_name
                     config_file_path = log_file_path + "/config.json"
-                    logger = setup_logging("training.log", level=logging.INFO)
                     load_config(config_file_path)
                     print('log_file_path', log_file_path)
 
@@ -132,6 +135,7 @@ if __name__ == '__main__':
                 allsetDataloader = create_or_load_dataset(cfg)
                 
                 net = load_model(cfg, allsetDataloader)
+                logger.info(f" Making sure model is using GPU: {next(net.parameters()).device}")
                 
                 if train_flag == 'train':
 

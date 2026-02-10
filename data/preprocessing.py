@@ -9,7 +9,10 @@ logger = logging.getLogger("hazard_recognition")
 def load_raw_data(cfg) -> pd.DataFrame:
     """Load the main CSV containing all video samples."""
 
-    df = pd.read_csv(cfg.data.dataset_csv_file_path)
+    dtype_dict = {43: str}  #43 is clip_source
+    df = pd.read_csv(cfg.data.dataset_csv_file_path, dtype=dtype_dict, low_memory=False)
+    #print(df.columns[43])
+    
     df["img_path"] = df["img_path"].apply(
         lambda x: x.replace("/EEdata/bllg002/", cfg.system.root).replace("C:/", cfg.system.root)
     )
