@@ -178,7 +178,7 @@ def prepare_sampler_and_weights_from_sequences(
     cfg,
     sequences,
     device='cpu',
-    label_key='hazard_name_hist',
+    label_key='true_hazard',
     loss_function='focal_loss',
     classes_name = ""):
     """
@@ -188,16 +188,17 @@ def prepare_sampler_and_weights_from_sequences(
     # ---- 1. Collect labels per sequence (LAST element safe for pandas Series/list) ----
     all_labels = []
     for seq in sequences:
-        seq_label_series = seq[label_key]
-        all_labels.append(seq_label_series.item())
+        #seq_label_series = seq[label_key]
+        #all_labels.append(seq_label_series.item())
+        all_labels.append(seq[label_key])
     
     # ---- 2. Encode labels ----
     le = LabelEncoder()
     le.fit(classes_name)
     labels_int = le.transform(all_labels)
 
-    logger.info(f"Class Name Order Data Loading (Class Weight): {le.classes_}")
-    logger.info(f"Indice Example (Class Weight): {labels_int[0:10]}")
+    #logger.info(f"Class Name Order Data Loading (Class Weight): {le.classes_}")
+    #logger.info(f"Indice Example (Class Weight): {labels_int[0:10]}")
     
     assert list(le.classes_) == list(cfg.model.classes_name), \
         "LabelEncoder classes do not match cfg.model.classes_name"

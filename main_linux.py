@@ -134,6 +134,7 @@ if __name__ == '__main__':
 
                 allsetDataloader = create_or_load_dataset(cfg)
                 
+                logger.info("Loading Model")
                 net = load_model(cfg, allsetDataloader)
                 logger.info(f" Making sure model is using GPU: {next(net.parameters()).device}")
                 

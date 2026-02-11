@@ -92,7 +92,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train):
 
         with torch.set_grad_enabled(is_train):
             preds = forward_pass(net, inputs)
-            targets = torch.argmax(targets.float(), dim=1)
+            #targets = torch.argmax(targets.float(), dim=1)
             loss = compute_loss(criterion, preds, targets, cfg)
 
             if is_train:

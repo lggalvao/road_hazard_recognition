@@ -25,8 +25,8 @@ def debug_observation_sequence(all_together_hist, original_frame_path_hist, vide
         frame = cv2.imread(image_path)
         frame = cv2.resize(frame, (new_img_width, new_img_height), interpolation = cv2.INTER_AREA)
     
-        #'object_type', 'tailight_status_int', 'object_visible_side_int', 'xc', 'yc', 'w', 'h', 'xc_speed', 'yc_speed', 'x_1', 'y_1', 'x_2', 'y_2' 
-        x_1, y_1, x_2, y_2 = int(all_together_all[y][9]), int(all_together_all[y][10]), int(all_together_all[y][11]), int(all_together_all[y][12])
+        #'object_type':0, 'tailight_status_int':1, 'object_visible_side_int':2, 'xc':3, 'yc':4, 'w':5, 'h':6, 'x_1':7, 'y_1':8, 'x_2':9, 'y_2:10'
+        x_1, y_1, x_2, y_2 = int(all_together_all[y][7]), int(all_together_all[y][8]), int(all_together_all[y][9]), int(all_together_all[y][10])
         xc, yc = int(all_together_all[y][3]), int(all_together_all[y][4])
         
         GT_int = "None"

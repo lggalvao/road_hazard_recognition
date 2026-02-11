@@ -63,7 +63,7 @@ class DataConfig:
     saved_dataloader: bool = True
     
     if os.name == "nt":  # Windows
-        num_workers: int = int(os.cpu_count() * 0.6)
+        num_workers: int = 4 #int(os.cpu_count() * 0.6)
         pin_memory = False
     else:
         num_workers: int = int(os.cpu_count() * 0.75)

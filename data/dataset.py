@@ -121,10 +121,12 @@ class RoadHazardDataset(Dataset):
         data = data.reset_index(drop = True)
 
         # ---- Apply split ----
+        logger.info("Filtering Data by Dataset Splitting")
         split_df = pd.read_csv(dataset_split_path)
         data = self._filter_by_split(data, split_df)
 
         # ---- Normalize numeric columns ----
+        logger.info("Normalizaing Dataset")
         norm_info = save_or_load_normalization(cfg, data, phase, self.NUMERIC_KEYS)
         data = apply_normalization(data, norm_info, self.NUMERIC_KEYS)
         
@@ -135,6 +137,7 @@ class RoadHazardDataset(Dataset):
             "model": cfg.model.model,
         }
         
+        logger.info("Preparing Numeric Input Feature")
         data = build_all_together_features(
             data,
             args_dict,
@@ -151,6 +154,7 @@ class RoadHazardDataset(Dataset):
         data.insert(len(data.columns)-1, "true_hazard_enc", true_hazard_enc.tolist())
         
         # ---- Create temporal sequences ----
+        logger.info("Creating Temporal Sequences")
         self.samples = create_temporal_sequences(
             cfg,
             df=data,
@@ -160,11 +164,51 @@ class RoadHazardDataset(Dataset):
             phase = self.phase
         )
         
+        logger.info("Get Samples Statistics")
         get_sequence_samples_info(
             self.cfg,
             self.phase,
             self.samples
         )
+        
+        #for seq in self.samples:
+        #    seq["object_type_feats_hist"] = torch.tensor(seq["object_type_feats_hist"], dtype=torch.long)
+        #    
+        #    seq["object_visible_side_int_feats_hist"] = torch.tensor(seq["object_visible_side_int_feats_hist"], dtype=torch.long)
+        #    
+        #    seq["tailight_status_int_feats_hist"] = torch.tensor(seq["tailight_status_int_feats_hist"], dtype=torch.long)
+        #    
+        #    seq["kinematic_hist"] = torch.tensor(seq["kinematic_hist"], dtype=torch.float32)
+        #    
+        #    seq["bbox_hist"] = torch.tensor(seq["bbox_hist"], dtype=torch.float32)
+        #    
+        #    seq["true_hazard_enc"] = torch.tensor(seq["true_hazard_enc"], dtype=torch.long)
+            #object_type = torch.as_tensor(
+            #    np.array(seq["object_type_feats_hist"]), dtype=torch.long
+            #).squeeze(0)
+            #
+            #object_visible_side = torch.as_tensor(
+            #    np.array(seq["object_visible_side_int_feats_hist"]), dtype=torch.long
+            #).squeeze(0)
+            #
+            #tailight_status = torch.as_tensor(
+            #    np.array(seq["tailight_status_int_feats_hist"]), dtype=torch.long
+            #).squeeze(0)
+            #
+            ## ---------------------------------
+            ##   Numeric features (FLOAT)
+            ## ---------------------------------
+            #kinematic = torch.as_tensor(
+            #    np.array(seq["kinematic_hist"]), dtype=torch.float32
+            #).squeeze(0)
+            #
+            #bbox = torch.as_tensor(
+            #    np.array(seq["bbox_hist"]), dtype=torch.float32
+            #).squeeze(0)
+            
+            #true_hazard_enc = torch.as_tensor(
+            #    np.array(seq["true_hazard_enc"]), dtype=torch.long
+            #)
 
 
     def _filter_by_split(self, data: pd.DataFrame, split_df: pd.DataFrame) -> pd.DataFrame:
@@ -242,28 +286,35 @@ class RoadHazardDataset(Dataset):
         # ---------------------------------
         #   Categorical features (INT)
         # ---------------------------------
-        object_type = torch.as_tensor(
-            np.array(seq["object_type_feats_hist"]), dtype=torch.long
-        ).squeeze(0)
-    
-        object_visible_side = torch.as_tensor(
-            np.array(seq["object_visible_side_int_feats_hist"]), dtype=torch.long
-        ).squeeze(0)
-    
-        tailight_status = torch.as_tensor(
-            np.array(seq["tailight_status_int_feats_hist"]), dtype=torch.long
-        ).squeeze(0)
+        object_type = seq["object_type_feats_hist"]
+        object_visible_side = seq["object_visible_side_int_feats_hist"]
+        tailight_status = seq["tailight_status_int_feats_hist"]
+        
+        #object_type = torch.as_tensor(
+        #    np.array(seq["object_type_feats_hist"]), dtype=torch.long
+        #).squeeze(0)
+        #
+        #object_visible_side = torch.as_tensor(
+        #    np.array(seq["object_visible_side_int_feats_hist"]), dtype=torch.long
+        #).squeeze(0)
+        #
+        #tailight_status = torch.as_tensor(
+        #    np.array(seq["tailight_status_int_feats_hist"]), dtype=torch.long
+        #).squeeze(0)
     
         # ---------------------------------
         #   Numeric features (FLOAT)
         # ---------------------------------
-        kinematic = torch.as_tensor(
-            np.array(seq["kinematic_hist"]), dtype=torch.float32
-        ).squeeze(0)
-    
-        bbox = torch.as_tensor(
-            np.array(seq["bbox_hist"]), dtype=torch.float32
-        ).squeeze(0)
+        kinematic = seq["kinematic_hist"]
+        bbox = seq["bbox_hist"]
+        
+        #kinematic = torch.as_tensor(
+        #    np.array(seq["kinematic_hist"]), dtype=torch.float32
+        #).squeeze(0)
+        #
+        #bbox = torch.as_tensor(
+        #    np.array(seq["bbox_hist"]), dtype=torch.float32
+        #).squeeze(0)
     
         # ---------------------------------
         #   Numeric augmentation (TRAIN ONLY)
@@ -282,20 +333,26 @@ class RoadHazardDataset(Dataset):
         # ---------------------------------
         #   Labels & metadata
         # ---------------------------------
-        true_hazard_enc = torch.as_tensor(
-            np.array(seq["true_hazard_enc"]), dtype=torch.long
-        )
-    
-        frame_n = torch.as_tensor(
-            seq["frame_n"], dtype=torch.long
-        )
-    
-        missing_object_mask = torch.as_tensor(
-            seq["object_detected_hist"], dtype=torch.float32
-        )
-    
-        start_frame = torch.as_tensor(seq["start_frame_hist"], dtype=torch.long)
-        end_frame = torch.as_tensor(seq["end_frame_hist"], dtype=torch.long)
+        true_hazard_enc = seq["true_hazard_enc"]
+        frame_n = seq["frame_n"]
+        missing_object_mask = seq["object_detected_hist"]
+        start_frame = seq["start_frame_hist"]
+        end_frame = seq["end_frame_hist"]
+        
+        #true_hazard_enc = torch.as_tensor(
+        #    np.array(seq["true_hazard_enc"]), dtype=torch.long
+        #)
+        #
+        #frame_n = torch.as_tensor(
+        #    seq["frame_n"], dtype=torch.long
+        #)
+        #
+        #missing_object_mask = torch.as_tensor(
+        #    seq["object_detected_hist"], dtype=torch.float32
+        #)
+        #
+        #start_frame = torch.as_tensor(seq["start_frame_hist"], dtype=torch.long)
+        #end_frame = torch.as_tensor(seq["end_frame_hist"], dtype=torch.long)
     
         # ---------------------------------
         #   Sanity checks (IMPORTANT)
@@ -510,10 +567,30 @@ def create_or_load_dataset(cfg):
         classes_name = cfg.model.classes_name
     )
     
-    logger.info(f"Class Name Order (Data Loading ): {cfg.model.classes_name}")
-    logger.info(f"Encoded Example (Data Loading ): {trSet.samples[0]['true_hazard_enc'][0]}")
-    logger.info(f"cfg.loss.class_weights {cfg.loss.class_weights}")
-    logger.info(f"cfg.data.sampler {cfg.data.sampler}")
+    
+    class_names = list(cfg.model.classes_name)
+    class_weights = cfg.loss.class_weights
+    
+    # Ensure weights are plain floats
+    if isinstance(class_weights, torch.Tensor):
+        class_weights = class_weights.detach().cpu().tolist()
+    
+    class_info = " ".join(
+        f"'{name}':{weight:.4f}"
+        for name, weight in zip(class_names, class_weights)
+    )
+    
+    logger.info("Class Name Order (Data Loading | Class Weights):")
+    for name, weight in zip(class_names, class_weights):
+        logger.info(f"  {name:<35} {weight:.4f}")
+    
+    #logger.info(f"Class Name Order (Data Loading ): {cfg.model.classes_name}")
+    #logger.info(
+    #    f"Encoded Example (Data Loading ): "
+    ##    f"{trSet.samples[0]['true_hazard_enc'].item()}"
+    ##)
+    ##logger.info(f"cfg.loss.class_weights {cfg.loss.class_weights}")
+    #logger.info(f"cfg.data.sampler {cfg.data.sampler}")
     
     trDataloader = _build_dataloader(
         trSet,
@@ -523,9 +600,8 @@ def create_or_load_dataset(cfg):
         sampler=cfg.data.sampler
     )
 
-    logger.info(f"Train batches: {len(trDataloader)}")
-    
     logger.info("\n----------- Train Statistics -----------")
+    logger.info(f"Train batches: {len(trDataloader)}")
     logger.info(f"Train videos total samples: {cfg.data.train_total_video_samples}")
     
     logger.info(f"Train videos samples per class:\n")
@@ -705,17 +781,31 @@ def split_roadHazardDataset(cfg):
 
 
 def get_sequence_samples_info(cfg, phase, samples):
-    
-    labels = [sample["true_hazard"].item() for sample in samples]
+
+    labels = [sample["true_hazard"] for sample in samples]
+    #labels = [sample["true_hazard"].item() for sample in samples]
     hazard_counts = Counter(labels)
-    
+
     if phase == "train":
         cfg.data.train_sequences_per_class = dict(hazard_counts)
-        cfg.data.train_total_sequences = sum(hazard_counts.values())
-    
-    if phase == "val":
+        cfg.data.train_total_sequences = len(samples)
+
+    elif phase == "val":
         cfg.data.test_sequences_per_class = dict(hazard_counts)
-        cfg.data.test_total_sequences = sum(hazard_counts.values())
+        cfg.data.test_total_sequences = len(samples)
+
+#def get_sequence_samples_info(cfg, phase, samples):
+#    
+#    labels = [sample["true_hazard"].item() for sample in samples]
+#    hazard_counts = Counter(labels)
+#    
+#    if phase == "train":
+#        cfg.data.train_sequences_per_class = dict(hazard_counts)
+#        cfg.data.train_total_sequences = sum(hazard_counts.values())
+#    
+#    if phase == "val":
+#        cfg.data.test_sequences_per_class = dict(hazard_counts)
+#        cfg.data.test_total_sequences = sum(hazard_counts.values())
 
 
 @timeit
