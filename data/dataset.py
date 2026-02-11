@@ -99,7 +99,7 @@ class RoadHazardDataset(Dataset):
         cfg.model.emb_dim_tailight_status = 5
         
         if self.phase == "train":
-            img_transforms = transforms.Compose([
+            self.img_transforms = transforms.Compose([
                 transforms.ColorJitter(
                     brightness=0.2,
                     contrast=0.2,
@@ -110,7 +110,7 @@ class RoadHazardDataset(Dataset):
                 transforms.ToTensor(),
             ])
         else:
-            img_transforms = transforms.ToTensor()
+            self.img_transforms = transforms.ToTensor()
         
         #if cfg.data.with_no_hazard_samples_flag:
         #    data = add_no_hazard_samples(cfg, data)
