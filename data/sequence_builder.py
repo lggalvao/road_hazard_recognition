@@ -160,46 +160,25 @@ def create_temporal_sequences(
                 "frame_n": frame_n[start:end].tolist(),
 
                 # Direct zero-copy → torch
-                "all_together_norm_hist": torch.from_numpy(
-                    norm_feats[start:end]
-                ).float(),
+                "all_together_norm_hist": norm_feats[start:end],
 
-                "object_type_feats_hist": torch.from_numpy(
-                    object_type_feats[start:end]
-                ).long(),
+                "object_type_feats_hist": object_type_feats[start:end],
 
-                "object_visible_side_int_feats_hist": torch.from_numpy(
-                    object_visible_side[start:end]
-                ).long(),
+                "object_visible_side_int_feats_hist": object_visible_side[start:end],
 
-                "tailight_status_int_feats_hist": torch.from_numpy(
-                    tailight_status[start:end]
-                ).long(),
+                "tailight_status_int_feats_hist": tailight_status[start:end],
 
-                "categorical_hist": torch.from_numpy(
-                    categorical_feats[start:end]
-                ).float(),
+                "categorical_hist": categorical_feats[start:end],
 
-                "kinematic_hist": torch.from_numpy(
-                    kinematic_feats[start:end]
-                ).float(),
+                "kinematic_hist": kinematic_feats[start:end],
 
-                "bbox_hist": torch.from_numpy(
-                    bbox_feats[start:end]
-                ).float(),
+                "bbox_hist": bbox_feats[start:end],
 
-                "object_detected_hist": torch.from_numpy(
-                    object_detected[start:end]
-                ).float(),
+                "object_detected_hist": object_detected[start:end],
 
-                "all_together_hist": torch.from_numpy(
-                    raw_feats[start:end]
-                ).float(),
+                "all_together_hist": raw_feats[start:end],
 
-                "true_hazard_enc": torch.tensor(
-                    true_hazard_enc[target_idx],
-                    dtype=torch.long
-                ),
+                "true_hazard_enc": true_hazard_enc[target_idx],
 
                 "true_hazard": hazard_type_name[target_idx],
 

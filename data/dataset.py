@@ -98,19 +98,17 @@ class RoadHazardDataset(Dataset):
         cfg.model.emb_dim_visible_side = 2
         cfg.model.emb_dim_tailight_status = 5
         
-        #if self.phase == "train":
-        #    self.img_transforms = transforms.Compose([
-        #        transforms.ColorJitter(
-        #            brightness=0.2,
-        #            contrast=0.2,
-        #            saturation=0.1,
-        #            hue=0.02,
-        #        ),
-        #        transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 1.0)),
-        #        transforms.ToTensor(),
-        #    ])
-        #else:
-        #    self.img_transforms = transforms.ToTensor()
+        self.train_img_transforms = transforms.Compose([
+            transforms.ColorJitter(
+                brightness=0.2,
+                contrast=0.2,
+                saturation=0.1,
+                hue=0.02,
+            ),
+            transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 1.0)),
+            transforms.ToTensor(),
+        ])
+        self.test_img_transforms = transforms.ToTensor()
         
         #if cfg.data.with_no_hazard_samples_flag:
         #    data = add_no_hazard_samples(cfg, data)
@@ -170,45 +168,6 @@ class RoadHazardDataset(Dataset):
             self.phase,
             self.samples
         )
-        
-        #for seq in self.samples:
-        #    seq["object_type_feats_hist"] = torch.tensor(seq["object_type_feats_hist"], dtype=torch.long)
-        #    
-        #    seq["object_visible_side_int_feats_hist"] = torch.tensor(seq["object_visible_side_int_feats_hist"], dtype=torch.long)
-        #    
-        #    seq["tailight_status_int_feats_hist"] = torch.tensor(seq["tailight_status_int_feats_hist"], dtype=torch.long)
-        #    
-        #    seq["kinematic_hist"] = torch.tensor(seq["kinematic_hist"], dtype=torch.float32)
-        #    
-        #    seq["bbox_hist"] = torch.tensor(seq["bbox_hist"], dtype=torch.float32)
-        #    
-        #    seq["true_hazard_enc"] = torch.tensor(seq["true_hazard_enc"], dtype=torch.long)
-            #object_type = torch.as_tensor(
-            #    np.array(seq["object_type_feats_hist"]), dtype=torch.long
-            #).squeeze(0)
-            #
-            #object_visible_side = torch.as_tensor(
-            #    np.array(seq["object_visible_side_int_feats_hist"]), dtype=torch.long
-            #).squeeze(0)
-            #
-            #tailight_status = torch.as_tensor(
-            #    np.array(seq["tailight_status_int_feats_hist"]), dtype=torch.long
-            #).squeeze(0)
-            #
-            ## ---------------------------------
-            ##   Numeric features (FLOAT)
-            ## ---------------------------------
-            #kinematic = torch.as_tensor(
-            #    np.array(seq["kinematic_hist"]), dtype=torch.float32
-            #).squeeze(0)
-            #
-            #bbox = torch.as_tensor(
-            #    np.array(seq["bbox_hist"]), dtype=torch.float32
-            #).squeeze(0)
-            
-            #true_hazard_enc = torch.as_tensor(
-            #    np.array(seq["true_hazard_enc"]), dtype=torch.long
-            #)
 
 
     def _filter_by_split(self, data: pd.DataFrame, split_df: pd.DataFrame) -> pd.DataFrame:
@@ -245,18 +204,19 @@ class RoadHazardDataset(Dataset):
         # ---------------------------------
         #img_transforms = self.img_transforms
         if self.phase == "train":
-            img_transforms = transforms.Compose([
-                transforms.ColorJitter(
-                    brightness=0.2,
-                    contrast=0.2,
-                    saturation=0.1,
-                    hue=0.02,
-                ),
-                transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 1.0)),
-                transforms.ToTensor(),
-            ])
+            img_transforms = self.train_img_transforms
+            #img_transforms = transforms.Compose([
+            #    transforms.ColorJitter(
+            #        brightness=0.2,
+            #        contrast=0.2,
+            #        saturation=0.1,
+            #        hue=0.02,
+            #    ),
+            #    transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 1.0)),
+            #    transforms.ToTensor(),
+            #])
         else:
-            img_transforms = transforms.ToTensor()
+            img_transforms = self.test_img_transforms
     
         # ---------------------------------
         #   Load image sequences
@@ -286,35 +246,30 @@ class RoadHazardDataset(Dataset):
         # ---------------------------------
         #   Categorical features (INT)
         # ---------------------------------
-        object_type = seq["object_type_feats_hist"]
-        object_visible_side = seq["object_visible_side_int_feats_hist"]
-        tailight_status = seq["tailight_status_int_feats_hist"]
         
-        #object_type = torch.as_tensor(
-        #    np.array(seq["object_type_feats_hist"]), dtype=torch.long
-        #).squeeze(0)
-        #
-        #object_visible_side = torch.as_tensor(
-        #    np.array(seq["object_visible_side_int_feats_hist"]), dtype=torch.long
-        #).squeeze(0)
-        #
-        #tailight_status = torch.as_tensor(
-        #    np.array(seq["tailight_status_int_feats_hist"]), dtype=torch.long
-        #).squeeze(0)
+        object_type = torch.from_numpy(
+            seq["object_type_feats_hist"]
+        ).long()
+        
+        object_visible_side = torch.from_numpy(
+            seq["object_visible_side_int_feats_hist"]
+        ).long()
+        
+        tailight_status = torch.from_numpy(
+            seq["tailight_status_int_feats_hist"]
+        ).long()
     
         # ---------------------------------
         #   Numeric features (FLOAT)
         # ---------------------------------
-        kinematic = seq["kinematic_hist"]
-        bbox = seq["bbox_hist"]
         
-        #kinematic = torch.as_tensor(
-        #    np.array(seq["kinematic_hist"]), dtype=torch.float32
-        #).squeeze(0)
-        #
-        #bbox = torch.as_tensor(
-        #    np.array(seq["bbox_hist"]), dtype=torch.float32
-        #).squeeze(0)
+        kinematic = torch.from_numpy(
+            seq["kinematic_hist"]
+        ).float()
+        
+        bbox = torch.from_numpy(
+            seq["bbox_hist"]
+        ).float()
     
         # ---------------------------------
         #   Numeric augmentation (TRAIN ONLY)
@@ -333,26 +288,22 @@ class RoadHazardDataset(Dataset):
         # ---------------------------------
         #   Labels & metadata
         # ---------------------------------
-        true_hazard_enc = seq["true_hazard_enc"]
-        frame_n = seq["frame_n"]
-        missing_object_mask = seq["object_detected_hist"]
-        start_frame = seq["start_frame_hist"]
-        end_frame = seq["end_frame_hist"]
+        true_hazard_enc = torch.tensor(
+            seq["true_hazard_enc"],
+            dtype=torch.long
+        )
         
-        #true_hazard_enc = torch.as_tensor(
-        #    np.array(seq["true_hazard_enc"]), dtype=torch.long
-        #)
-        #
-        #frame_n = torch.as_tensor(
-        #    seq["frame_n"], dtype=torch.long
-        #)
-        #
-        #missing_object_mask = torch.as_tensor(
-        #    seq["object_detected_hist"], dtype=torch.float32
-        #)
-        #
-        #start_frame = torch.as_tensor(seq["start_frame_hist"], dtype=torch.long)
-        #end_frame = torch.as_tensor(seq["end_frame_hist"], dtype=torch.long)
+        frame_n = torch.tensor(
+            seq["frame_n"],
+            dtype=torch.long
+        )
+        
+        missing_object_mask = torch.from_numpy(
+            seq["object_detected_hist"]
+        ).float()
+        
+        start_frame = torch.tensor(seq["start_frame_hist"], dtype=torch.long)
+        end_frame = torch.tensor(seq["end_frame_hist"], dtype=torch.long)
     
         # ---------------------------------
         #   Sanity checks (IMPORTANT)
