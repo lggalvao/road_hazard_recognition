@@ -98,19 +98,19 @@ class RoadHazardDataset(Dataset):
         cfg.model.emb_dim_visible_side = 2
         cfg.model.emb_dim_tailight_status = 5
         
-        if self.phase == "train":
-            self.img_transforms = transforms.Compose([
-                transforms.ColorJitter(
-                    brightness=0.2,
-                    contrast=0.2,
-                    saturation=0.1,
-                    hue=0.02,
-                ),
-                transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 1.0)),
-                transforms.ToTensor(),
-            ])
-        else:
-            self.img_transforms = transforms.ToTensor()
+        #if self.phase == "train":
+        #    self.img_transforms = transforms.Compose([
+        #        transforms.ColorJitter(
+        #            brightness=0.2,
+        #            contrast=0.2,
+        #            saturation=0.1,
+        #            hue=0.02,
+        #        ),
+        #        transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 1.0)),
+        #        transforms.ToTensor(),
+        #    ])
+        #else:
+        #    self.img_transforms = transforms.ToTensor()
         
         #if cfg.data.with_no_hazard_samples_flag:
         #    data = add_no_hazard_samples(cfg, data)
@@ -199,20 +199,20 @@ class RoadHazardDataset(Dataset):
         # ---------------------------------
         #   Image transforms (SAFE)
         # ---------------------------------
-        img_transforms = self.img_transforms
-        #if self.phase == "train":
-        #    img_transforms = transforms.Compose([
-        #        transforms.ColorJitter(
-        #            brightness=0.2,
-        #            contrast=0.2,
-        #            saturation=0.1,
-        #            hue=0.02,
-        #        ),
-        #        transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 1.0)),
-        #        transforms.ToTensor(),
-        #    ])
-        #else:
-        #    img_transforms = transforms.ToTensor()
+        #img_transforms = self.img_transforms
+        if self.phase == "train":
+            img_transforms = transforms.Compose([
+                transforms.ColorJitter(
+                    brightness=0.2,
+                    contrast=0.2,
+                    saturation=0.1,
+                    hue=0.02,
+                ),
+                transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 1.0)),
+                transforms.ToTensor(),
+            ])
+        else:
+            img_transforms = transforms.ToTensor()
     
         # ---------------------------------
         #   Load image sequences
