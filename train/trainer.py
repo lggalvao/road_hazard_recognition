@@ -24,11 +24,11 @@ class GPUTransform(torch.nn.Module):
                 hue=0.02,
                 p=0.8
             ),
-            K.RandomGaussianBlur(
-                kernel_size=(3,3),
-                sigma=(0.1,1.0),
-                p=0.3
-            ),
+            #K.RandomGaussianBlur(
+            #    kernel_size=(3,3),
+            #    sigma=(0.1,1.0),
+            #    p=0.3
+            #),
         )
 
         self.normalize = K.Normalize(
