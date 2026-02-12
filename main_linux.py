@@ -219,8 +219,6 @@ if __name__ == '__main__':
                         
                         net.load_state_dict(torch.load(log_file_path + "/validation_best.tar", map_location=torch.device(cfg.system.device)))
                         
-                        net.load_state_dict(torch.load(load_file, map_location=torch.device(cfg.system.device), weights_only=True))
-                        
                         unfreeze_layer4(net)
                         
                         optimizer = get_optimizer(cfg, net)
