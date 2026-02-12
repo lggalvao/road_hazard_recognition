@@ -216,7 +216,7 @@ if __name__ == '__main__':
                         
                         cfg.training.stage = 2
                         
-                        net.load_state_dict(torch.load(log_file_path + "/stage1_best.pth"))
+                        net.load_state_dict(torch.load(log_file_path + "/validation_best.tar"))
                         
                         unfreeze_layer4(net)
                         

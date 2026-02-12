@@ -45,38 +45,26 @@ def debug_observation_sequence(all_together_hist, original_frame_path_hist, vide
         cv2.waitKey(0)
         #cv2.imwrite(''./image_debug/' + str(video_nu_all[0]).zfill(4) + '_' + str(temp_frame_all[y]).zfill(5) + '.png', frame)
 
-def debug_input_img_sequence(cfg, img_path, img):
-    """
-    Function to visualise input image transformation. It is the actual image
-    that is input into the network.
-    """
+def debug_input_img_sequence(cfg, img_paths, imgs):
+    print(imgs.shape)
+    imgs = imgs.detach().cpu()
+
+    # Handle sequence input
+    #if imgs.dim() == 4:
+    for img, img_path in zip(imgs, img_paths):
+        #img = img[0]  # visualize first frame
     
-    img = img.detach().cpu()
-    
-    # If normalized, unnormalize first (optional)
-    # mean = torch.tensor([0.485, 0.456, 0.406])
-    # std  = torch.tensor([0.229, 0.224, 0.225])
-    # img = img * std[:, None, None] + mean[:, None, None]
-    # img = img.clamp(0, 1)
-    
-    img = img.permute(1, 2, 0)  # [H, W, C]
-    
-    # Directory for saving images
-    input_img_tansformed_path_dir = Path("./output/debug/input/input_img_tansformed")
-    input_img_tansformed_path_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Sanitize image filename
-    img_path = img_path.replace(cfg.data.dataset_folder_path, "")
-    img_path = img_path.replace("/", "_")
-    img_filename = Path(img_path)
-    save_path = input_img_tansformed_path_dir / img_filename
-    
-    # Plot and save
-    plt.figure(figsize=(6,6))
-    plt.imshow(img)        # make sure img is [H, W, C] and in [0,1] or uint8
-    plt.axis("off")
-    plt.tight_layout()
-    plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    plt.close()
-    
-    #print("Saved transformed image to:", save_path)
+        # Unnormalize if needed
+        # mean/std optional here
+        
+        img = img.permute(1, 2, 0).clamp(0, 1)
+        
+        save_dir = Path("./output/debug/input/input_img_transformed")
+        save_dir.mkdir(parents=True, exist_ok=True)
+        
+        img_path = str(img_path).replace(cfg.data.dataset_folder_path, "")
+        img_path = img_path.replace("/", "_")
+        
+        save_path = save_dir / Path(img_path)
+        
+        plt.imsave(save_path, img.numpy())

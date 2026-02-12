@@ -44,6 +44,7 @@ from utils.visualization import debug_input_img_sequence
 from collections import Counter
 from sklearn.preprocessing import LabelEncoder
 import torch.nn as nn
+import torchvision.transforms.v2 as T
 
 logger = logging.getLogger("hazard_recognition")
 
@@ -106,9 +107,12 @@ class RoadHazardDataset(Dataset):
                 hue=0.02,
             ),
             transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 1.0)),
-            transforms.ToTensor(),
+            T.ConvertImageDtype(torch.float32)
+            #transforms.ToTensor(),
         ])
-        self.test_img_transforms = transforms.ToTensor()
+        self.test_img_transforms = T.Compose([
+            T.ConvertImageDtype(torch.float32),  # converts uint8 → float32 AND divides by 255
+        ])
         
         #if cfg.data.with_no_hazard_samples_flag:
         #    data = add_no_hazard_samples(cfg, data)
@@ -205,16 +209,6 @@ class RoadHazardDataset(Dataset):
         #img_transforms = self.img_transforms
         if self.phase == "train":
             img_transforms = self.train_img_transforms
-            #img_transforms = transforms.Compose([
-            #    transforms.ColorJitter(
-            #        brightness=0.2,
-            #        contrast=0.2,
-            #        saturation=0.1,
-            #        hue=0.02,
-            #    ),
-            #    transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 1.0)),
-            #    transforms.ToTensor(),
-            #])
         else:
             img_transforms = self.test_img_transforms
     
@@ -486,7 +480,8 @@ def _build_dataloader(dataset, cfg, shuffle, drop_last, sampler):
         sampler=sampler,
         drop_last=drop_last,
         pin_memory=cfg.data.pin_memory,
-        persistent_workers= False #cfg.data.num_workers > 0,
+        persistent_workers=True, #cfg.data.num_workers > 0,
+        prefetch_factor=2
     )
 
 
@@ -745,19 +740,6 @@ def get_sequence_samples_info(cfg, phase, samples):
         cfg.data.test_sequences_per_class = dict(hazard_counts)
         cfg.data.test_total_sequences = len(samples)
 
-#def get_sequence_samples_info(cfg, phase, samples):
-#    
-#    labels = [sample["true_hazard"].item() for sample in samples]
-#    hazard_counts = Counter(labels)
-#    
-#    if phase == "train":
-#        cfg.data.train_sequences_per_class = dict(hazard_counts)
-#        cfg.data.train_total_sequences = sum(hazard_counts.values())
-#    
-#    if phase == "val":
-#        cfg.data.test_sequences_per_class = dict(hazard_counts)
-#        cfg.data.test_total_sequences = sum(hazard_counts.values())
-
 
 @timeit
 def safe_load_image(path, resize, transform):
@@ -769,22 +751,31 @@ def safe_load_image(path, resize, transform):
         img = img.resize(resize, Image.BILINEAR)
     return transform(img)
 
-
+from torchvision.io import read_image
 @timeit
-def build_img_tensor(cfg, seq_paths, transform, debug):
-    # Pre-size Frames When Sequence Length is Fixed
-    frames = [None] * len(seq_paths)
-    for i, p in enumerate(seq_paths):
-        with Image.open(p) as img:
-            
-            if img.mode != "RGB":
-                img = img.convert("RGB")
-            
-            if debug:
-                debug_input_img_sequence(cfg, p, transform(img))
+def build_img_tensor(cfg, seq_paths, transform, debug=False):
+    # 1. Fast tensor decode
+    frames = []
+    for p in seq_paths:
+        img = read_image(p)  # (C, H, W), uint8
+        
+        if img.shape[0] == 1:  # grayscale
+            img = img.repeat(3, 1, 1)
+        
+        frames.append(img)
 
-            frames[i] = transform(img)
-    return torch.stack(frames)
+    # 2. Stack once
+    clip = torch.stack(frames)  # (T, C, H, W)
+
+    # 3. Vectorized transform
+    if transform:
+        clip = transform(clip)
+
+    # 4. Debug after transform
+    if debug:
+        debug_input_img_sequence(cfg, seq_paths, clip)
+
+    return clip
 
 
 @timeit
