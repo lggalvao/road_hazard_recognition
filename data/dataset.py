@@ -99,16 +99,12 @@ class RoadHazardDataset(Dataset):
         cfg.model.emb_dim_visible_side = 2
         cfg.model.emb_dim_tailight_status = 5
         
-        self.train_img_transforms = transforms.Compose([
-            transforms.ColorJitter(
-                brightness=0.2,
-                contrast=0.2,
-                saturation=0.1,
-                hue=0.02,
-            ),
-            transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 1.0)),
-            T.ConvertImageDtype(torch.float32)
-            #transforms.ToTensor(),
+        self.train_img_transforms = T.Compose([
+            T.Resize((224, 224)),
+            T.RandomHorizontalFlip(p=0.5),
+            T.ColorJitter(0.15, 0.15, 0.1, 0.02),
+            T.ConvertImageDtype(torch.float32),
+            #T.Normalize(mean, std),
         ])
         self.test_img_transforms = T.Compose([
             T.ConvertImageDtype(torch.float32),  # converts uint8 → float32 AND divides by 255
@@ -480,8 +476,8 @@ def _build_dataloader(dataset, cfg, shuffle, drop_last, sampler):
         sampler=sampler,
         drop_last=drop_last,
         pin_memory=cfg.data.pin_memory,
-        persistent_workers=True, #cfg.data.num_workers > 0,
-        prefetch_factor=2
+        persistent_workers=False, #cfg.data.num_workers > 0,
+        #prefetch_factor=2
     )
 
 
