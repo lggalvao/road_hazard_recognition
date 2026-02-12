@@ -476,8 +476,8 @@ def _build_dataloader(dataset, cfg, shuffle, drop_last, sampler):
         sampler=sampler,
         drop_last=drop_last,
         pin_memory=cfg.data.pin_memory,
-        persistent_workers=False, #cfg.data.num_workers > 0,
-        #prefetch_factor=2
+        persistent_workers=cfg.data.persistent_workers,
+        prefetch_factor=cfg.data.prefetch_factor
     )
 
 

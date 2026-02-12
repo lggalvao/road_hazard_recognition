@@ -65,9 +65,13 @@ class DataConfig:
     if os.name == "nt":  # Windows
         num_workers: int = 0 #int(os.cpu_count() * 0.6)
         pin_memory = False
+        persistent_workers = False
+        prefetch_factor = 0
     else:
         num_workers: int = int(os.cpu_count() * 0.75)
         pin_memory = True
+        persistent_workers = True
+        prefetch_factor = 2
 
 
 
