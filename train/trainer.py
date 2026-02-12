@@ -118,6 +118,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
     net.train() if is_train else net.eval()
 
     cpu_dataloader_time = 0.0
+    prepare_inputs_time = 0.0
     gpu_transform_time = 0.0
     gpu_time = 0.0
     epoch_loss = 0.0
@@ -132,7 +133,10 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
         start = time.time()
         cpu_dataloader_time += (start - end)
 
+        t1 = time.time()
         inputs, targets = prepare_inputs(data, cfg)
+        t2 = time.time()
+        prepare_inputs_time += (t2 - t1)
         
         inputs = move_to_device(inputs, "cuda")
         t1 = time.time()
@@ -170,6 +174,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
         end = time.time()
 
     print(f"\nEpoch DataLoader wait time: {cpu_dataloader_time:.2f}s")
+    print(f"Epoch Prepare inputs time: {prepare_inputs_time:.2f}s")
     print(f"Epoch GPU transform compute time: {gpu_transform_time:.2f}s")
     print(f"Epoch GPU compute time: {gpu_time:.2f}s")
 

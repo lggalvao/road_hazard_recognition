@@ -223,6 +223,27 @@ if __name__ == '__main__':
                         
                         optimizer = get_optimizer(cfg, net)
                         
+                        exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(
+                            optimizer,
+                            step_size=cfg.training.step_size,
+                            gamma=cfg.training.gamma
+                        )
+                        
+                        early_stopping = EarlyStopping(
+                            patience=cfg.training.patience,
+                            verbose=True,
+                            path=log_file_path + '/validation_best_statge_2.tar'
+                        )
+                        
+                        run_wandb.finish()
+                        
+                        run_wandb = initialize_wandb(
+                            cfg,
+                            log_file_path
+                        )
+    
+                        log_config_to_wandb(cfg)
+                        
                         train_model(
                             cfg,
                             net,
