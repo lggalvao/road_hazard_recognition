@@ -144,7 +144,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
             optimizer.zero_grad()
 
         # ---- GPU compute time ----
-        torch.cuda.synchronize()
+        #torch.cuda.synchronize()
         t1 = time.time()
 
         with torch.set_grad_enabled(is_train):
@@ -157,7 +157,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
                 torch.nn.utils.clip_grad_norm_(net.parameters(), cfg.training.clip_grad)
                 optimizer.step()
 
-        torch.cuda.synchronize()
+        #torch.cuda.synchronize()
         t2 = time.time()
         gpu_time += (t2 - t1)
 
