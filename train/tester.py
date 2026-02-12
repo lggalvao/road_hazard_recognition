@@ -42,7 +42,7 @@ def test_model(cfg, net, allsetDataloader, run_wandb, log_file_path):
             with torch.no_grad():
                 preds = forward_pass(net, inputs)
             targets = targets.float()
-            targets = torch.argmax(targets, dim=1)
+            #targets = torch.argmax(targets, dim=1)
             
             y_true = targets.detach().cpu().numpy()
     
