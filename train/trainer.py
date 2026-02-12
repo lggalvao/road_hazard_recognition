@@ -43,18 +43,17 @@ class GPUTransform(torch.nn.Module):
     
         x = x.float() / 255.0
     
-        output = []
+        # Collapse B and T
+        x = x.view(B * T, C, H, W)
     
-        for b in range(B):
-            seq = x[b]                 # (T, C, H, W)
-            seq = self.augs(seq)       # Kornia sees this as batch=T
-            output.append(seq)
+        # Apply all augmentations at once
+        x = self.augs(x)
     
-        x = torch.stack(output)        # (B, T, C, H, W)
+        # Normalize
+        x = self.normalize(x)
     
-        x = self.normalize(
-            x.view(B*T, C, H, W)
-        ).view(B, T, C, H, W)
+        # Restore shape
+        x = x.view(B, T, C, H, W)
     
         return x
 
@@ -171,7 +170,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
         end = time.time()
 
     print(f"\nEpoch DataLoader wait time: {cpu_dataloader_time:.2f}s")
-    print(f"Epoch GPU compute time: {gpu_transform_time:.2f}s")
+    print(f"Epoch GPU transform compute time: {gpu_transform_time:.2f}s")
     print(f"Epoch GPU compute time: {gpu_time:.2f}s")
 
     avg_loss = epoch_loss / len(dataloader)
