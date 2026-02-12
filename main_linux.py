@@ -92,7 +92,7 @@ if __name__ == '__main__':
     cfg.data.with_no_hazard_samples_flag = True
     cfg.loss.loss_function = "weighted_FocalLoss" #["FocalLoss", "weighted_FocalLoss", "weighted_CELoss", "CELoss"]
     cfg.data.sequence_stride = 1
-    cfg.data.dataset_trim = 500
+    cfg.data.dataset_trim = 30
     cfg.model.freeze_strategy = "head"
     cfg.training.ts_augme = False
     cfg.loss.focal_loss_gamma = 1

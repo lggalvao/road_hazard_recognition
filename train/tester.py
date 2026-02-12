@@ -35,6 +35,7 @@ def test_model(cfg, net, allsetDataloader, run_wandb, log_file_path):
             inputs, targets = prepare_inputs(data, cfg)
             
             inputs = move_to_device(inputs, cfg.system.device)
+            inputs["images"] = gpu_transform(inputs["images"])
             
             with torch.no_grad():
                 preds = forward_pass(net, inputs)
