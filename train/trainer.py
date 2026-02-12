@@ -57,7 +57,8 @@ class GPUTransform(torch.nn.Module):
         ).view(B, T, C, H, W)
     
         return x
-gpu_transform = GPUTransform().cuda()
+
+
 
 # -------------------------
 # Main Training Loop
@@ -65,6 +66,8 @@ gpu_transform = GPUTransform().cuda()
 @timeit
 def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criterion, early_stopping, run_wandb, log_file_path):
 
+    gpu_transform = GPUTransform().to(cfg.system.device)
+    
     for epoch in range(cfg.training.num_epochs):
         print(f"\nEpoch {epoch}/{cfg.training.num_epochs-1}")
  
@@ -77,7 +80,8 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
                 optimizer,
                 criterion,
                 cfg,
-                is_train
+                is_train,
+                gpu_transform
             )
 
             metrics = evaluate_predictions(targets, preds, phase, cfg.model.classes_name)
@@ -110,11 +114,12 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
         print_average_timings()
 
 @timeit
-def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train):
+def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transform):
 
     net.train() if is_train else net.eval()
 
-    data_time = 0.0
+    cpu_dataloader_time = 0.0
+    gpu_transform_time = 0.0
     gpu_time = 0.0
     epoch_loss = 0.0
 
@@ -126,12 +131,15 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train):
 
         # ---- DataLoader wait time ----
         start = time.time()
-        data_time += (start - end)
+        cpu_dataloader_time += (start - end)
 
         inputs, targets = prepare_inputs(data, cfg)
         
         inputs = move_to_device(inputs, "cuda")
+        t1 = time.time()
         inputs["images"] = gpu_transform(inputs["images"])
+        t2 = time.time()
+        gpu_transform_time += (t2 - t1)
 
         if is_train:
             optimizer.zero_grad()
@@ -162,7 +170,8 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train):
 
         end = time.time()
 
-    print(f"\nEpoch DataLoader wait time: {data_time:.2f}s")
+    print(f"\nEpoch DataLoader wait time: {cpu_dataloader_time:.2f}s")
+    print(f"Epoch GPU compute time: {gpu_transform_time:.2f}s")
     print(f"Epoch GPU compute time: {gpu_time:.2f}s")
 
     avg_loss = epoch_loss / len(dataloader)
