@@ -16,6 +16,7 @@ def test_model(cfg, net, allsetDataloader, run_wandb, log_file_path):
     
     print('Performing Testing')
     # Clear GPU memory
+    gpu_transform = GPUTransform().to(cfg.system.device)
     torch.cuda.empty_cache()
 
     best_paths = get_best_weights(log_file_path)
