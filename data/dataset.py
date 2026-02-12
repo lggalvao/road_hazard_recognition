@@ -748,10 +748,15 @@ def safe_load_image(path, resize, transform):
     return transform(img)
 
 from torchvision.io import read_image
+import time
 @timeit
 def build_img_tensor(cfg, seq_paths, transform, debug=False):
     # 1. Fast tensor decode
     frames = []
+    reading_img_time = 0.0
+    stacking_img_time = 0.0
+    transforming_img_time = 0.0
+    t1 = time.time()
     for p in seq_paths:
         img = read_image(p)  # (C, H, W), uint8
         
@@ -759,17 +764,28 @@ def build_img_tensor(cfg, seq_paths, transform, debug=False):
             img = img.repeat(3, 1, 1)
         
         frames.append(img)
-
+    t2 = time.time()
+    reading_img_time += (t2 - t1)
+    t1 = time.time()
     # 2. Stack once
     clip = torch.stack(frames)  # (T, C, H, W)
+    t2 = time.time()
+    stacking_img_time += (t2 - t1)
 
-    # 3. Vectorized transform
-    if transform:
-        clip = transform(clip)
-
-    # 4. Debug after transform
-    if debug:
-        debug_input_img_sequence(cfg, seq_paths, clip)
+    ## 3. Vectorized transform
+    #t1 = time.time()
+    #if transform:
+    #    clip = transform(clip)
+    #t2 = time.time()
+    #transforming_img_time += (t2 - t1)
+    #
+    #print("reading_img_time", reading_img_time)
+    #print("stacking_img_time", stacking_img_time)
+    #print("transforming_img_time", transforming_img_time)
+    #
+    ## 4. Debug after transform
+    #if debug:
+    #    debug_input_img_sequence(cfg, seq_paths, clip)
 
     return clip
 

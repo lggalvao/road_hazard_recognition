@@ -24,11 +24,12 @@ if __name__ == '__main__':
     from data.dataset import (
         create_or_load_dataset,
         split_roadHazardDataset,
-        RoadHazardDataset
+        RoadHazardDataset,
     )
     from models.load_models_parameters import (
         load_model,
-        select_config_setting
+        select_config_setting,
+        unfreeze_layer4
     )
     from utils.seeds import setup_seed
     from utils.logger import (

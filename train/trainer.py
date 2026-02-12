@@ -9,8 +9,55 @@ from train.losses import compute_loss
 import torch.nn as nn
 from utils.timing import timeit, print_average_timings
 import time
+import kornia.augmentation as K
 
+class GPUTransform(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
 
+        self.augs = torch.nn.Sequential(
+            K.RandomHorizontalFlip(p=0.5),
+            K.ColorJitter(
+                brightness=0.15,
+                contrast=0.15,
+                saturation=0.1,
+                hue=0.02,
+                p=0.8
+            ),
+            K.RandomGaussianBlur(
+                kernel_size=(3,3),
+                sigma=(0.1,1.0),
+                p=0.3
+            ),
+        )
+
+        self.normalize = K.Normalize(
+            mean=torch.tensor([0.485,0.456,0.406]),
+            std=torch.tensor([0.229,0.224,0.225])
+        )
+        
+    def forward(self, x):
+        # x: (B, T, C, H, W)
+    
+        B, T, C, H, W = x.shape
+    
+        x = x.float() / 255.0
+    
+        output = []
+    
+        for b in range(B):
+            seq = x[b]                 # (T, C, H, W)
+            seq = self.augs(seq)       # Kornia sees this as batch=T
+            output.append(seq)
+    
+        x = torch.stack(output)        # (B, T, C, H, W)
+    
+        x = self.normalize(
+            x.view(B*T, C, H, W)
+        ).view(B, T, C, H, W)
+    
+        return x
+gpu_transform = GPUTransform().cuda()
 
 # -------------------------
 # Main Training Loop
@@ -82,6 +129,9 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train):
         data_time += (start - end)
 
         inputs, targets = prepare_inputs(data, cfg)
+        
+        inputs = move_to_device(inputs, "cuda")
+        inputs["images"] = gpu_transform(inputs["images"])
 
         if is_train:
             optimizer.zero_grad()
@@ -183,3 +233,17 @@ def estimate_training_time_flops(model, batch_size, gpu_type="A100", safety_fact
         "flops_per_step": flops_per_step,
         "estimated_time_per_step_sec": time_per_step
     }
+
+
+import torch
+import kornia.augmentation as K
+
+def move_to_device(batch, device):
+    if torch.is_tensor(batch):
+        return batch.to(device, non_blocking=True)
+    elif isinstance(batch, dict):
+        return {k: move_to_device(v, device) for k, v in batch.items()}
+    elif isinstance(batch, list):
+        return [move_to_device(v, device) for v in batch]
+    else:
+        return batch

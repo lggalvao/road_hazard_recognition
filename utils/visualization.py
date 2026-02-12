@@ -46,7 +46,7 @@ def debug_observation_sequence(all_together_hist, original_frame_path_hist, vide
         #cv2.imwrite(''./image_debug/' + str(video_nu_all[0]).zfill(4) + '_' + str(temp_frame_all[y]).zfill(5) + '.png', frame)
 
 def debug_input_img_sequence(cfg, img_paths, imgs):
-    print(imgs.shape)
+
     imgs = imgs.detach().cpu()
 
     # Handle sequence input
