@@ -9,6 +9,7 @@ from train.losses import compute_loss
 import torch.nn as nn
 from pathlib import Path
 from utils.timing import timeit
+from train.trainer import move_to_device, GPUTransform
 
 @timeit
 def test_model(cfg, net, allsetDataloader, run_wandb, log_file_path):
@@ -79,14 +80,3 @@ def forward_pass(net, inputs):
 def get_best_weights(directory):
     directory = Path(directory)
     return list(directory.glob("*best.tar"))
-
-
-def move_to_device(batch, device):
-    if torch.is_tensor(batch):
-        return batch.to(device, non_blocking=True)
-    elif isinstance(batch, dict):
-        return {k: move_to_device(v, device) for k, v in batch.items()}
-    elif isinstance(batch, list):
-        return [move_to_device(v, device) for v in batch]
-    else:
-        return batch
