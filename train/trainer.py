@@ -138,7 +138,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
         t2 = time.time()
         prepare_inputs_time += (t2 - t1)
         
-        inputs = move_to_device(inputs, "cuda")
+        inputs = move_to_device(inputs, cfg.system.device)
         t1 = time.time()
         inputs["images"] = gpu_transform(inputs["images"])
         t2 = time.time()

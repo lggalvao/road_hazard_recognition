@@ -217,7 +217,7 @@ if __name__ == '__main__':
                         
                         cfg.training.stage = 2
                         
-                        net.load_state_dict(torch.load(log_file_path + "/validation_best.tar"))
+                        net.load_state_dict(torch.load(log_file_path + "/validation_best.tar"), map_location=torch.device(cfg.system.device))
                         
                         unfreeze_layer4(net)
                         
