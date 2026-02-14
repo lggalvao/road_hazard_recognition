@@ -106,7 +106,6 @@ if __name__ == '__main__':
     cfg.logging.test_name = 'explicit_feature_5'
     cfg.data.split_seed = 250
     cfg.data.saved_dataloader = False
-    cfg.training.stage = 0
 
     get_devie(cfg, cmd_args)
 
@@ -134,6 +133,7 @@ if __name__ == '__main__':
         cfg.model.tailight_status = exp_config.tailight_status
         cfg.model.enc_input_seq_length = exp_config.enc_input_seq_length
         cfg.logging.comments = exp_config.comments
+        cfg.training.stage = exp_config.stage
         
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
         
