@@ -10,14 +10,6 @@ from utils.timing import timeit
 def save_checkpoint(net, path, name):
     torch.save(net.state_dict(), f"{path}/{name}.tar")
 
-
-def save_config(cfg: Config, path: str):
-    """Save nested dataclass config to JSON safely."""
-    serializable_cfg = make_json_serializable(cfg)
-    with open(path, "w") as f:
-        json.dump(serializable_cfg, f, indent=4)
-
-
 def make_json_serializable(obj):
     if isinstance(obj, torch.Tensor):
         return obj.tolist()  # convert torch.Tensor → list
@@ -33,3 +25,9 @@ def make_json_serializable(obj):
         return [make_json_serializable(v) for v in obj]
     else:
         return obj
+
+def save_config(cfg: Config, path: str):
+    """Save nested dataclass config to JSON safely."""
+    serializable_cfg = make_json_serializable(cfg)
+    with open(path, "w") as f:
+        json.dump(serializable_cfg, f, indent=4)

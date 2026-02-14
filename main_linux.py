@@ -60,16 +60,18 @@ if __name__ == '__main__':
     from train.tester import test_model
     from train.losses import get_loss_function
     from utils.config import Config, load_config, build_paths
+    from utils.check_point import save_config
     from utils.logger import log_config_to_wandb, initialize_wandb, setup_logging
     from train.optimizer import get_optimizer
     from utils.cmd_args import get_cmd_args
     from utils.setup_hardware import get_devie
     from utils.timing import timeit
     import logging
+    from experiments import EXPERIMENTS
+    from types import SimpleNamespace
 
     logger = setup_logging("./output/training.log", level=logging.INFO)
     logger = logging.getLogger("hazard_recognition")
-    
     
     config_file_path = "C:/Projects/hazard_prediction_project/output/trained_models/explicit_feature_5/config.json"
 
@@ -82,15 +84,15 @@ if __name__ == '__main__':
     tailight_status_arr = ['BOO', 'OLO', 'OLR', 'OOO', 'OOR', 'BLO', 'BLR', 'BOR', 'REVERSE', 'UNK']
 
     cfg.system.multi_gpu = False
-    cfg.data.input_feature_type = cmd_args.input_feature_type
-    cfg.data.input_img_type1 = cmd_args.input_img_type1
-    cfg.data.input_img_type2 = cmd_args.input_img_type2
-    cfg.data.input_img_type3 = cmd_args.input_img_type3
-    cfg.model.model = cmd_args.model
-    cfg.model.classes_type = cmd_args.classes_type
+    #cfg.data.input_feature_type = cmd_args.input_feature_type
+    #cfg.data.input_img_type1 = cmd_args.input_img_type1
+    #cfg.data.input_img_type2 = cmd_args.input_img_type2
+    #cfg.data.input_img_type3 = cmd_args.input_img_type3
+    #cfg.model.model = cmd_args.model
+    #cfg.model.classes_type = cmd_args.classes_type
     cfg.model.cnn_pretrained = False
     cfg.data.with_no_hazard_samples_flag = True
-    cfg.loss.loss_function = "weighted_FocalLoss" #["FocalLoss", "weighted_FocalLoss", "weighted_CELoss", "CELoss"]
+    cfg.loss.loss_function = "FocalLoss" #["FocalLoss", "weighted_FocalLoss", "weighted_CELoss", "CELoss"]
     cfg.data.sequence_stride = 1
     cfg.data.dataset_trim = 1000
     cfg.model.freeze_strategy = "head"
@@ -104,181 +106,188 @@ if __name__ == '__main__':
     cfg.logging.test_name = 'explicit_feature_5'
     cfg.data.split_seed = 250
     cfg.data.saved_dataloader = False
-    cfg.training.stage = 1
+    cfg.training.stage = 0
 
     get_devie(cfg, cmd_args)
 
-    for parameter_1 in ["FocalLoss"]:  #FocalLoss, "weighted_FocalLoss", "weighted_CELoss", "CELoss"]:
+    for exp_config in EXPERIMENTS:
 
-        cfg.loss.loss_function = parameter_1
-        for parameter_2 in [""]:
+        # Enable to use dot .object
+        exp_config = SimpleNamespace(**exp_config)
+        cfg.data.input_feature_type = exp_config.input_feature_type
+        cfg.data.input_img_type1 = exp_config.input_img_type1
+        cfg.data.input_img_type2 = exp_config.input_img_type2
+        cfg.model.model = exp_config.model
+        cfg.model.classes_type = exp_config.classes_type
 
-            for parameter_3 in [0]:
+        train_flag = 'train' # Run 'train', 'test', or 'prediction' algorithm.
+        if train_flag == 'test' or train_flag == 'prediction':
 
-                train_flag = 'train' # Run 'train', 'test', or 'prediction' algorithm.
-                if train_flag == 'test' or train_flag == 'prediction':
+            #log_file_path =  './output/trained_models/official_results_v2/' + 'explicit_feature' + '/'+ cfg.logging.test_name
+            log_file_path = './output/trained_models/' + cfg.logging.test_name
+            config_file_path = log_file_path + "/config.json"
+            load_config(config_file_path)
+            print('log_file_path', log_file_path)
 
-                    #log_file_path =  './output/trained_models/official_results_v2/' + 'explicit_feature' + '/'+ cfg.logging.test_name
-                    log_file_path = './output/trained_models/' + cfg.logging.test_name
-                    config_file_path = log_file_path + "/config.json"
-                    load_config(config_file_path)
-                    print('log_file_path', log_file_path)
+        select_config_setting(cfg)
+        cfg.model.object_visible_side = exp_config.object_visible_side
+        cfg.model.tailight_status = exp_config.tailight_status
+        cfg.model.enc_input_seq_length = exp_config.enc_input_seq_length
+        cfg.logging.comments = exp_config.comments
+        
+        #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
+        
+        setup_seed(cfg.system.seed)
 
-                select_config_setting(cfg)
+        if cfg.data.split_dataset:
+            split_roadHazardDataset(cfg)
+
+        allsetDataloader = create_or_load_dataset(cfg)
+        
+        logger.info("Loading Model")
+        net = load_model(cfg, allsetDataloader)
+        logger.info(f" Making sure model is using GPU: {next(net.parameters()).device}")
+        
+        if train_flag == 'train':
+
+            log_file_path, file_number = record_parameters_and_results(cfg)
+            
+            if cfg.training.stage == 0:
+                optimizer = get_optimizer(cfg, net)
+
+                exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(
+                    optimizer,
+                    step_size=cfg.training.step_size,
+                    gamma=cfg.training.gamma
+                )
+    
+                criterion = get_loss_function(cfg)
                 
-                #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
+                early_stopping = EarlyStopping(
+                    patience=cfg.training.patience,
+                    verbose=True,
+                    path=log_file_path + f'/stage{cfg.training.stage}_validation_best.tar'
+                )
+    
+                run_wandb = initialize_wandb(
+                    cfg,
+                    log_file_path
+                )
+    
+                log_config_to_wandb(cfg)
                 
-                setup_seed(cfg.system.seed)
-
-                if cfg.data.split_dataset:
-                    split_roadHazardDataset(cfg)
-
-                allsetDataloader = create_or_load_dataset(cfg)
+                save_config(cfg, log_file_path + "/config.json")
                 
-                logger.info("Loading Model")
-                net = load_model(cfg, allsetDataloader)
-                logger.info(f" Making sure model is using GPU: {next(net.parameters()).device}")
+                train_model(
+                    cfg,
+                    net,
+                    allsetDataloader,
+                    optimizer,
+                    exp_lr_scheduler,
+                    criterion,
+                    early_stopping,
+                    run_wandb,
+                    log_file_path
+                )
                 
-                if train_flag == 'train':
+            if cfg.training.stage == 1:
+                optimizer = get_optimizer(cfg, net)
+    
+                exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(
+                    optimizer,
+                    step_size=cfg.training.step_size,
+                    gamma=cfg.training.gamma
+                )
+    
+                criterion = get_loss_function(cfg)
+    
+                early_stopping = EarlyStopping(
+                    patience=cfg.training.patience,
+                    verbose=True,
+                    path=log_file_path + '/validation_best.tar'
+                )
+    
+                run_wandb = initialize_wandb(
+                    cfg,
+                    log_file_path
+                )
+    
+                log_config_to_wandb(cfg)
+                
+                train_model(
+                    cfg,
+                    net,
+                    allsetDataloader,
+                    optimizer,
+                    exp_lr_scheduler,
+                    criterion,
+                    early_stopping,
+                    run_wandb,
+                    log_file_path
+                )
+                
+                cfg.training.stage = 2
+                
+                net.load_state_dict(torch.load(log_file_path + "/validation_best.tar", map_location=torch.device(cfg.system.device)))
+                
+                unfreeze_layer4(net)
+                
+                optimizer = get_optimizer(cfg, net)
+                
+                exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(
+                    optimizer,
+                    step_size=cfg.training.step_size,
+                    gamma=cfg.training.gamma
+                )
+                
+                early_stopping = EarlyStopping(
+                    patience=cfg.training.patience,
+                    verbose=True,
+                    path=log_file_path + '/validation_best_statge_2.tar'
+                )
+                
+                run_wandb.finish()
+                
+                run_wandb = initialize_wandb(
+                    cfg,
+                    log_file_path
+                )
+    
+                log_config_to_wandb(cfg)
+                
+                train_model(
+                    cfg,
+                    net,
+                    allsetDataloader,
+                    optimizer,
+                    exp_lr_scheduler,
+                    criterion,
+                    early_stopping,
+                    run_wandb,
+                    log_file_path
+                )
+            
+            test_model(
+                cfg,
+                net,
+                allsetDataloader,
+                run_wandb,
+                log_file_path
+            )
 
-                    log_file_path, file_number = record_parameters_and_results(cfg)
-                    
-                    if cfg.training.stage == 0:
-                        optimizer = get_optimizer(cfg, net)
+            run_wandb.finish()
 
-                        exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(
-                            optimizer,
-                            step_size=cfg.training.step_size,
-                            gamma=cfg.training.gamma
-                        )
-    
-                        criterion = get_loss_function(cfg)
-                        
-                        early_stopping = EarlyStopping(
-                            patience=cfg.training.patience,
-                            verbose=True,
-                            path=log_file_path + f'/stage{cfg.training.stage}_validation_best.tar'
-                        )
-    
-                        run_wandb = initialize_wandb(
-                            cfg,
-                            log_file_path
-                        )
-    
-                        log_config_to_wandb(cfg)
-                        
-                        train_model(
-                            cfg,
-                            net,
-                            allsetDataloader,
-                            optimizer,
-                            exp_lr_scheduler,
-                            criterion,
-                            early_stopping,
-                            run_wandb,
-                            log_file_path
-                        )
-                        
-                    if cfg.training.stage == 1:
-                        optimizer = get_optimizer(cfg, net)
-    
-                        exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(
-                            optimizer,
-                            step_size=cfg.training.step_size,
-                            gamma=cfg.training.gamma
-                        )
-    
-                        criterion = get_loss_function(cfg)
-    
-                        early_stopping = EarlyStopping(
-                            patience=cfg.training.patience,
-                            verbose=True,
-                            path=log_file_path + '/validation_best.tar'
-                        )
-    
-                        run_wandb = initialize_wandb(
-                            cfg,
-                            log_file_path
-                        )
-    
-                        log_config_to_wandb(cfg)
-                        
-                        train_model(
-                            cfg,
-                            net,
-                            allsetDataloader,
-                            optimizer,
-                            exp_lr_scheduler,
-                            criterion,
-                            early_stopping,
-                            run_wandb,
-                            log_file_path
-                        )
-                        
-                        cfg.training.stage = 2
-                        
-                        net.load_state_dict(torch.load(log_file_path + "/validation_best.tar", map_location=torch.device(cfg.system.device)))
-                        
-                        unfreeze_layer4(net)
-                        
-                        optimizer = get_optimizer(cfg, net)
-                        
-                        exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(
-                            optimizer,
-                            step_size=cfg.training.step_size,
-                            gamma=cfg.training.gamma
-                        )
-                        
-                        early_stopping = EarlyStopping(
-                            patience=cfg.training.patience,
-                            verbose=True,
-                            path=log_file_path + '/validation_best_statge_2.tar'
-                        )
-                        
-                        run_wandb.finish()
-                        
-                        run_wandb = initialize_wandb(
-                            cfg,
-                            log_file_path
-                        )
-    
-                        log_config_to_wandb(cfg)
-                        
-                        train_model(
-                            cfg,
-                            net,
-                            allsetDataloader,
-                            optimizer,
-                            exp_lr_scheduler,
-                            criterion,
-                            early_stopping,
-                            run_wandb,
-                            log_file_path
-                        )
-                    
-                    test_model(
-                        cfg,
-                        net,
-                        allsetDataloader,
-                        run_wandb,
-                        log_file_path
-                    )
+        if train_flag == 'test':
+            run_wandb = None
+            test_model(
+                cfg,
+                net,
+                allsetDataloader,
+                run_wandb,
+                log_file_path
+            )
 
-                    run_wandb.finish()
-
-                if train_flag == 'test':
-                    run_wandb = None
-                    test_model(
-                        cfg,
-                        net,
-                        allsetDataloader,
-                        run_wandb,
-                        log_file_path
-                    )
-
-                    results_csv.to_csv(cfg.logging.results_csv_file_path, index=False)
-
-                if train_flag == 'prediction':
+        if train_flag == 'prediction':
 # ##        ###############################################################################################
                                     # # GENERATING PREDICTION RESULTS
 # ##        ###############################################################################################

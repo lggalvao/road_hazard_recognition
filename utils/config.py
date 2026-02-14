@@ -63,7 +63,7 @@ class DataConfig:
     saved_dataloader: bool = True
     
     if os.name == "nt":  # Windows
-        num_workers: int = 0 #int(os.cpu_count() * 0.6)
+        num_workers: int = 0 # int(os.cpu_count() * 0.6)
         pin_memory = False
         persistent_workers = False
         prefetch_factor = None
@@ -181,13 +181,6 @@ def load_config(path: str) -> Config:
         loss=LossConfig(**cfg_data["loss"]),
         logging=LoggingConfig(**cfg_data["logging"]),
     )
-
-
-def save_config(cfg: Config, path: str):
-    """Save nested dataclass config to JSON safely."""
-    serializable_cfg = make_json_serializable(cfg)
-    with open(path, "w") as f:
-        json.dump(serializable_cfg, f, indent=4)
 
 
 def build_paths(cfg: Config):

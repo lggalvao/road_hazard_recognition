@@ -368,7 +368,6 @@ def prepare_inputs(batch, cfg):
     
     missing_object_mask = move(batch.get("missing_object_mask")) #List of tensors 
     images = batch.get("images")                # list(Tensor) or None
-    #features_norm = batch.get("features_norm")  # Tensor or None
     labels = move(batch["true_hazard_enc"])           # Tensor, always present
 
     # Normalize images structure
@@ -397,7 +396,6 @@ def prepare_inputs(batch, cfg):
             },
             labels
         )
-        #(kinematic, bbox, object_visible_side, tailight_status, object_type, missing_object_mask), labels
 
     # ----- Single Image Input (automatically selects first image) -----
     elif feature_type == "single_img_input":
@@ -411,7 +409,6 @@ def prepare_inputs(batch, cfg):
             },
             labels
             )
-        #return (images[0], missing_object_mask), labels
 
     # ----- Multi-Image Input (automatically uses all images) -----
     elif feature_type == "multi_img_input":
@@ -800,3 +797,4 @@ def augment_time_series(tensor_seq, augmenter=None, t_h=None, ts_augme=False):
             # fallback if augmentation fails
             return tensor_seq
     return tensor_seq
+

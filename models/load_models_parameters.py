@@ -188,7 +188,7 @@ def explicit_feature_parameters(cfg):
 
     #Hyperparameters
     cfg.training.batch_size = 128
-    cfg.training.num_epochs = 35#30 15
+    cfg.training.num_epochs = 2#30 15
     cfg.training.optimizer = 'Adam' #SGD, Adam, AdamW
     cfg.training.learning_rate = 0.0001#Learnign rate for SGD(0.09), Adam(0.00006) using images
     cfg.training.cnn_lr = 1e-5
@@ -200,7 +200,7 @@ def explicit_feature_parameters(cfg):
 
 def single_img_input_parameters(cfg):
     print('Using single_img_input_parameters')
-    cfg.system.seed = 205
+    cfg.system.seed = 100
     cfg.data.num_of_input_img = None
     cfg.data.num_of_no_hazard_samples_train = 250
     cfg.data.num_of_no_hazard_samples_test = 50
@@ -228,7 +228,7 @@ def single_img_input_parameters(cfg):
     cfg.training.clip_grad = 5
     
     #Hyperparameters
-    cfg.training.batch_size = 64 #CNN:50, Vision Transformer:20
+    cfg.training.batch_size = 16 #CNN:50, Vision Transformer:20
     cfg.training.num_epochs = 30
     cfg.training.optimizer = 'SGD' #SGD, Adam, AdamW
     cfg.training.learning_rate = 0.0001 #0.00009#Learning rate for SGD(0.09), Adam(0.00006) using images
@@ -241,7 +241,7 @@ def single_img_input_parameters(cfg):
 
 def multi_img_input_parameters(cfg):
     print('Using local_context_parameters')
-    cfg.system.seed = 205
+    cfg.system.seed = 100
     cfg.data.num_of_input_img = 2
     cfg.data.num_of_no_hazard_samples_train = 250
     cfg.data.num_of_no_hazard_samples_test = 50
@@ -316,7 +316,7 @@ def explicit_and_single_img_input_parameters(cfg):
 
 
 def explicit_and_multi_img_input_parameters(cfg):
-    cfg.system.seed = 205
+    cfg.system.seed = 100
     cfg.data.num_of_input_img = 2
     cfg.data.num_of_no_hazard_samples_train = 250
     cfg.data.num_of_no_hazard_samples_test = 50

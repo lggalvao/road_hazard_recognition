@@ -2,7 +2,7 @@ import torch
 import numpy as np
 from tqdm import tqdm
 from utils.metrics import evaluate_predictions
-from utils.logger import log_results, update_results_csv
+from utils.logger import log_results
 from utils.check_point import save_checkpoint
 from data.dataset import prepare_inputs
 from train.losses import compute_loss
@@ -139,10 +139,12 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
         prepare_inputs_time += (t2 - t1)
         
         inputs = move_to_device(inputs, cfg.system.device)
-        t1 = time.time()
-        inputs["images"] = gpu_transform(inputs["images"])
-        t2 = time.time()
-        gpu_transform_time += (t2 - t1)
+        
+        if cfg.data.input_feature_type != "explicit_feature":
+            t1 = time.time()
+            inputs["images"] = gpu_transform(inputs["images"])
+            t2 = time.time()
+            gpu_transform_time += (t2 - t1)
 
         if is_train:
             optimizer.zero_grad()
@@ -248,7 +250,6 @@ def estimate_training_time_flops(model, batch_size, gpu_type="A100", safety_fact
     }
 
 
-import torch
 import kornia.augmentation as K
 
 def move_to_device(batch, device):

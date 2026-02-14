@@ -85,6 +85,7 @@ def augment_numeric_timeseries(
         plt.grid(True)
         plt.tight_layout()
         plt.savefig(augment_save_path / f"BBox Noise Injection_{sample_index}.png", dpi=300, format='png')
+        plt.close()
         #plt.show()
 
     bbox = bbox_noisy

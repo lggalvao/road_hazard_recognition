@@ -52,39 +52,42 @@ def create_temporal_sequences(
             cfg.data.with_no_hazard_samples_flag
         )
         
-        if is_no_hazard:
-        
-            video_str = str(int(vid)).zfill(4)
-            frame_str = group["frame_n"].astype(int).astype(str).str.zfill(5)
-        
-            if cfg.system.root == 'C:/':
-                base_root = img_path.str.slice(0, 46)
-        
-            elif cfg.system.root == '/EEdata/bllg002/':
-                base_root = img_path.str.slice(0, 59)
-        
+        if cfg.data.input_feature_type != "explicit_feature":
+            if is_no_hazard:
+            
+                video_str = str(int(vid)).zfill(4)
+                frame_str = group["frame_n"].astype(int).astype(str).str.zfill(5)
+            
+                if cfg.system.root == 'C:/':
+                    base_root = img_path.str.slice(0, 46)
+            
+                elif cfg.system.root == '/EEdata/bllg002/':
+                    base_root = img_path.str.slice(0, 59)
+            
+                else:
+                    raise ValueError("Unsupported root")
+            
+                input_img = (
+                    base_root +
+                    "no_hazard_samples/" +
+                    video_str +
+                    f"/{cfg.data.input_img_type1}/" +
+                    frame_str +
+                    ".png"
+                )
+            
+                img_path_root_hist = img_path.to_numpy()
+            
             else:
-                raise ValueError("Unsupported root")
-        
-            input_img = (
-                base_root +
-                "no_hazard_samples/" +
-                video_str +
-                f"/{cfg.data.input_img_type1}/" +
-                frame_str +
-                ".png"
-            )
-        
-            img_path_root_hist = img_path.to_numpy()
-        
+                input_img = img_path.str.replace(
+                    "img_original_size",
+                    cfg.data.input_img_type1,
+                    regex=False
+                )
+            
+                img_path_root_hist = img_path.to_numpy()
         else:
-            input_img = img_path.str.replace(
-                "img_original_size",
-                cfg.data.input_img_type1,
-                regex=False
-            )
-        
-            img_path_root_hist = img_path.to_numpy()
+            input_img = img_path
 
         # Normalize slashes + dataset root
         input_img = input_img.str.replace("\\", "/", regex=False)

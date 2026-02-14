@@ -3,7 +3,6 @@ from pathlib import Path
 from dataclasses import asdict
 import wandb
 import os
-from utils.check_point import save_config
 
 from pathlib import Path
 import matplotlib.pyplot as plt
@@ -14,7 +13,9 @@ import pandas as pd
 import json
 from typing import Tuple
 import warnings
-import openpyxl 
+import openpyxl
+from openpyxl import load_workbook
+from openpyxl.styles import PatternFill
 
 
 unwanted_keys = [
@@ -283,12 +284,6 @@ def flatten_cfg(cfg) -> dict:
     return flat_dict
 
 
-def save_config(cfg, path: str):
-    """Save the cfg object as a JSON file."""
-    with open(path, 'w') as f:
-        json.dump(flatten_cfg(cfg), f, indent=4)
-
-
 def record_parameters_and_results(cfg) -> Tuple[str, int]:
     """
     Create a unique output folder for the run, save config, and record parameters in CSV.
@@ -313,9 +308,6 @@ def record_parameters_and_results(cfg) -> Tuple[str, int]:
     print(f"Directory created for run: {log_file_path}")
 
     cfg.logging.test_name = test_name
-
-    # This csv results is just to compare each run side by side
-    update_results_csv(cfg)
 
     return log_file_path, file_number
 
@@ -366,33 +358,50 @@ def update_results_csv(cfg, metrics = None) -> pd.DataFrame:
             # Existing parameter: update value
             results_csv.loc[results_csv['Parameters'] == key, cfg.logging.test_name] = str(value)
 
-    # Ensure there are at least two run columns
-    if results_csv.shape[1] < 3:  # 'Parameters' + at least two runs
-        print("Not enough columns to compare.")
-        return
-    
     # Identify columns
     param_col = results_csv.columns[0]               # First column is 'Parameters'
-    previous_run = results_csv.columns[-2]           # Second-to-last column
-    current_run = results_csv.columns[-1]            # Last column
     
-    # Function to highlight differences
-    def highlight_diff(row):
-        return [
-            'background-color: yellow' if (col == current_run and str(row[col]) != str(row[previous_run])) else ''
-            for col in results_csv.columns
-        ]
+    xlsx_file_path = cfg.logging.results_csv_file_path.replace('.csv', '.xlsx')
     
-    # Apply styling
-    styled = results_csv.style.apply(highlight_diff, axis=1)
-
-    # Save to Excel
-    styled.to_excel(cfg.logging.results_csv_file_path.replace('.csv', '.xlsx'), index=False)
-    print(f"Excel saved with highlighted changes: {cfg.logging.results_csv_file_path.replace('.csv', '.xlsx')}")
+    wb = load_workbook(xlsx_file_path)
+    ws = wb.active
     
-    # --- Save CSV ---
+    # Extract last column dynamically
+    current_run = results_csv.columns[-1]
+    previous_run = results_csv.columns[-2]
+    
+    next_col = ws.max_column + 1
+    
+    # Write header
+    ws.cell(row=1, column=next_col, value=current_run)
+    
+    # Define highlight style
+    yellow_fill = PatternFill(start_color="FFFF00",
+                            end_color="FFFF00",
+                            fill_type="solid")
+    
+        # Ensure there are at least two run columns
+    #if results_csv.shape[1] < 3:  # 'Parameters' + at least two runs
+    #    print("Not enough columns to compare.")
+    #    
+    #    wb.save(xlsx_file_path)
+    #    
+    #    return results_csv
+    
+    # Write values + apply highlight condition
+    for row_idx, (_, row) in enumerate(results_csv.iterrows(), start=2):
+        
+        value = row[current_run]
+        ws.cell(row=row_idx, column=next_col, value=value)
+    
+        # Apply highlight condition
+        if str(row[current_run]) != str(row[previous_run]):
+            ws.cell(row=row_idx, column=next_col).fill = yellow_fill
+    
+    wb.save(xlsx_file_path)
+    
     results_csv.to_csv(cfg.logging.results_csv_file_path, index=False)
-    print(f"Parameters recorded in CSV: {cfg.logging.results_csv_file_path}")
+    
+    print(f"Column '{current_run}' added with conditional highlights.")
 
     return results_csv
-
