@@ -9,6 +9,7 @@ EXPERIMENTS = [
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",
+        "stage": 0,
         "comments": None
     },
     {
@@ -20,6 +21,7 @@ EXPERIMENTS = [
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",
+        "stage": 0,
         "comments": None
     },
     {
@@ -31,6 +33,7 @@ EXPERIMENTS = [
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",
+        "stage": 0,
         "comments": None
     },
     {
@@ -42,6 +45,7 @@ EXPERIMENTS = [
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",
+        "stage": 0,
         "comments": None
     },
     # SINGLE IMAGE
@@ -78,6 +82,7 @@ EXPERIMENTS = [
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",
+        "stage": 0,
         "comments": None
     },
     # MULTI IMAGE
@@ -88,6 +93,7 @@ EXPERIMENTS = [
         "input_img_type2": "img_local_context_ROI_0",
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",
+        "stage": 0,
         "comments": None
     },
     #SINGLE IMAGE + EXPLICIT FEATURES
@@ -98,6 +104,7 @@ EXPERIMENTS = [
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",
+        "stage": 0,
         "comments": None
     }
 ]
