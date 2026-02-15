@@ -4,7 +4,6 @@ __pycache__/
 .venv/
 .ipynb_checkpoints
 *.ipynb
-Excel Results/
 models - Copy/
 Project Diagrams/
 Notes for Deep Learning Architecture.docx
