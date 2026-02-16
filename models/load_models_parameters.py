@@ -4,7 +4,8 @@ from models import (
     Embedding_Temporal_LSTM,
     Embedding_Transformer,
     CNN_LSTM,
-    Embedding_CNN_LSTM
+    Embedding_CNN_LSTM,
+    CNN_Transformer
 )
 from utils.timing import timeit
 
@@ -25,18 +26,11 @@ def load_model(cfg, allsetDataloader):
     # ----------------------------------------------------------------------
     feature_type = cfg.data.input_feature_type
 
-    # Always available for every mode
-    #features_norm = batch["features_norm"]
     kinematic = batch["kinematic"]
     bbox = batch["bbox"]
 
     cfg.model.num_kinematic_features = kinematic.shape[-1]
     cfg.model.num_bbox_features = bbox.shape[-1]
-    #cfg.model.num_kinematic_features = kinematic.shape[-1] + bbox.shape[-1]
-    
-    #object_type = batch["object_type"]
-    #object_visible_side = batch["object_visible_side"]
-    #tailight_status = batch["tailight_status"]
 
     # Image inputs vary depending on mode
     if feature_type in ["single_img_input", "explicit_and_single_img_input"]:
@@ -49,9 +43,6 @@ def load_model(cfg, allsetDataloader):
         img_streams = batch["images"]
         img_tensor = torch.stack(img_streams[0], dim=0)
         cfg.data.img_shape = img_tensor.shape
-
-    # explicit_feature mode does not need images
-    # trajectory mode handled separately below
 
     # ----------------------------------------------------------------------
     # 3. Instantiate model according to configuration
@@ -75,6 +66,11 @@ def load_model(cfg, allsetDataloader):
             if cfg.training.stage == 1:
                 freeze_cnn(net)
 
+        elif model_name == "CNN_Transformer":
+            net = CNN_Transformer.CNN_Transformer(cfg)
+            if cfg.training.stage == 1:
+                freeze_cnn(net)
+        
         else:
             raise ValueError(f"Unsupported model {model_name}")
     
@@ -239,7 +235,7 @@ def single_img_input_parameters(cfg):
     cfg.training.clip_grad = 5
     
     #Hyperparameters
-    cfg.training.batch_size = 64 #CNN:50, Vision Transformer:20
+    cfg.training.batch_size = 32 #CNN:50, Vision Transformer:20
     cfg.training.num_epochs = 30
     cfg.training.optimizer = 'SGD' #SGD, Adam, AdamW
     cfg.training.learning_rate = 0.0001 #0.00009#Learning rate for SGD(0.09), Adam(0.00006) using images

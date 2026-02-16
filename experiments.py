@@ -1,10 +1,25 @@
-EXPERIMENTS = [
-       {
-        "input_feature_type": "explicit_and_single_img_input",
+#["FocalLoss", "weighted_FocalLoss", "weighted_CELoss", "CELoss"]
+
+EXPERIMENTS_0 = [
+    {
+        "input_feature_type": "single_img_input",
         "object_visible_side": None,
         "tailight_status": None,
-        "model": "Embedding_CNN_LSTM",
+        "model": "CNN_LSTM",
         "input_img_type1": "img_local_context_ROI_0",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "loss_function": "CELoss",
+        "comments": None
+    },
+    {
+        "input_feature_type": "single_img_input",
+        "object_visible_side": None,
+        "tailight_status": None,
+        "model": "CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",
@@ -30,12 +45,25 @@ EXPERIMENTS = [
         "object_visible_side": None,
         "tailight_status": None,
         "model": "CNN_LSTM",
-        "input_img_type1": "img_local_context_ROI_0",
+        "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",
         "stage": 1,
-        "loss_function": "CELoss",
+        "loss_function": "FocalLoss",
+        "comments": None
+    },
+    {
+        "input_feature_type": "single_img_input",
+        "object_visible_side": None,
+        "tailight_status": None,
+        "model": "CNN_Transformer",
+        "input_img_type1": "img_local_context_ROI_1",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 1,
+        "loss_function": "FocalLoss",
         "comments": None
     },
     # EXPLICIT FFEATURES
@@ -134,4 +162,34 @@ EXPERIMENTS = [
     #    "stage": 0,
     #    "comments": None
     #}
+]
+
+
+EXPERIMENTS_1 = [
+    {
+        "input_feature_type": "explicit_and_single_img_input",
+        "object_visible_side": None,
+        "tailight_status": None,
+        "model": "Embedding_CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_0",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "loss_function": "CELoss",
+        "comments": None
+    },
+    {
+        "input_feature_type": "explicit_and_single_img_input",
+        "object_visible_side": None,
+        "tailight_status": None,
+        "model": "Embedding_CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_1",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "loss_function": "CELoss",
+        "comments": None
+    },
 ]

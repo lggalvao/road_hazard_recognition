@@ -49,7 +49,6 @@ unwanted_keys = [
     'logging_wandb_run_name',
     'data_test_video_samples_per_class',
     'system_root',
-    'data_saved_dataloader',
     'data_num_of_input_img',
     'logging_file_name',
     'logging_file_name',

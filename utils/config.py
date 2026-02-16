@@ -35,7 +35,6 @@ class DataConfig:
     with_no_hazard_samples_flag: bool = False
     num_of_no_hazard_samples_train: int = 250
     num_of_no_hazard_samples_test: int = 50
-    split_seed: int = 250
     
     train_videos_number: List[float] = field(default_factory=lambda: [4.0, 296.0])
     test_videos_number: List[float] = field(default_factory=lambda: [335.0, 30.0])
@@ -60,7 +59,6 @@ class DataConfig:
     test_csv_set_output_path: str = ""
     dataset_event_time_csv_file_path: str = ""
     dataset_csv_file_path: str = ""
-    saved_dataloader: bool = True
     
     if os.name == "nt":  # Windows
         num_workers: int = 0 # int(os.cpu_count() * 0.6)
@@ -79,7 +77,6 @@ class DataConfig:
 class ModelConfig:
     model: str = "Embedding_Temporal_LSTM"
     cnn_model: Optional[str] = None
-    cnn_pretrained: bool = False
     freeze_strategy: str = "head"
     encoder_type: str = "LSTM"
     enc_hidden_size: int = 112

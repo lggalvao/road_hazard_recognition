@@ -1,19 +1,3 @@
-'''
-python main_linux.py --device 0 --model TimeSeriesTransformer --input_feature_type explicit_feature --input_img_type1 img_local_context_ROI_1 --input_img_type2 None --classes_type motion_towards
-
-python main_linux.py --device 0 --model Embedding_Temporal_LSTM --input_feature_type explicit_feature --input_img_type1 img_local_context_ROI_1 --input_img_type2 None --classes_type motion_towards
-
-python main_linux.py --device 0 --model CNN_LSTM --input_feature_type single_img_input --input_img_type1 img_local_context_ROI_0 --input_img_type2 None --classes_type all_classes
-
-python main_linux.py --device 0 --model TimeSformerNet --input_feature_type single_img_input --input_img_type1 img_local_context_ROI_1 --input_img_type2 None --classes_type literature_classes
-
-python main_linux.py --device 0 --model Embedding_CNN_LSTM --input_feature_type explicit_and_single_img_input --input_img_type1 img_local_context_ROI_1 --input_img_type2 None --classes_type all_classes
-
-python main_linux.py --device 1 --model Multi_Stream_CNN_LSTM --input_feature_type multi_img_input --input_img_type1 img_local_context --input_img_type2 img_local_context_with_motion --classes_type all_classes
-
-python main_linux.py --device 1 --model Embedding_Multi_Stream_CNN_LSTM --input_feature_type explicit_and_multi_img_input --input_img_type1 img_local_context --input_img_type2 img_local_context_with_motion --classes_type all_classes
-'''
-
 #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
 
 
@@ -67,7 +51,10 @@ if __name__ == '__main__':
     from utils.setup_hardware import get_devie
     from utils.timing import timeit
     import logging
-    from experiments import EXPERIMENTS
+    from experiments import {
+        EXPERIMENTS_0,
+        EXPERIMENTS_1
+    }
     from types import SimpleNamespace
 
     logger = setup_logging("./output/training.log", level=logging.INFO)
@@ -78,38 +65,33 @@ if __name__ == '__main__':
     cfg = Config()
     #cfg = load_config(config_file_path)
     cfg = build_paths(cfg)
-    cmd_args = get_cmd_args()
+    cmd_args = get_cmd_args(
 
     visible_side_arr = ['front_side', 'front_left_side', 'front_right_side', 'rear_side', 'rear_right_side', 'rear_left_side', 'left_side', 'right_side', 'UNK']
     tailight_status_arr = ['BOO', 'OLO', 'OLR', 'OOO', 'OOR', 'BLO', 'BLR', 'BOR', 'REVERSE', 'UNK']
 
     cfg.system.multi_gpu = False
-    #cfg.data.input_feature_type = cmd_args.input_feature_type
-    #cfg.data.input_img_type1 = cmd_args.input_img_type1
-    #cfg.data.input_img_type2 = cmd_args.input_img_type2
-    #cfg.data.input_img_type3 = cmd_args.input_img_type3
-    #cfg.model.model = cmd_args.model
-    #cfg.model.classes_type = cmd_args.classes_type
-    cfg.model.cnn_pretrained = False
     cfg.data.with_no_hazard_samples_flag = True
-    cfg.loss.loss_function = "FocalLoss" #["FocalLoss", "weighted_FocalLoss", "weighted_CELoss", "CELoss"]
     cfg.data.sequence_stride = 1
     cfg.data.dataset_trim = 1000
     cfg.model.freeze_strategy = "head"
     cfg.training.ts_augme = False
     cfg.loss.focal_loss_gamma = 1
     cfg.training.patience = 5
-    cfg.system.root = 'C:/' #C:/, '/data/home/r2049970/'
     cfg.data.split_dataset = True
     cfg.logging.pred_save_wrong = False
     cfg.logging.pred_save_frame_flag = False
     cfg.logging.test_name = 'explicit_feature_5'
-    cfg.data.split_seed = 250
-    cfg.data.saved_dataloader = False
 
     get_devie(cfg, cmd_args)
 
-    for exp_config in EXPERIMENTS:
+    if cfg.system.device == 0:
+        exp = EXPERIMENTS_0
+    
+    else cfg.system.device == 1:
+        exp = EXPERIMENTS_1
+    
+    for exp_config in exp:
 
         # Enable to use dot .object
         exp_config = SimpleNamespace(**exp_config)

@@ -608,45 +608,20 @@ def create_or_load_dataset(cfg):
 def create_or_load_dataset___(cfg):
     
     root_file_name = str(cfg.data.input_feature_type) + '_OH_' + str(cfg.model.enc_input_seq_length) + '_b_size' + str(cfg.training.batch_size)
-    if cfg.data.saved_dataloader:
-        print("Loading Dataset from Saved .pth File")
-        trDataloader = torch.load('./output/dataloader/' + root_file_name + '_trDataloader.pth')
-        print("len",len(trDataloader) * cfg.training.batch_size)
-        print("trDataloader_len", len(trDataloader))
+    logger.info('\n-----------Loading Dataset-----------')
+    trSet = RoadHazardDataset(cfg, cfg.data.train_csv_set_output_path, phase='train')
+    trDataloader = DataLoader(trSet,batch_size=cfg.training.batch_size, num_workers=cfg.data.num_workers, shuffle=True, drop_last = True, sampler=cfg.data.sampler) 
+    torch.save(trDataloader, './output/dataloader/' + root_file_name + '_trDataloader.pth')
+    print("\nNumber of Train Video Samples:", len(cfg.data.train_videos_number))
+    print("Number of Train Sequence Samples:", len(trSet))
+    print("Number of Train batches:", len(trDataloader))
 
-        tsDataloader = torch.load('./output/dataloader/' + root_file_name + '_tsDataloader.pth')
-        print("len",len(tsDataloader) * cfg.training.batch_size)
-        print("TestDataloader_len", len(tsDataloader))
-        
-        if cfg.model.classes_type == 'literature_classes':
-            #Literature Classes
-            cfg.loss.class_weights = [1.3269, 0.9346, 0.9237, 0.8838, 1.0391]
-        
-        elif cfg.model.classes_type == 'motion_towards':
-            #Motion Towards
-            cfg.loss.class_weights = [0.9180, 1.4963, 1.8604, 0.6465, 0.6390, 0.6114, 0.7189, 1.1274, 3.1453,  2.7636]
-        
-        elif cfg.model.classes_type == 'all_classes':
-            #All Classes
-            cfg.loss.class_weights = [0.9761, 0.8735, 1.5910, 1.9782, 0.6875, 0.6795, 0.6502, 0.7644, 1.1988, 0.6900, 1.3259, 3.3445, 2.9386, 0.8018]
-        
-        print("All dataset was loaded successfully")
-    else:
-    
-        logger.info('\n-----------Loading Dataset-----------')
-        trSet = RoadHazardDataset(cfg, cfg.data.train_csv_set_output_path, phase='train')
-        trDataloader = DataLoader(trSet,batch_size=cfg.training.batch_size, num_workers=cfg.data.num_workers, shuffle=True, drop_last = True, sampler=cfg.data.sampler) 
-        torch.save(trDataloader, './output/dataloader/' + root_file_name + '_trDataloader.pth')
-        print("\nNumber of Train Video Samples:", len(cfg.data.train_videos_number))
-        print("Number of Train Sequence Samples:", len(trSet))
-        print("Number of Train batches:", len(trDataloader))
-
-        tsSet = RoadHazardDataset(cfg, cfg.data.test_csv_set_output_path, phase = 'val')
-        tsDataloader = DataLoader(tsSet,batch_size=cfg.training.batch_size, shuffle=False, num_workers=cfg.data.num_workers, drop_last = False)
-        torch.save(tsDataloader, './output/dataloader/' + root_file_name + '_tsDataloader.pth')
-        print("\nNumber of Test Video Samples:", len(cfg.data.test_videos_number))
-        print("Number of Test Sequence Samples:", len(tsSet))
-        print("Number of test batches:", len(tsDataloader))
+    tsSet = RoadHazardDataset(cfg, cfg.data.test_csv_set_output_path, phase = 'val')
+    tsDataloader = DataLoader(tsSet,batch_size=cfg.training.batch_size, shuffle=False, num_workers=cfg.data.num_workers, drop_last = False)
+    torch.save(tsDataloader, './output/dataloader/' + root_file_name + '_tsDataloader.pth')
+    print("\nNumber of Test Video Samples:", len(cfg.data.test_videos_number))
+    print("Number of Test Sequence Samples:", len(tsSet))
+    print("Number of test batches:", len(tsDataloader))
 
     allsetDataloader = {'train':trDataloader,
                         'val'  :tsDataloader, #########################################note test and validation set are the same at the moment
