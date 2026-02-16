@@ -118,6 +118,7 @@ if __name__ == '__main__':
         cfg.data.input_img_type2 = exp_config.input_img_type2
         cfg.model.model = exp_config.model
         cfg.model.classes_type = exp_config.classes_type
+        cfg.loss.loss_function = exp_config.loss_function
 
         train_flag = 'train' # Run 'train', 'test', or 'prediction' algorithm.
         if train_flag == 'test' or train_flag == 'prediction':
