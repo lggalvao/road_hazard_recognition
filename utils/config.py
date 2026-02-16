@@ -68,7 +68,7 @@ class DataConfig:
         persistent_workers = False
         prefetch_factor = None
     else:
-        num_workers: int = int(os.cpu_count() * 0.75)
+        num_workers: int = int(os.cpu_count() * 0.5)
         pin_memory = True
         persistent_workers = True
         prefetch_factor = 2
