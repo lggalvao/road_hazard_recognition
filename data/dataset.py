@@ -418,11 +418,23 @@ def prepare_inputs(batch, cfg):
 
     # ----- Explicit + Single Image -----
     elif feature_type == "explicit_and_single_img_input":
-        if features_norm is None:
-            raise ValueError("explicit_and_single_img_input requires features_norm.")
+        
         if num_imgs < 1:
             raise ValueError("explicit_and_single_img_input requires at least 1 image.")
-        return (move(features_norm), images[0], missing_object_mask), labels
+            
+        return (
+            {
+                "kinematic": kinematic,
+                "bbox": bbox,
+                "object_type": object_type,
+                "object_visible_side": object_visible_side,
+                "tailight_status": tailight_status,
+                "images": images[0],
+                "missing_object_mask": missing_object_mask
+            },
+            labels
+        )
+
 
     # ----- Explicit + Multi-Image (automatically uses all images) -----
     elif feature_type == "explicit_and_multi_img_input":

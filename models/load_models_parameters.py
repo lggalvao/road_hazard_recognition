@@ -3,7 +3,8 @@ import torch.nn as nn
 from models import (
     Embedding_Temporal_LSTM,
     Embedding_Transformer,
-    CNN_LSTM
+    CNN_LSTM,
+    Embedding_CNN_LSTM
 )
 from utils.timing import timeit
 
@@ -74,6 +75,16 @@ def load_model(cfg, allsetDataloader):
             if cfg.training.stage == 1:
                 freeze_cnn(net)
 
+        else:
+            raise ValueError(f"Unsupported model {model_name}")
+    
+    elif feature_type == "explicit_and_single_img_input":
+        
+        if model_name == "Embedding_CNN_LSTM":
+            emb_net = Embedding_Temporal_LSTM.Embedding_Temporal_LSTM(cfg)
+            cnn_net = CNN_LSTM.CNN_LSTM(cfg)
+            net = Embedding_CNN_LSTM.Embedding_CNN_LSTM(cfg, emb_net, cnn_net)
+        
         else:
             raise ValueError(f"Unsupported model {model_name}")
 
@@ -294,7 +305,7 @@ def explicit_and_single_img_input_parameters(cfg):
     
     #LSTM parameters
     cfg.model.enc_hidden_size = 128
-    cfg.model.enc_input_seq_length = 13 #25 frames per second, hence 25 for a observation horizon of 1s.
+    cfg.model.enc_input_seq_length = 13 #25 frames per second, hence 25 for a observation horizon of 1s
     cfg.model.enc_layers_num = 1
     cfg.model.bi_directional = False
     
@@ -304,7 +315,7 @@ def explicit_and_single_img_input_parameters(cfg):
     cfg.training.clip_grad = 5
     
     #Hyperparameters
-    cfg.training.batch_size = 50
+    cfg.training.batch_size = 16
     cfg.training.num_epochs = 40
     cfg.training.optimizer = 'SGD' #SGD, Adam, AdamW
     cfg.training.learning_rate = 0.0002#Learnign rate for SGD(0.09), Adam(0.00006) using images
