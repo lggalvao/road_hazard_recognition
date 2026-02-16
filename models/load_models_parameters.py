@@ -113,8 +113,8 @@ def Trajectory_Embedding_LSTM_parameters(cfg):
     
     #LSTM parameters
     cfg.model.enc_hidden_size = cfg.model.output_embedding_size
-    cfg.model.enc_input_seq_length = 13 #25 frames per second, hence 25 for a observation horizon of 1
-    cfg.model.encoder_type = 'LSTM' #LSTM, GRU
+    cfg.model.enc_input_seq_length = 13  #25 frames per second, hence 25 for a observation horizon of 1
+    cfg.model.encoder_type = 'LSTM'  #LSTM, GRU
     cfg.model.enc_layers_num = 1
     cfg.model.bi_directional = False
 
@@ -125,9 +125,9 @@ def Trajectory_Embedding_LSTM_parameters(cfg):
 
     #Hyperparameters
     cfg.training.batch_size = 128
-    cfg.training.num_epochs = 40#15
-    cfg.training.optimizer = 'Adam' #SGD, Adam, AdamW
-    cfg.training.learning_rate = 0.0001#Learnign rate for SGD(0.09), Adam(0.00006) using images
+    cfg.training.num_epochs = 40  #15
+    cfg.training.optimizer = 'Adam'  #SGD, Adam, AdamW
+    cfg.training.learning_rate = 0.0001  #Learnign rate for SGD(0.09), Adam(0.00006) using images
     cfg.training.cnn_lr = 1e-5
     cfg.training.weight_decay = 0.0006
     cfg.training.step_size = 25
@@ -311,7 +311,7 @@ def explicit_and_single_img_input_parameters(cfg):
     cfg.training.clip_grad = 5
     
     #Hyperparameters
-    cfg.training.batch_size = 16
+    cfg.training.batch_size = 32
     cfg.training.num_epochs = 40
     cfg.training.optimizer = 'SGD' #SGD, Adam, AdamW
     cfg.training.learning_rate = 0.0002#Learnign rate for SGD(0.09), Adam(0.00006) using images
