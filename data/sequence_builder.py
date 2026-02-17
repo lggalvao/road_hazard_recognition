@@ -58,6 +58,7 @@ def create_temporal_sequences(
                 video_str = str(int(vid)).zfill(4)
                 frame_str = group["frame_n"].astype(int).astype(str).str.zfill(5)
             
+                print(cfg.system.root)
                 if cfg.system.root == 'C:\\':
                     base_root = img_path.str.slice(0, 46)
             
