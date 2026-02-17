@@ -63,6 +63,7 @@ def create_temporal_sequences(
                     base_root = img_path.str.slice(0, 46)
             
                 elif cfg.system.root == '/data/home/r2049970/':
+                    print("img_path", img_path)
                     base_root = img_path.str.slice(0, 59)
             
                 else:
