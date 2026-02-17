@@ -235,7 +235,7 @@ def single_img_input_parameters(cfg):
     cfg.training.clip_grad = 5
     
     #Hyperparameters
-    cfg.training.batch_size = 32 #CNN:50, Vision Transformer:20
+    cfg.training.batch_size = 16 #CNN:50, Vision Transformer:20
     cfg.training.num_epochs = 30
     cfg.training.optimizer = 'SGD' #SGD, Adam, AdamW
     cfg.training.learning_rate = 0.0001 #0.00009#Learning rate for SGD(0.09), Adam(0.00006) using images

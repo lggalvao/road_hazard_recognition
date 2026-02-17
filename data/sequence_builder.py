@@ -58,22 +58,22 @@ def create_temporal_sequences(
                 video_str = str(int(vid)).zfill(4)
                 frame_str = group["frame_n"].astype(int).astype(str).str.zfill(5)
             
-                print(cfg.system.root)
-                print("img_path", img_path)
-                
-                if cfg.system.root == 'C:/':
-                    base_root = img_path.str.slice(0, 46)
-            
-                elif cfg.system.root == '/data/home/r2049970/':
-                    
-                    base_root = img_path.str.slice(0, 63)
-                    print("base_root", base_root)
-            
-                else:
-                    raise ValueError("Unsupported root")
+                #print(cfg.system.root)
+                #print("img_path", img_path)
+                #
+                #if cfg.system.root == 'C:/':
+                #    base_root = img_path.str.slice(0, 46)
+                #
+                #elif cfg.system.root == '/data/home/r2049970/':
+                #    
+                #    base_root = img_path.str.slice(0, 63)
+                #    print("base_root", base_root)
+                #
+                #else:
+                #    raise ValueError("Unsupported root")
             
                 input_img = (
-                    base_root +
+                    cfg.data.dataset_folder_path +
                     "no_hazard_samples/" +
                     video_str +
                     f"/{cfg.data.input_img_type1}/" +
@@ -95,6 +95,7 @@ def create_temporal_sequences(
             input_img = img_path
 
         # Normalize slashes + dataset root
+        print("input_img", input_img)
         input_img = input_img.str.replace("\\", "/", regex=False)
         input_img = input_img.str.replace(
             "C:/Projects/RoadHazardDataset/frame_sequences/",
