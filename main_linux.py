@@ -51,10 +51,10 @@ if __name__ == '__main__':
     from utils.setup_hardware import get_devie
     from utils.timing import timeit
     import logging
-    from experiments import {
+    from experiments import (
         EXPERIMENTS_0,
         EXPERIMENTS_1
-    }
+    )
     from types import SimpleNamespace
 
     logger = setup_logging("./output/training.log", level=logging.INFO)
@@ -65,7 +65,7 @@ if __name__ == '__main__':
     cfg = Config()
     #cfg = load_config(config_file_path)
     cfg = build_paths(cfg)
-    cmd_args = get_cmd_args(
+    cmd_args = get_cmd_args()
 
     visible_side_arr = ['front_side', 'front_left_side', 'front_right_side', 'rear_side', 'rear_right_side', 'rear_left_side', 'left_side', 'right_side', 'UNK']
     tailight_status_arr = ['BOO', 'OLO', 'OLR', 'OOO', 'OOR', 'BLO', 'BLR', 'BOR', 'REVERSE', 'UNK']
@@ -85,10 +85,10 @@ if __name__ == '__main__':
 
     get_devie(cfg, cmd_args)
 
-    if cfg.system.device == 0:
+    if cmd_args.device == 0:
         exp = EXPERIMENTS_0
     
-    else cfg.system.device == 1:
+    elif cmd_args.device == 1:
         exp = EXPERIMENTS_1
     
     for exp_config in exp:
