@@ -61,7 +61,7 @@ def create_temporal_sequences(
                 if cfg.system.root == 'C:\\':
                     base_root = img_path.str.slice(0, 46)
             
-                elif cfg.system.root == '\\EEdata\\bllg002\\':
+                elif cfg.system.root == '/EEdata/bllg002/':
                     base_root = img_path.str.slice(0, 59)
             
                 else:
