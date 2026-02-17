@@ -186,7 +186,6 @@ def build_paths(cfg: Config):
     logger.info(f"[INFO] Detected root Dir: {cfg.system.root}")
 
     cfg.data.dataset_folder_path = cfg.system.root + "Projects/RoadHazardDataset_OK/frame_sequences/"
-    print("cfg.data.dataset_folder_path", cfg.data.dataset_folder_path)
 
     cfg.data.dataset_csv_file_path = cfg.data.dataset_folder_path  + "/all_roadHazardDataset_videos.csv"
     

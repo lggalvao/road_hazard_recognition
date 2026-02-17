@@ -66,7 +66,7 @@ def create_temporal_sequences(
             
                 elif cfg.system.root == '/data/home/r2049970/':
                     
-                    base_root = img_path.str.slice(0, 59)
+                    base_root = img_path.str.slice(0, 63)
                     print("base_root", base_root)
             
                 else:
