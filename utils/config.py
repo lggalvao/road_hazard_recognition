@@ -181,11 +181,13 @@ def load_config(path: str) -> Config:
 
 
 def build_paths(cfg: Config):
-    root = cfg.system.root.rstrip("/") + "/"
+    cfg.system.root = cfg.system.root.rstrip("\\") + "/"
     logger.info(f"Suggested DataLoader workers: {cfg.data.num_workers}")
-    logger.info(f"[INFO] Detected root Dir: {root}")
+    logger.info(f"[INFO] Detected root Dir: {cfg.system.root}")
 
-    cfg.data.dataset_folder_path = root + "Projects/RoadHazardDataset_OK/frame_sequences/"
+    cfg.data.dataset_folder_path = cfg.system.root + "Projects/RoadHazardDataset_OK/frame_sequences/"
+    print("cfg.data.dataset_folder_path", cfg.data.dataset_folder_path)
+
     cfg.data.dataset_csv_file_path = cfg.data.dataset_folder_path  + "/all_roadHazardDataset_videos.csv"
     
     cfg.data.no_hazard_samples_train_csv_file_path = cfg.data.dataset_folder_path + "manually_checked_no_hazard_samples_train.csv"
@@ -193,6 +195,6 @@ def build_paths(cfg: Config):
     
     cfg.data.train_csv_set_output_path = cfg.data.dataset_folder_path + 'roadHazardDataset_train_set.csv'
     cfg.data.test_csv_set_output_path = cfg.data.dataset_folder_path + 'roadHazardDataset_test_set.csv'
-    cfg.data.dataset_event_time_csv_file_path = root + "Projects/hazard_samples_preprocessing/hazard_samples_info.csv"
+    cfg.data.dataset_event_time_csv_file_path = cfg.system.root + "Projects/hazard_samples_preprocessing/hazard_samples_info.csv"
 
     return cfg
