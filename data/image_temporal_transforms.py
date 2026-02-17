@@ -32,7 +32,6 @@ def temporal_jittering_fixed(frames, T, drop_prob=0.1):
     """
     new_frames = []
     for f in frames:
-        #print(random.random())
         if random.random() < drop_prob:
             # Drop this frame
             print("frame dropped")
