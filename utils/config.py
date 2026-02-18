@@ -33,8 +33,6 @@ class DataConfig:
     sequence_stride: int = 1
     dataset_trim: int = 500
     with_no_hazard_samples_flag: bool = False
-    num_of_no_hazard_samples_train: int = 250
-    num_of_no_hazard_samples_test: int = 50
     
     train_videos_number: List[float] = field(default_factory=lambda: [4.0, 296.0])
     test_videos_number: List[float] = field(default_factory=lambda: [335.0, 30.0])

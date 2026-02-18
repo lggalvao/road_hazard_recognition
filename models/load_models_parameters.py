@@ -171,8 +171,6 @@ def explicit_feature_parameters(cfg):
     cfg.system.seed = 100
     cfg.data.num_of_input_img = None
     cfg.data.input_img_resize = None
-    cfg.data.num_of_no_hazard_samples_train = 250
-    cfg.data.num_of_no_hazard_samples_test = 50
     
     #Embedding parameters
     cfg.model.object_visible_side = True
@@ -200,17 +198,14 @@ def explicit_feature_parameters(cfg):
     cfg.training.learning_rate = 0.0001#Learnign rate for SGD(0.09), Adam(0.00006) using images
     cfg.training.cnn_lr = 1e-5
     cfg.training.weight_decay = 0.0009
-    cfg.training.step_size = 16
+    cfg.training.step_size = 30
     cfg.training.gamma = 0.1
     cfg.logging.comments = 'none'
 
 
 def single_img_input_parameters(cfg):
-    print('Using single_img_input_parameters')
     cfg.system.seed = 100
     cfg.data.num_of_input_img = None
-    cfg.data.num_of_no_hazard_samples_train = 250
-    cfg.data.num_of_no_hazard_samples_test = 50
     
     #CNN parameters
     cfg.data.input_img_resize = (224, 224) # (h, w) (128, 171) (112, 112)
@@ -235,23 +230,20 @@ def single_img_input_parameters(cfg):
     cfg.training.clip_grad = 5
     
     #Hyperparameters
-    cfg.training.batch_size = 16 #CNN:50, Vision Transformer:20
+    cfg.training.batch_size = 64 #CNN:50, Vision Transformer:20
     cfg.training.num_epochs = 30
     cfg.training.optimizer = 'SGD' #SGD, Adam, AdamW
     cfg.training.learning_rate = 0.0001 #0.00009#Learning rate for SGD(0.09), Adam(0.00006) using images
     cfg.training.cnn_lr = 1e-5
     cfg.training.weight_decay = 0.0001 #0.0001
-    cfg.training.step_size = 40
+    cfg.training.step_size = 30
     cfg.training.gamma = 0.01
     cfg.logging.comments = None
 
 
 def multi_img_input_parameters(cfg):
-    print('Using local_context_parameters')
     cfg.system.seed = 100
     cfg.data.num_of_input_img = 2
-    cfg.data.num_of_no_hazard_samples_train = 250
-    cfg.data.num_of_no_hazard_samples_test = 50
     
     #CNN parameters
     cfg.data.input_img_resize = (224, 224)
@@ -273,13 +265,13 @@ def multi_img_input_parameters(cfg):
     cfg.training.clip_grad = 5
     
     #Hyper-parameters
-    cfg.training.batch_size = 50
-    cfg.training.num_epochs = 13
+    cfg.training.batch_size = 64
+    cfg.training.num_epochs = 30
     cfg.training.optimizer = 'SGD' #SGD, Adam, AdamW
     cfg.training.learning_rate = 0.0003#Learning rate for SGD(0.09), Adam(0.00006) using images
     cfg.training.cnn_lr = 1e-5
     cfg.training.weight_decay = 0.0001 #0.0001
-    cfg.training.step_size = 4
+    cfg.training.step_size = 30
     cfg.training.gamma = 0.33
     cfg.logging.comments = 'none'
 
@@ -287,8 +279,6 @@ def multi_img_input_parameters(cfg):
 def explicit_and_single_img_input_parameters(cfg):
     cfg.system.seed = 100
     cfg.data.num_of_input_img = 'Not in use'
-    cfg.data.num_of_no_hazard_samples_train = 400
-    cfg.data.num_of_no_hazard_samples_test = 100
     
     #CNN parameters
     cfg.data.input_img_resize = (224,224)
@@ -311,7 +301,7 @@ def explicit_and_single_img_input_parameters(cfg):
     cfg.training.clip_grad = 5
     
     #Hyperparameters
-    cfg.training.batch_size = 32
+    cfg.training.batch_size = 64
     cfg.training.num_epochs = 40
     cfg.training.optimizer = 'SGD' #SGD, Adam, AdamW
     cfg.training.learning_rate = 0.0002#Learnign rate for SGD(0.09), Adam(0.00006) using images
@@ -325,8 +315,6 @@ def explicit_and_single_img_input_parameters(cfg):
 def explicit_and_multi_img_input_parameters(cfg):
     cfg.system.seed = 100
     cfg.data.num_of_input_img = 2
-    cfg.data.num_of_no_hazard_samples_train = 250
-    cfg.data.num_of_no_hazard_samples_test = 50
 
     #CNN parameters
     cfg.data.input_img_resize = (224,224) # (h, w) (128, 171) (112, 112)
@@ -349,13 +337,13 @@ def explicit_and_multi_img_input_parameters(cfg):
     cfg.training.clip_grad = 5
     
     #Hyperparameters
-    cfg.training.batch_size = 50
-    cfg.training.num_epochs = 15#25
+    cfg.training.batch_size = 64
+    cfg.training.num_epochs = 40#25
     cfg.training.optimizer = 'SGD' #SGD, Adam, AdamW
     cfg.training.learning_rate = 0.0003 #Learnign rate for SGD(0.09), Adam(0.00006) using images
     cfg.training.cnn_lr = 1e-5
     cfg.training.weight_decay = 0.0001
-    cfg.training.step_size = 15
+    cfg.training.step_size = 40
     cfg.training.gamma = 0.1
     cfg.logging.comments = 'none'
 

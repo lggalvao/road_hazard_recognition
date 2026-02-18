@@ -110,13 +110,12 @@ class RoadHazardDataset(Dataset):
             T.ConvertImageDtype(torch.float32),  # converts uint8 → float32 AND divides by 255
         ])
         
-        #if cfg.data.with_no_hazard_samples_flag:
-        #    data = add_no_hazard_samples(cfg, data)
-        #data.to_csv("./debug.csv", index=False)
-        
          # ---- Keep only the target object ----
         data = data.loc[(data['ID'] == data['target_obj_id'])]
         data = data.reset_index(drop = True)
+        
+        if cfg.data.split_dataset:
+            split_roadHazardDataset(cfg, data)
 
         # ---- Apply split ----
         logger.info("Filtering Data by Dataset Splitting")
@@ -172,10 +171,11 @@ class RoadHazardDataset(Dataset):
 
     def _filter_by_split(self, data: pd.DataFrame, split_df: pd.DataFrame) -> pd.DataFrame:
         """Filter rows by the provided split CSV."""
-        if "new_clip_name" in split_df.columns:
-            valid_videos = set(split_df["new_clip_name"].unique())
+        if "video_n" in split_df.columns:
+            valid_videos = set(split_df["video_n"].unique())
             return data[data["video_n"].isin(valid_videos)].reset_index(drop=True)
-        return data
+        else:
+            print("Split data frame does not contain the column video_n")
 
     # -----------------------------
     # Standard Dataset API
@@ -629,35 +629,33 @@ def create_or_load_dataset___(cfg):
     return allsetDataloader
 
 
-def split_roadHazardDataset(cfg):
+def split_roadHazardDataset(cfg, data):
     print('\n-----------Splitting Dataset-----------')
 
     #right_cut_in: 113; object_stopping: 63; left_cut_in: 61; object_crossing: 60; object_turning: 51; object_hazard_light_on: 48; red_crossing_traffic_light: 40; object_meeting: 38; object_emerging: 37; pedestrian_near_parked_vehicles: 34; road_works: 34; object_reversing: 20; object_pulling_up: 14; object_coming_out: 11;
 
-    dataset_timings_data_frame = pd.read_csv(cfg.data.dataset_event_time_csv_file_path)
+    dataset_timings_data_frame = data[['video_n','hazard_type_name', 'hazard_type_int']]  #pd.read_csv(cfg.data.dataset_event_time_csv_file_path)
+    dataset_timings_data_frame = dataset_timings_data_frame.drop_duplicates(subset='video_n')
     
     if cfg.model.classes_type == 'literature_classes':
         #5 classes: Classes that are studied by the literature
-        hazard_list = ['right_cut_in', 'object_stopping', 'left_cut_in', 'object_crossing', 'object_turning']
-
-    elif cfg.model.classes_type == '20_or_more':
-        #12 classes: all classes that have >= 34 samples
-        hazard_list = ['right_cut_in', 'object_stopping', 'left_cut_in', 'object_crossing', 'object_turning', 'object_hazard_light_on', 'red_crossing_traffic_light', 'object_meeting', 'object_emerging', 'pedestrian_near_parked_vehicles', 'road_works', 'object_reversing']
+        hazard_list = ['right_cut_in', 'object_stopping', 'left_cut_in', 'object_crossing', 'object_turning', 'no_hazard']
+    
+    elif cfg.model.classes_type == 'motion_towards':
+        #10 classes: Classes that are trained by the explicit model only.
+        hazard_list = ['right_cut_in', 'object_stopping', 'left_cut_in', 'object_crossing', 'object_turning', 'object_meeting', 'object_emerging', 'object_reversing', 'object_pulling_up', 'object_coming_out', 'no_hazard']
 
     elif cfg.model.classes_type == 'all_classes':
         #14 classes: [All available classes]
-        hazard_list = ['right_cut_in', 'object_stopping', 'left_cut_in', 'object_crossing', 'object_turning', 'object_hazard_light_on', 'red_crossing_traffic_light', 'object_meeting', 'object_emerging', 'pedestrian_near_parked_vehicles', 'road_works', 'object_reversing', 'object_pulling_up', 'object_coming_out']
+        hazard_list = ['right_cut_in', 'object_stopping', 'left_cut_in', 'object_crossing', 'object_turning', 'object_hazard_light_on', 'red_crossing_traffic_light', 'object_meeting', 'object_emerging', 'pedestrian_near_parked_vehicles', 'road_works', 'object_reversing', 'object_pulling_up', 'object_coming_out', 'no_hazard']
 
-    elif cfg.model.classes_type == 'motion_towards':
-        #10 classes: Classes that are trained by the explicit model only.
-        hazard_list = ['right_cut_in', 'object_stopping', 'left_cut_in', 'object_crossing', 'object_turning', 'object_meeting', 'object_emerging', 'object_reversing', 'object_pulling_up', 'object_coming_out']
+
     
     road_hazard_train = pd.DataFrame()
     road_hazard_test = pd.DataFrame()
-    #dataset_timings_data_frame = dataset_timings_data_frame[dataset_timings_data_frame['put_all_samples_together_done'] == True]
-    for nu_hazard in dataset_timings_data_frame.hazard_type.unique():
-        if nu_hazard in hazard_list: #and len(dataset_timings_data_frame[dataset_timings_data_frame['hazard_type'] == nu_hazard]) >= 18:
-            temp_hazard_df = dataset_timings_data_frame[dataset_timings_data_frame['hazard_type'] == nu_hazard]
+    for nu_hazard in dataset_timings_data_frame.hazard_type_name.unique():
+        if nu_hazard in hazard_list:
+            temp_hazard_df = dataset_timings_data_frame[dataset_timings_data_frame['hazard_type_name'] == nu_hazard]
 
             if len(temp_hazard_df) > cfg.data.dataset_trim:
                 temp_hazard_df = temp_hazard_df.sample(n=cfg.data.dataset_trim, random_state = 1)
@@ -665,42 +663,22 @@ def split_roadHazardDataset(cfg):
             road_hazard_train = pd.concat([road_hazard_train, train])
             road_hazard_test = pd.concat([road_hazard_test, test])
 
-    if cfg.data.with_no_hazard_samples_flag == True:
-        # Merge the hazard samples with the no hazard samples
-        road_hazard_train = road_hazard_train[['new_clip_name','hazard_type', 'hazard_type_int']]
-        no_hazard_samples_train_set = pd.read_csv(cfg.data.dataset_folder_path + "manually_checked_no_hazard_samples_train.csv")
-        no_hazard_samples_train_set = no_hazard_samples_train_set.video_n.unique()
-        no_hazard_samples_train_set = pd.DataFrame(no_hazard_samples_train_set, columns=['new_clip_name']) 
-        no_hazard_samples_train_set['hazard_type'] = 'no_hazard'
-        no_hazard_samples_train_set['hazard_type_int'] = 18
-        no_hazard_samples_train_set = no_hazard_samples_train_set.sample(n=cfg.data.num_of_no_hazard_samples_train, random_state = 1)
-        road_hazard_train = pd.concat([road_hazard_train, no_hazard_samples_train_set])
-        
-        road_hazard_test = road_hazard_test[['new_clip_name','hazard_type', 'hazard_type_int']]
-        no_hazard_samples_test_set = pd.read_csv(cfg.data.dataset_folder_path + "manually_checked_no_hazard_samples_test.csv")
-        no_hazard_samples_test_set = no_hazard_samples_test_set.video_n.unique()
-        no_hazard_samples_test_set = pd.DataFrame(no_hazard_samples_test_set, columns=['new_clip_name']) 
-        no_hazard_samples_test_set['hazard_type'] = 'no_hazard'
-        no_hazard_samples_test_set['hazard_type_int'] = 18
-        no_hazard_samples_test_set = no_hazard_samples_test_set.sample(n=cfg.data.num_of_no_hazard_samples_test, random_state = 1)
-        road_hazard_test = pd.concat([road_hazard_test, no_hazard_samples_test_set])
-    
-    cfg.model.num_classes = len(road_hazard_train.hazard_type.unique()) #+1 to consider the sequences that are not a hazard
+    cfg.model.num_classes = len(road_hazard_train.hazard_type_name.unique()) #+1 to consider the sequences that are not a hazard
     
     le = LabelEncoder()
-    le.fit(road_hazard_train.hazard_type.unique())
+    le.fit(road_hazard_train.hazard_type_name.unique())
     cfg.model.classes_name = le.classes_
     
-    cfg.data.train_videos_number = road_hazard_train.new_clip_name.unique()
-    cfg.data.train_total_video_samples = len(road_hazard_train.new_clip_name.unique())
-    cfg.data.test_videos_number = road_hazard_test.new_clip_name.unique()
-    cfg.data.test_total_video_samples = len(road_hazard_test.new_clip_name.unique())
+    cfg.data.train_videos_number = road_hazard_train.video_n.unique()
+    cfg.data.train_total_video_samples = len(road_hazard_train.video_n.unique())
+    cfg.data.test_videos_number = road_hazard_test.video_n.unique()
+    cfg.data.test_total_video_samples = len(road_hazard_test.video_n.unique())
 
-    for hazard_name in road_hazard_train.hazard_type.unique():
-        cfg.data.train_video_samples_per_class[hazard_name] = len(road_hazard_train[road_hazard_train['hazard_type'] == hazard_name])
+    for hazard_name in road_hazard_train.hazard_type_name.unique():
+        cfg.data.train_video_samples_per_class[hazard_name] = len(road_hazard_train[road_hazard_train['hazard_type_name'] == hazard_name])
 
-    for hazard_name in road_hazard_test.hazard_type.unique():
-        cfg.data.test_video_samples_per_class[hazard_name] = len(road_hazard_test[road_hazard_test['hazard_type'] == hazard_name])
+    for hazard_name in road_hazard_test.hazard_type_name.unique():
+        cfg.data.test_video_samples_per_class[hazard_name] = len(road_hazard_test[road_hazard_test['hazard_type_name'] == hazard_name])
 
     road_hazard_train.to_csv(cfg.data.train_csv_set_output_path, index=False)
     road_hazard_test.to_csv(cfg.data.test_csv_set_output_path, index=False)
