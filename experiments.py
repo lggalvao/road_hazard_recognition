@@ -140,5 +140,18 @@ EXPERIMENTS_1 = [
         "loss_function": "FocalLoss",
         "comments": None
     },
+    {
+        "input_feature_type": "explicit_and_single_img_input",
+        "object_visible_side": None,
+        "tailight_status": None,
+        "model": "Embedding_CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_0",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "loss_function": "FocalLoss",
+        "comments": None
+    },
 
 ]

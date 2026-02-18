@@ -301,7 +301,7 @@ def explicit_and_single_img_input_parameters(cfg):
     cfg.training.clip_grad = 5
     
     #Hyperparameters
-    cfg.training.batch_size = 64
+    cfg.training.batch_size = 32
     cfg.training.num_epochs = 40
     cfg.training.optimizer = 'SGD' #SGD, Adam, AdamW
     cfg.training.learning_rate = 0.0002#Learnign rate for SGD(0.09), Adam(0.00006) using images
@@ -338,7 +338,7 @@ def explicit_and_multi_img_input_parameters(cfg):
     
     #Hyperparameters
     cfg.training.batch_size = 64
-    cfg.training.num_epochs = 40#25
+    cfg.training.num_epochs = 40 #25
     cfg.training.optimizer = 'SGD' #SGD, Adam, AdamW
     cfg.training.learning_rate = 0.0003 #Learnign rate for SGD(0.09), Adam(0.00006) using images
     cfg.training.cnn_lr = 1e-5
