@@ -56,6 +56,11 @@ if __name__ == '__main__':
         EXPERIMENTS_1
     )
     from types import SimpleNamespace
+    
+    import torch
+
+    torch.backends.cuda.matmul.allow_tf32 = True
+    torch.backends.cudnn.allow_tf32 = True
 
     logger = setup_logging("./output/training.log", level=logging.INFO)
     logger = logging.getLogger("hazard_recognition")
