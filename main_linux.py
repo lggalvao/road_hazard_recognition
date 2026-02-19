@@ -117,6 +117,7 @@ if __name__ == '__main__':
         cfg.model.enc_input_seq_length = exp_config.enc_input_seq_length
         cfg.logging.comments = exp_config.comments
         cfg.training.stage = exp_config.stage
+        cfg.training.batch_size = exp_config.batch_size
         
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
         

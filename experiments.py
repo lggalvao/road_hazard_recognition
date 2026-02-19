@@ -12,6 +12,7 @@ EXPERIMENTS_0 = [
         "classes_type": "literature_classes",
         "stage": 0,
         "loss_function": "FocalLoss",
+        "batch_size": 32,
         "comments": None
     },
     {
@@ -25,6 +26,63 @@ EXPERIMENTS_0 = [
         "classes_type": "literature_classes",
         "stage": 0,
         "loss_function": "FocalLoss",
+        "batch_size": 32,
+        "comments": None
+    }
+    {
+        "input_feature_type": "single_img_input",
+        "object_visible_side": None,
+        "tailight_status": None,
+        "model": "CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_0",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "loss_function": "FocalLoss",
+        "batch_size": 16,
+        "comments": None
+    },
+    {
+        "input_feature_type": "single_img_input",
+        "object_visible_side": None,
+        "tailight_status": None,
+        "model": "CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_1",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "loss_function": "FocalLoss",
+        "batch_size": 16,
+        "comments": None
+    }
+    {
+        "input_feature_type": "single_img_input",
+        "object_visible_side": None,
+        "tailight_status": None,
+        "model": "CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_0",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "loss_function": "CELoss",
+        "batch_size": 16,
+        "comments": None
+    },
+    {
+        "input_feature_type": "single_img_input",
+        "object_visible_side": None,
+        "tailight_status": None,
+        "model": "CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_1",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "loss_function": "CELoss",
+        "batch_size": 16,
         "comments": None
     }
     # EXPLICIT FFEATURES
@@ -138,6 +196,7 @@ EXPERIMENTS_1 = [
         "classes_type": "literature_classes",
         "stage": 0,
         "loss_function": "FocalLoss",
+        "batch_size": 16,
         "comments": None
     },
     {
@@ -151,6 +210,63 @@ EXPERIMENTS_1 = [
         "classes_type": "literature_classes",
         "stage": 0,
         "loss_function": "FocalLoss",
+        "batch_size": 16,
+        "comments": None
+    },
+    {
+        "input_feature_type": "explicit_and_single_img_input",
+        "object_visible_side": None,
+        "tailight_status": None,
+        "model": "Embedding_CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_1",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "loss_function": "FocalLoss",
+        "batch_size": 32,
+        "comments": None
+    },
+    {
+        "input_feature_type": "explicit_and_single_img_input",
+        "object_visible_side": None,
+        "tailight_status": None,
+        "model": "Embedding_CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_0",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "loss_function": "FocalLoss",
+        "batch_size": 32,
+        "comments": None
+    },
+    {
+        "input_feature_type": "explicit_and_single_img_input",
+        "object_visible_side": None,
+        "tailight_status": None,
+        "model": "Embedding_CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_1",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "loss_function": "CELoss",
+        "batch_size": 32,
+        "comments": None
+    },
+    {
+        "input_feature_type": "explicit_and_single_img_input",
+        "object_visible_side": None,
+        "tailight_status": None,
+        "model": "Embedding_CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_0",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "loss_function": "CELoss",
+        "batch_size": 32,
         "comments": None
     },
 
