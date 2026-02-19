@@ -28,7 +28,7 @@ EXPERIMENTS_0 = [
         "loss_function": "FocalLoss",
         "batch_size": 32,
         "comments": None
-    }
+    },
     {
         "input_feature_type": "single_img_input",
         "object_visible_side": None,
@@ -56,7 +56,7 @@ EXPERIMENTS_0 = [
         "loss_function": "FocalLoss",
         "batch_size": 16,
         "comments": None
-    }
+    },
     {
         "input_feature_type": "single_img_input",
         "object_visible_side": None,
