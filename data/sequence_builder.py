@@ -94,6 +94,12 @@ def create_temporal_sequences(
             regex=False
         )
         
+        input_img = input_img.str.replace(
+            "/home/ubuntu/Projects/RoadHazardDataset/frame_sequences/",
+            cfg.data.dataset_folder_path,
+            regex=False
+        )
+        
         # Multi-camera handling
         img_paths_2 = None
         img_paths_3 = None
