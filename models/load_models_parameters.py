@@ -97,6 +97,7 @@ def load_model(cfg, allsetDataloader):
     # 5. Move to device
     # ----------------------------------------------------------------------
     net = net.to(cfg.system.device)
+    print("--------------->", next(net.parameters()).dtype)
     return net
 
 
