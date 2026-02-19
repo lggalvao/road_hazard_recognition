@@ -133,12 +133,14 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
         start = time.time()
         cpu_dataloader_time += (start - end)
 
+        torch.cuda.synchronize()
         t1 = time.time()
         inputs, targets = prepare_inputs(data, cfg)
         t2 = time.time()
         prepare_inputs_time += (t2 - t1)
         
         inputs = move_to_device(inputs, cfg.system.device)
+        print(inputs["images"].device)
         
         if cfg.data.input_feature_type != "explicit_feature":
             t1 = time.time()
@@ -249,8 +251,6 @@ def estimate_training_time_flops(model, batch_size, gpu_type="A100", safety_fact
         "estimated_time_per_step_sec": time_per_step
     }
 
-
-import kornia.augmentation as K
 
 def move_to_device(batch, device):
     if torch.is_tensor(batch):
