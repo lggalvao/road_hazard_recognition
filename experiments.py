@@ -13,7 +13,7 @@ EXPERIMENTS_0 = [
         "stage": 0,
         "loss_function": "FocalLoss",
         "batch_size": 64,
-        "cached_dataset": True
+        "cached_dataset": True,
         "comments": None
     },
     {
@@ -28,7 +28,7 @@ EXPERIMENTS_0 = [
         "stage": 0,
         "loss_function": "FocalLoss",
         "batch_size": 64,
-        "cached_dataset": True
+        "cached_dataset": True,
         "comments": None
     },
 
@@ -144,7 +144,7 @@ EXPERIMENTS_1 = [
         "stage": 0,
         "loss_function": "FocalLoss",
         "batch_size": 64,
-        "cached_dataset": False
+        "cached_dataset": False,
         "comments": None
     },
     #{
