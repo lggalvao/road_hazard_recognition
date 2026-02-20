@@ -78,7 +78,7 @@ if __name__ == '__main__':
     cfg.system.multi_gpu = False
     cfg.data.with_no_hazard_samples_flag = True
     cfg.data.sequence_stride = 1
-    cfg.data.dataset_trim = 500
+    cfg.data.dataset_trim = 10
     cfg.model.freeze_strategy = "head"
     cfg.training.ts_augme = False
     cfg.loss.focal_loss_gamma = 1
@@ -123,6 +123,7 @@ if __name__ == '__main__':
         cfg.logging.comments = exp_config.comments
         cfg.training.stage = exp_config.stage
         cfg.training.batch_size = exp_config.batch_size
+        cfg.data.cached_dataset = exp_config.cached_dataset
         
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
         

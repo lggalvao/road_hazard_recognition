@@ -485,6 +485,9 @@ def prepare_inputs(batch, cfg):
         if num_imgs < 1:
             raise ValueError("single_img_input requires at least 1 image.")
             
+        if not cfg.data.cached_dataset:
+            images = images[0]
+        
         return (
             {
                 "images": images,
