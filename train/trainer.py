@@ -10,6 +10,7 @@ import torch.nn as nn
 from utils.timing import timeit, print_average_timings
 import time
 import kornia.augmentation as K
+import torch.profiler
 
 class GPUTransform(torch.nn.Module):
     def __init__(self):
@@ -24,37 +25,25 @@ class GPUTransform(torch.nn.Module):
                 hue=0.02,
                 p=0.8
             ),
-            #K.RandomGaussianBlur(
-            #    kernel_size=(3,3),
-            #    sigma=(0.1,1.0),
-            #    p=0.3
-            #),
         )
 
         self.normalize = K.Normalize(
             mean=torch.tensor([0.485,0.456,0.406]),
             std=torch.tensor([0.229,0.224,0.225])
         )
-        
-    def forward(self, x):
-        # x: (B, T, C, H, W)
-    
+
+    def forward(self, x, is_train=True):
+
         B, T, C, H, W = x.shape
-    
         x = x.float() / 255.0
-    
-        # Collapse B and T
         x = x.view(B * T, C, H, W)
-    
-        # Apply all augmentations at once
-        x = self.augs(x)
-    
-        # Normalize
+
+        if is_train:
+            x = self.augs(x)
+
         x = self.normalize(x)
-    
-        # Restore shape
+
         x = x.view(B, T, C, H, W)
-    
         return x
 
 
@@ -72,6 +61,18 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
  
         for phase in ['train', 'val']:
             is_train = (phase == 'train')
+            
+            if epoch == 0:
+                # Function to inspect CPU and GPU usage
+                run_epoch_profile(
+                    net,
+                    allsetDataloader[phase],
+                    optimizer,
+                    criterion,
+                    cfg,
+                    is_train,
+                    gpu_transform
+                )
             
             avg_loss, targets, preds = run_epoch(
                 net,
@@ -116,48 +117,25 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
 def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transform):
 
     net.train() if is_train else net.eval()
-
-    cpu_dataloader_time = 0.0
-    prepare_inputs_time = 0.0
-    gpu_transform_time = 0.0
-    gpu_time = 0.0
     epoch_loss = 0.0
 
     epoch_preds, epoch_targets = [], []
 
-    end = time.time()
-
     for data in tqdm(dataloader, desc="Training..." if is_train else "Validating..."):
 
-        # ---- DataLoader wait time ----
-        start = time.time()
-        cpu_dataloader_time += (start - end)
-
-        torch.cuda.synchronize()
-        t1 = time.time()
         inputs, targets = prepare_inputs(data, cfg)
-        t2 = time.time()
-        prepare_inputs_time += (t2 - t1)
         
+        targets = move_to_device(targets, cfg.system.device)
         inputs = move_to_device(inputs, cfg.system.device)
-        print(inputs["images"].device)
         
         if cfg.data.input_feature_type != "explicit_feature":
-            t1 = time.time()
-            inputs["images"] = gpu_transform(inputs["images"])
-            t2 = time.time()
-            gpu_transform_time += (t2 - t1)
+            inputs["images"] = gpu_transform(inputs["images"], is_train)
 
         if is_train:
             optimizer.zero_grad()
 
-        # ---- GPU compute time ----
-        #torch.cuda.synchronize()
-        t1 = time.time()
-
         with torch.set_grad_enabled(is_train):
             preds = forward_pass(net, inputs)
-            #targets = torch.argmax(targets.float(), dim=1)
             loss = compute_loss(criterion, preds, targets, cfg)
 
             if is_train:
@@ -165,25 +143,64 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
                 torch.nn.utils.clip_grad_norm_(net.parameters(), cfg.training.clip_grad)
                 optimizer.step()
 
-        #torch.cuda.synchronize()
-        t2 = time.time()
-        gpu_time += (t2 - t1)
-
         epoch_loss += loss.item()
 
         # ---- Metrics ----
         epoch_targets.extend(targets.detach().cpu().numpy())
         epoch_preds.extend(torch.argmax(preds, dim=1).detach().cpu().numpy())
 
-        end = time.time()
-
-    print(f"\nEpoch DataLoader wait time: {cpu_dataloader_time:.2f}s")
-    print(f"Epoch Prepare inputs time: {prepare_inputs_time:.2f}s")
-    print(f"Epoch GPU transform compute time: {gpu_transform_time:.2f}s")
-    print(f"Epoch GPU compute time: {gpu_time:.2f}s")
-
     avg_loss = epoch_loss / len(dataloader)
     return avg_loss, epoch_targets, epoch_preds
+
+
+def run_epoch_profile(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transform):
+
+    net.train() if is_train else net.eval()
+
+    max_steps = 100
+
+    with torch.profiler.profile(
+        activities=[
+            torch.profiler.ProfilerActivity.CPU,
+            torch.profiler.ProfilerActivity.CUDA,
+        ],
+        schedule=torch.profiler.schedule(
+            wait=0,
+            warmup=10,
+            active=90,
+            repeat=1
+        ),
+        record_shapes=True,
+        profile_memory=True,
+    ) as prof:
+
+        for step, data in enumerate(dataloader):
+
+            inputs, targets = prepare_inputs(data, cfg)
+            targets = move_to_device(targets, cfg.system.device)
+            inputs = move_to_device(inputs, cfg.system.device)
+
+            if cfg.data.input_feature_type != "explicit_feature":
+                inputs["images"] = gpu_transform(inputs["images"], is_train)
+
+            if is_train:
+                optimizer.zero_grad()
+
+            with torch.set_grad_enabled(is_train):
+                preds = forward_pass(net, inputs)
+                loss = compute_loss(criterion, preds, targets, cfg)
+
+                if is_train:
+                    loss.backward()
+                    optimizer.step()
+
+            prof.step()
+
+            if step >= max_steps - 1:
+                break
+
+    print(prof.key_averages().table(sort_by="cuda_time_total"))
+
 
 
 @timeit

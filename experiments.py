@@ -6,13 +6,13 @@ EXPERIMENTS_0 = [
         "object_visible_side": None,
         "tailight_status": None,
         "model": "CNN_LSTM",
-        "input_img_type1": "img_local_context_ROI_0",
+        "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",
         "stage": 0,
         "loss_function": "FocalLoss",
-        "batch_size": 32,
+        "batch_size": 64,
         "comments": None
     },
     {

@@ -64,10 +64,13 @@ class DataConfig:
         persistent_workers = False
         prefetch_factor = None
     else:
-        num_workers: int = int(os.cpu_count() * 0.5)
+        num_workers: int = int(os.cpu_count() * 0.7)
         pin_memory = True
         persistent_workers = True
         prefetch_factor = 2
+    
+    cached_dataset: bool = True
+    cached_dataset_dir_path: str = ""
 
 
 
@@ -193,5 +196,7 @@ def build_paths(cfg: Config):
     cfg.data.train_csv_set_output_path = cfg.data.dataset_folder_path + 'roadHazardDataset_train_set.csv'
     cfg.data.test_csv_set_output_path = cfg.data.dataset_folder_path + 'roadHazardDataset_test_set.csv'
     cfg.data.dataset_event_time_csv_file_path = cfg.system.root + "Projects/hazard_samples_preprocessing/hazard_samples_info.csv"
+    
+    cfg.data.cached_dataset_dir_path = "./output/dataset_cache"
 
     return cfg

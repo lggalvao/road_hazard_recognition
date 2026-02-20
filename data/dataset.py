@@ -45,51 +45,41 @@ from collections import Counter
 from sklearn.preprocessing import LabelEncoder
 import torch.nn as nn
 import torchvision.transforms.v2 as T
+import os
+import torch
+from torchvision.io import read_image
+from tqdm import tqdm
 
 logger = logging.getLogger("hazard_recognition")
 
 
-#@timeit
-class RoadHazardDataset(Dataset):
-    """
-    PyTorch Dataset for the Road Hazard Recognition project.
+# Keys to implement normalization
+NUMERIC_KEYS = [
+    "x_n", "y_n",
+    "w_n", "h_n",
+    "bbox_area_n",
+    "vx_n", "vy_n",
+    "ax_n", "ay_n",
+    "speed",
+    "theta", "dtheta",
+    "scale", "dscale",
+    "aspect", "daspect",
+    "border_dist"
+]
 
-    Args:
-        cfg: Configuration object.
-        dataset_split_path (str): Path to the CSV defining the dataset split.
-        phase (str): One of ["train", "val", "test"].
-    """
 
-    # Keys to implement normalization
-    NUMERIC_KEYS = [
-        "x_n", "y_n",
-        "w_n", "h_n",
-        "bbox_area_n",
-        "vx_n", "vy_n",
-        "ax_n", "ay_n",
-        "speed",
-        "theta", "dtheta",
-        "scale", "dscale",
-        "aspect", "daspect",
-        "border_dist"
-    ]
+def _filter_by_split(data: pd.DataFrame, split_df: pd.DataFrame) -> pd.DataFrame:
+    """Filter rows by the provided split CSV."""
+    if "video_n" in split_df.columns:
+        valid_videos = set(split_df["video_n"].unique())
+        return data[data["video_n"].isin(valid_videos)].reset_index(drop=True)
+    else:
+        print("Split data frame does not contain the column video_n")
 
-    @timeit
-    def __init__(self, cfg, dataset_split_path: str, phase: str):
-        self.cfg = cfg
-        self.phase = phase
-        self.root = Path(cfg.system.root)
-        self.t_h = cfg.model.enc_input_seq_length
-        self.num_input_imgs = cfg.data.num_of_input_img
-        self.input_feature_type = cfg.data.input_feature_type
-        self.stride = cfg.data.sequence_stride
-        self.input_img_resize = cfg.data.input_img_resize
-        self.ts_augme = cfg.training.ts_augme
-        self.model = cfg.model.model
-
+def preprocess_sequences(cfg, phase):
         # ---- Load and prepare data ----
         data = load_raw_data(cfg)
-
+        
         # This must be done before filtering the data becasue if using small number
         #of clsses might not get all the object classes
         cfg.model.num_object_types = len(data["object_type_consecutive"].unique())
@@ -99,18 +89,12 @@ class RoadHazardDataset(Dataset):
         cfg.model.emb_dim_visible_side = 2
         cfg.model.emb_dim_tailight_status = 5
         
-        self.train_img_transforms = T.Compose([
-            T.Resize((224, 224)),
-            T.RandomHorizontalFlip(p=0.5),
-            T.ColorJitter(0.15, 0.15, 0.1, 0.02),
-            T.ConvertImageDtype(torch.float32),
-            #T.Normalize(mean, std),
-        ])
-        self.test_img_transforms = T.Compose([
-            T.ConvertImageDtype(torch.float32),  # converts uint8 → float32 AND divides by 255
-        ])
+        if phase == "train":
+            dataset_split_path = cfg.data.train_csv_set_output_path
+        else:
+            dataset_split_path = cfg.data.test_csv_set_output_path
         
-         # ---- Keep only the target object ----
+        # ---- Keep only the target object ----
         data = data.loc[(data['ID'] == data['target_obj_id'])]
         data = data.reset_index(drop = True)
         
@@ -120,12 +104,12 @@ class RoadHazardDataset(Dataset):
         # ---- Apply split ----
         logger.info("Filtering Data by Dataset Splitting")
         split_df = pd.read_csv(dataset_split_path)
-        data = self._filter_by_split(data, split_df)
+        data = _filter_by_split(data, split_df)
 
         # ---- Normalize numeric columns ----
         logger.info("Normalizaing Dataset")
-        norm_info = save_or_load_normalization(cfg, data, phase, self.NUMERIC_KEYS)
-        data = apply_normalization(data, norm_info, self.NUMERIC_KEYS)
+        norm_info = save_or_load_normalization(cfg, data, phase, NUMERIC_KEYS)
+        data = apply_normalization(data, norm_info, NUMERIC_KEYS)
         
         # build features here (args could be cfg.model and cfg flags)
         args_dict = {
@@ -152,30 +136,108 @@ class RoadHazardDataset(Dataset):
         
         # ---- Create temporal sequences ----
         logger.info("Creating Temporal Sequences")
-        self.samples = create_temporal_sequences(
+        samples = create_temporal_sequences(
             cfg,
             df=data,
-            seq_len=self.t_h,
-            stride=self.stride,
+            seq_len=cfg.model.enc_input_seq_length,
+            stride=cfg.data.sequence_stride,
             label_key="hazard_type_int",
-            phase = self.phase
+            phase = phase
         )
         
         logger.info("Get Samples Statistics")
         get_sequence_samples_info(
-            self.cfg,
-            self.phase,
-            self.samples
+            cfg,
+            phase,
+            samples
         )
+        
+
+        (cfg.loss.class_weights,
+         cfg.data.sampler) = prepare_sampler_and_weights_from_sequences(
+            cfg,
+            samples,
+            label_key='true_hazard',
+            device=cfg.system.device,
+            loss_function=cfg.loss.loss_function,
+            classes_name = cfg.model.classes_name
+        )
+        
+        if cfg.data.cached_dataset:
+            cache_sequences_tensor(cfg, samples, phase)
+        
+        return samples
 
 
-    def _filter_by_split(self, data: pd.DataFrame, split_df: pd.DataFrame) -> pd.DataFrame:
-        """Filter rows by the provided split CSV."""
-        if "video_n" in split_df.columns:
-            valid_videos = set(split_df["video_n"].unique())
-            return data[data["video_n"].isin(valid_videos)].reset_index(drop=True)
+def cache_sequences_tensor(cfg, samples, phase):
+
+    cache_root = Path(cfg.data.cached_dataset_dir_path) / phase
+    cache_root.mkdir(parents=True, exist_ok=True)
+
+    for idx, seq in enumerate(tqdm(samples, desc=f"Preprocessing {phase}")):
+
+        save_path = cache_root / f"seq_{idx:06d}.pt"
+
+        if save_path.exists():
+            continue
+
+        # ---- Build image clip ----
+        clip = build_clip(seq["input_img_path_hist"])
+
+        # ---- Build numeric tensors ----
+        sample_dict = {
+            "images": clip,  # uint8
+            "kinematic": torch.from_numpy(seq["kinematic_hist"]).float(),
+            "bbox": torch.from_numpy(seq["bbox_hist"]).float(),
+            "object_type": torch.from_numpy(seq["object_type_feats_hist"]).long(),
+            "object_visible_side": torch.from_numpy(seq["object_visible_side_int_feats_hist"]).long(),
+            "tailight_status": torch.from_numpy(seq["tailight_status_int_feats_hist"]).long(),
+            "missing_object_mask": torch.from_numpy(seq["object_detected_hist"]).float(),
+            "true_hazard_enc": torch.tensor(seq["true_hazard_enc"], dtype=torch.long),
+            "frame_n": torch.tensor(seq["frame_n"], dtype=torch.long),
+            "start_frame": torch.tensor(seq["start_frame_hist"], dtype=torch.long),
+            "end_frame": torch.tensor(seq["end_frame_hist"], dtype=torch.long),
+            "hazard_name": seq["hazard_name_hist"],
+            "img_root": seq["img_path_root_hist"],
+            "original_frame_paths": seq["original_frame_path_hist"],
+        }
+
+        torch.save(sample_dict, save_path)
+
+
+class RoadHazardDataset(Dataset):
+    """
+    PyTorch Dataset for the Road Hazard Recognition project.
+
+    Args:
+        cfg: Configuration object.
+        dataset_split_path (str): Path to the CSV defining the dataset split.
+        phase (str): One of ["train", "val", "test"].
+    """
+
+    @timeit
+    def __init__(self, cfg, samples, dataset_split_path: str, phase: str):
+        self.cfg = cfg
+        self.phase = phase
+        self.input_feature_type = cfg.data.input_feature_type
+        self.model = cfg.model.model
+
+        if self.cfg.data.cached_dataset:
+            cache_dir = f"{cfg.data.cached_dataset_dir_path}/{phase}"
+            self.samples = sorted(list(Path(cache_dir).glob("*.pt")))
         else:
-            print("Split data frame does not contain the column video_n")
+            self.samples = samples
+        
+        self.train_img_transforms = T.Compose([
+            T.Resize((224, 224)),
+            T.RandomHorizontalFlip(p=0.5),
+            T.ColorJitter(0.15, 0.15, 0.1, 0.02),
+            T.ConvertImageDtype(torch.float32),
+            #T.Normalize(mean, std),
+        ])
+        self.test_img_transforms = T.Compose([
+            T.ConvertImageDtype(torch.float32),  # converts uint8 → float32 AND divides by 255
+        ])
 
     # -----------------------------
     # Standard Dataset API
@@ -194,137 +256,158 @@ class RoadHazardDataset(Dataset):
         
         #Save some samples for debugging
         debug = False
-        if self.phase == "train" and index in [0,1, 2, 3, 4, 5]:
+        if self.phase == "train" and index in [-1]:
             debug = True
-    
-        seq = self.samples[index]
-    
-        # ---------------------------------
-        #   Image transforms (SAFE)
-        # ---------------------------------
-        #img_transforms = self.img_transforms
-        if self.phase == "train":
-            img_transforms = self.train_img_transforms
-        else:
-            img_transforms = self.test_img_transforms
-    
-        # ---------------------------------
-        #   Load image sequences
-        # ---------------------------------
-        img_tensors = []
-    
-        if self.input_feature_type != "explicit_feature":
-    
-            img_inputs = [seq["input_img_path_hist"]]
-            if "input_img_path_hist_2" in seq:
-                img_inputs.append(seq["input_img_path_hist_2"])
-            if "input_img_path_hist_3" in seq:
-                img_inputs.append(seq["input_img_path_hist_3"])
-    
-            for img_list in img_inputs:
-                imgs = build_img_tensor(
-                    self.cfg,
-                    img_list,
-                    img_transforms,
-                    debug
+        
+        if self.cfg.data.cached_dataset:
+            samples = torch.load(self.samples[index])
+            
+            # ---------------------------------
+            #   Numeric augmentation (TRAIN ONLY)
+            # ---------------------------------
+            if self.phase == "train":
+                samples["kinematic"], samples["bbox"] = augment_numeric_timeseries(
+                    kinematic=samples["kinematic"],
+                    bbox=samples["bbox"],
+                    noise_std=0.01,
+                    scale_range=(0.95, 1.05),
+                    max_time_shift=0,  # MUST stay 0 (frame-aligned)
+                    debug=debug,
+                    sample_index=index,
                 )
-                img_tensors.append(imgs)  # [T, C, H, W]
-    
-            if self.model == "C3D":
-                img_tensors = [t.permute(1, 0, 2, 3) for t in img_tensors]  # [C, T, H, W]
-    
-        # ---------------------------------
-        #   Categorical features (INT)
-        # ---------------------------------
+
+            return samples
         
-        object_type = torch.from_numpy(
-            seq["object_type_feats_hist"]
-        ).long()
+        else:
+
+            seq = self.samples[index]
         
-        object_visible_side = torch.from_numpy(
-            seq["object_visible_side_int_feats_hist"]
-        ).long()
+            # ---------------------------------
+            #   Image transforms (SAFE)
+            # ---------------------------------
+            img_transforms = None
+            #if self.phase == "train":
+            #    img_transforms = self.train_img_transforms
+            #else:
+            #    img_transforms = self.test_img_transforms
         
-        tailight_status = torch.from_numpy(
-            seq["tailight_status_int_feats_hist"]
-        ).long()
-    
-        # ---------------------------------
-        #   Numeric features (FLOAT)
-        # ---------------------------------
+            # ---------------------------------
+            #   Load image sequences
+            # ---------------------------------
+            img_tensors = []
         
-        kinematic = torch.from_numpy(
-            seq["kinematic_hist"]
-        ).float()
+            if self.input_feature_type != "explicit_feature":
         
-        bbox = torch.from_numpy(
-            seq["bbox_hist"]
-        ).float()
-    
-        # ---------------------------------
-        #   Numeric augmentation (TRAIN ONLY)
-        # ---------------------------------
-        if self.phase == "train":
-            kinematic, bbox = augment_numeric_timeseries(
-                kinematic=kinematic,
-                bbox=bbox,
-                noise_std=0.01,
-                scale_range=(0.95, 1.05),
-                max_time_shift=0,  # MUST stay 0 (frame-aligned)
-                debug=debug,
-                sample_index=index,
+                img_inputs = [seq["input_img_path_hist"]]
+                if "input_img_path_hist_2" in seq:
+                    img_inputs.append(seq["input_img_path_hist_2"])
+                if "input_img_path_hist_3" in seq:
+                    img_inputs.append(seq["input_img_path_hist_3"])
+        
+                for img_list in img_inputs:
+                    imgs = build_img_tensor(
+                        self.cfg,
+                        img_list,
+                        img_transforms,
+                        debug
+                    )
+                    img_tensors.append(imgs)  # [T, C, H, W]
+        
+                if self.model == "C3D":
+                    img_tensors = [t.permute(1, 0, 2, 3) for t in img_tensors]  # [C, T, H, W]
+        
+            # ---------------------------------
+            #   Categorical features (INT)
+            # ---------------------------------
+            
+            object_type = torch.from_numpy(
+                seq["object_type_feats_hist"]
+            ).long()
+            
+            object_visible_side = torch.from_numpy(
+                seq["object_visible_side_int_feats_hist"]
+            ).long()
+            
+            tailight_status = torch.from_numpy(
+                seq["tailight_status_int_feats_hist"]
+            ).long()
+        
+            # ---------------------------------
+            #   Numeric features (FLOAT)
+            # ---------------------------------
+            
+            kinematic = torch.from_numpy(
+                seq["kinematic_hist"]
+            ).float()
+            
+            bbox = torch.from_numpy(
+                seq["bbox_hist"]
+            ).float()
+        
+            # ---------------------------------
+            #   Numeric augmentation (TRAIN ONLY)
+            # ---------------------------------
+            if self.phase == "train":
+                kinematic, bbox = augment_numeric_timeseries(
+                    kinematic=kinematic,
+                    bbox=bbox,
+                    noise_std=0.01,
+                    scale_range=(0.95, 1.05),
+                    max_time_shift=0,  # MUST stay 0 (frame-aligned)
+                    debug=debug,
+                    sample_index=index,
+                )
+        
+            # ---------------------------------
+            #   Labels & metadata
+            # ---------------------------------
+            true_hazard_enc = torch.tensor(
+                seq["true_hazard_enc"],
+                dtype=torch.long
             )
-    
-        # ---------------------------------
-        #   Labels & metadata
-        # ---------------------------------
-        true_hazard_enc = torch.tensor(
-            seq["true_hazard_enc"],
-            dtype=torch.long
-        )
+            
+            frame_n = torch.tensor(
+                seq["frame_n"],
+                dtype=torch.long
+            )
+            
+            missing_object_mask = torch.from_numpy(
+                seq["object_detected_hist"]
+            ).float()
+            
+            start_frame = torch.tensor(seq["start_frame_hist"], dtype=torch.long)
+            end_frame = torch.tensor(seq["end_frame_hist"], dtype=torch.long)
         
-        frame_n = torch.tensor(
-            seq["frame_n"],
-            dtype=torch.long
-        )
+            # ---------------------------------
+            #   Sanity checks (IMPORTANT)
+            # ---------------------------------
+            T = self.cfg.model.enc_input_seq_length
         
-        missing_object_mask = torch.from_numpy(
-            seq["object_detected_hist"]
-        ).float()
-        
-        start_frame = torch.tensor(seq["start_frame_hist"], dtype=torch.long)
-        end_frame = torch.tensor(seq["end_frame_hist"], dtype=torch.long)
+            assert kinematic.shape[0] == T
+            assert bbox.shape[0] == T
+            assert object_type.shape[0] == T
+            assert object_type.dtype == torch.long
+            assert kinematic.dtype == torch.float32
     
-        # ---------------------------------
-        #   Sanity checks (IMPORTANT)
-        # ---------------------------------
-        T = self.cfg.model.enc_input_seq_length
-    
-        assert kinematic.shape[0] == T
-        assert bbox.shape[0] == T
-        assert object_type.shape[0] == T
-        assert object_type.dtype == torch.long
-        assert kinematic.dtype == torch.float32
-    
-        # ---------------------------------
-        #   Return (NO FUSION HERE)
-        # ---------------------------------
-        return {
-            "images": img_tensors,               # list of [T, C, H, W]
-            "kinematic": kinematic,              # [T, K] 
-            "bbox": bbox,                        # [T, B]
-            "object_type": object_type,          # [T]
-            "object_visible_side": object_visible_side,
-            "tailight_status": tailight_status,
-            "true_hazard_enc": true_hazard_enc,
-            "frame_n": frame_n,
-            "start_frame": start_frame,
-            "end_frame": end_frame,
-            "missing_object_mask": missing_object_mask,
-            "hazard_name": seq["hazard_name_hist"],
-            "img_root": seq["img_path_root_hist"],
-            "original_frame_paths": seq["original_frame_path_hist"],
-        }
+            # ---------------------------------
+            #   Return (NO FUSION HERE)
+            # ---------------------------------
+            return {
+                "images": img_tensors,               # list of [T, C, H, W]
+                "kinematic": kinematic,              # [T, K] 
+                "bbox": bbox,                        # [T, B]
+                "object_type": object_type,          # [T]
+                "object_visible_side": object_visible_side,
+                "tailight_status": tailight_status,
+                "true_hazard_enc": true_hazard_enc,
+                "frame_n": frame_n,
+                "start_frame": start_frame,
+                "end_frame": end_frame,
+                "missing_object_mask": missing_object_mask,
+                "hazard_name": seq["hazard_name_hist"],
+                "img_root": seq["img_path_root_hist"],
+                "original_frame_paths": seq["original_frame_path_hist"],
+            }
 
 
 
@@ -360,23 +443,23 @@ def prepare_inputs(batch, cfg):
         return x
 
     # ========= Extract batch fields =========
-    kinematic = move(batch.get("kinematic"))                # list(Tensor) or None
-    bbox = move(batch.get("bbox"))                # list(Tensor) or None
-    object_visible_side = move(batch.get("object_visible_side"))                # list(Tensor) or None
-    tailight_status = move(batch.get("tailight_status"))                # list(Tensor) or None
-    object_type = move(batch.get("object_type"))                # list(Tensor) or None
+    kinematic = (batch.get("kinematic"))                # list(Tensor) or None
+    bbox = (batch.get("bbox"))                # list(Tensor) or None
+    object_visible_side = (batch.get("object_visible_side"))                # list(Tensor) or None
+    tailight_status = (batch.get("tailight_status"))                # list(Tensor) or None
+    object_type = (batch.get("object_type"))                # list(Tensor) or None
     
-    missing_object_mask = move(batch.get("missing_object_mask")) #List of tensors 
+    missing_object_mask = (batch.get("missing_object_mask")) #List of tensors 
     images = batch.get("images")                # list(Tensor) or None
-    labels = move(batch["true_hazard_enc"])           # Tensor, always present
+    labels = (batch["true_hazard_enc"])           # Tensor, always present
 
     # Normalize images structure
     if images is None:
         images = []
     else:
-        images = move(images)
-        if not isinstance(images, list):
-            raise ValueError("Expected batch['images'] to be a list of image tensors.")
+        images = (images)
+        #if not isinstance(images, list):
+        #    raise ValueError("Expected batch['images'] to be a list of image tensors.")
 
     num_imgs = len(images)
 
@@ -404,7 +487,7 @@ def prepare_inputs(batch, cfg):
             
         return (
             {
-                "images": images[0],
+                "images": images,
                 "missing_object_mask": missing_object_mask
             },
             labels
@@ -502,21 +585,24 @@ def create_or_load_dataset(cfg):
     # --------------------
     # TRAIN DATASET
     # --------------------
+    samples = preprocess_sequences(cfg, phase="train")
+    
     trSet = RoadHazardDataset(
         cfg,
+        samples,
         cfg.data.train_csv_set_output_path,
-        phase="train"
+        phase="train",
     )
 
-    (cfg.loss.class_weights,
-     cfg.data.sampler) = prepare_sampler_and_weights_from_sequences(
-        cfg,
-        trSet.samples,
-        label_key='true_hazard',
-        device=cfg.system.device,
-        loss_function=cfg.loss.loss_function,
-        classes_name = cfg.model.classes_name
-    )
+    #(cfg.loss.class_weights,
+    # cfg.data.sampler) = prepare_sampler_and_weights_from_sequences(
+    #    cfg,
+    #    trSet.samples,
+    #    label_key='true_hazard',
+    #    device=cfg.system.device,
+    #    loss_function=cfg.loss.loss_function,
+    #    classes_name = cfg.model.classes_name
+    #)
     
     
     class_names = list(cfg.model.classes_name)
@@ -534,14 +620,6 @@ def create_or_load_dataset(cfg):
     logger.info("Class Name Order (Data Loading | Class Weights):")
     for name, weight in zip(class_names, class_weights):
         logger.info(f"  {name:<35} {weight:.4f}")
-    
-    #logger.info(f"Class Name Order (Data Loading ): {cfg.model.classes_name}")
-    #logger.info(
-    #    f"Encoded Example (Data Loading ): "
-    ##    f"{trSet.samples[0]['true_hazard_enc'].item()}"
-    ##)
-    ##logger.info(f"cfg.loss.class_weights {cfg.loss.class_weights}")
-    #logger.info(f"cfg.data.sampler {cfg.data.sampler}")
     
     trDataloader = _build_dataloader(
         trSet,
@@ -568,8 +646,10 @@ def create_or_load_dataset(cfg):
     # --------------------
     # VALIDATION / TEST DATASET
     # --------------------
+    samples = preprocess_sequences(cfg, phase="val")
     tsSet = RoadHazardDataset(
         cfg,
+        samples,
         cfg.data.test_csv_set_output_path,
         phase="val",
     )
@@ -750,6 +830,21 @@ def build_img_tensor(cfg, seq_paths, transform, debug=False):
     #    debug_input_img_sequence(cfg, seq_paths, clip)
 
     return clip
+
+def build_clip(seq_paths):
+    frames = []
+
+    for p in seq_paths:
+        img = read_image(p)  # uint8 (C,H,W)
+
+        if img.shape[0] == 1:
+            img = img.repeat(3, 1, 1)
+
+        frames.append(img)
+
+    clip = torch.stack(frames)  # (T,C,H,W) uint8
+    return clip
+
 
 
 @timeit

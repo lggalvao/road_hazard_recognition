@@ -25,6 +25,7 @@ def test_model(cfg, net, allsetDataloader, run_wandb, log_file_path):
     epoch = 0
     
     j = 0
+    is_train = False
     for load_file in best_paths:
     
         net.load_state_dict(torch.load(load_file, map_location=torch.device(cfg.system.device), weights_only=True))
@@ -36,14 +37,14 @@ def test_model(cfg, net, allsetDataloader, run_wandb, log_file_path):
         for i, data in enumerate(tqdm(allsetDataloader['test'], desc="Testing...")):
             inputs, targets = prepare_inputs(data, cfg)
             
+            targets = move_to_device(targets, cfg.system.device)
             inputs = move_to_device(inputs, cfg.system.device)
             if cfg.data.input_feature_type != "explicit_feature":
-                inputs["images"] = gpu_transform(inputs["images"])
+                inputs["images"] = gpu_transform(inputs["images"], is_train)
             
             with torch.no_grad():
                 preds = forward_pass(net, inputs)
             targets = targets.float()
-            #targets = torch.argmax(targets, dim=1)
             
             y_true = targets.detach().cpu().numpy()
     
