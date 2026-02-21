@@ -64,6 +64,7 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
             
             if epoch == 1:
                 # Function to inspect CPU and GPU usage
+                logger.info("Running Torch Profile")
                 run_epoch_profile(
                     net,
                     allsetDataloader[phase],
@@ -73,6 +74,7 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
                     is_train,
                     gpu_transform
                 )
+                logger.info("Torch Profile Done")
             
             avg_loss, targets, preds = run_epoch(
                 net,
