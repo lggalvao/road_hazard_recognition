@@ -11,6 +11,9 @@ from utils.timing import timeit, print_average_timings
 import time
 import kornia.augmentation as K
 import torch.profiler
+import logging
+
+logger = logging.getLogger("hazard_recognition")
 
 class GPUTransform(torch.nn.Module):
     def __init__(self):
