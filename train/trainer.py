@@ -65,7 +65,7 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
         for phase in ['train', 'val']:
             is_train = (phase == 'train')
             
-            if epoch == 0:
+            if epoch == -1:
                 # Function to inspect CPU and GPU usage
                 logger.info("Running Torch Profile")
                 run_epoch_profile(
@@ -123,18 +123,31 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
 
     net.train() if is_train else net.eval()
     epoch_loss = 0.0
+    move_to_device_time = 0
+    prepare_inputs_time = 0
+    gpu_transform_time = 0
 
     epoch_preds, epoch_targets = [], []
 
     for data in tqdm(dataloader, desc="Training..." if is_train else "Validating..."):
 
+        t1 = time.time()
         inputs, targets = prepare_inputs(data, cfg)
+        t2 =time.time()
+        prepare_inputs_time += (t2 - t1)
         
+        
+        t1 = time.time()
         targets = move_to_device(targets, cfg.system.device)
         inputs = move_to_device(inputs, cfg.system.device)
+        t2 =time.time()
+        move_to_device_time += (t2 - t1)
         
         if cfg.data.input_feature_type != "explicit_feature":
+            t1 = time.time()
             inputs["images"] = gpu_transform(inputs["images"], is_train)
+            t2 =time.time()
+            gpu_transform_time += (t2 - t1)
 
         if is_train:
             optimizer.zero_grad()
@@ -154,6 +167,10 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
         epoch_targets.extend(targets.detach().cpu().numpy())
         epoch_preds.extend(torch.argmax(preds, dim=1).detach().cpu().numpy())
 
+    print("prepare_inputs_time:", prepare_inputs_time)
+    print("move_to_device_time:", move_to_device_time)
+    print("gpu_transform_time:", gpu_transform_time)
+    
     avg_loss = epoch_loss / len(dataloader)
     return avg_loss, epoch_targets, epoch_preds
 
