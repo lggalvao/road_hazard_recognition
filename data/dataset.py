@@ -249,6 +249,7 @@ class RoadHazardDataset(Dataset):
     @timeit
     def __getitem__(self, index):
     
+        dataloader_time = 0
         t1 =time.time()
 
         if index >= len(self.samples):
