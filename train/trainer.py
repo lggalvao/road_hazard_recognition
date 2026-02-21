@@ -62,7 +62,7 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
         for phase in ['train', 'val']:
             is_train = (phase == 'train')
             
-            if epoch == 1:
+            if epoch == 0:
                 # Function to inspect CPU and GPU usage
                 logger.info("Running Torch Profile")
                 run_epoch_profile(
