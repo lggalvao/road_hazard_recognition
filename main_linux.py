@@ -59,8 +59,8 @@ if __name__ == '__main__':
     
     import torch
 
-    torch.backends.cuda.matmul.allow_tf32 = True
-    torch.backends.cudnn.allow_tf32 = True
+    #torch.backends.cuda.matmul.allow_tf32 = True
+    #torch.backends.cudnn.allow_tf32 = True
 
     logger = setup_logging("./output/training.log", level=logging.INFO)
     logger = logging.getLogger("hazard_recognition")
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     cfg.system.multi_gpu = False
     cfg.data.with_no_hazard_samples_flag = True
     cfg.data.sequence_stride = 1
-    cfg.data.dataset_trim = 30
+    cfg.data.dataset_trim = 500
     cfg.model.freeze_strategy = "head"
     cfg.training.ts_augme = False
     cfg.loss.focal_loss_gamma = 1
