@@ -226,7 +226,7 @@ class RoadHazardDataset(Dataset):
             cache_dir = f"{cfg.data.cached_dataset_dir_path}/{phase}"
             self.samples = sorted(list(Path(cache_dir).glob("*.pt")))
         else:
-            self.samples = samples
+            self.samples = preprocess_sequences(cfg, phase)  #samples
         
         self.train_img_transforms = T.Compose([
             T.Resize((224, 224)),
@@ -588,7 +588,8 @@ def create_or_load_dataset(cfg):
     # --------------------
     # TRAIN DATASET
     # --------------------
-    samples = preprocess_sequences(cfg, phase="train")
+    #samples = preprocess_sequences(cfg, phase="train")
+    samples = None
     
     trSet = RoadHazardDataset(
         cfg,
@@ -598,7 +599,7 @@ def create_or_load_dataset(cfg):
     )
 
     #(cfg.loss.class_weights,
-    # cfg.data.sampler) = prepare_sampler_and_weights_from_sequences(
+    #  cfg.data.sampler) = prepare_sampler_and_weights_from_sequences(
     #    cfg,
     #    trSet.samples,
     #    label_key='true_hazard',
@@ -606,8 +607,7 @@ def create_or_load_dataset(cfg):
     #    loss_function=cfg.loss.loss_function,
     #    classes_name = cfg.model.classes_name
     #)
-    
-    
+
     class_names = list(cfg.model.classes_name)
     class_weights = cfg.loss.class_weights
     
@@ -649,7 +649,8 @@ def create_or_load_dataset(cfg):
     # --------------------
     # VALIDATION / TEST DATASET
     # --------------------
-    samples = preprocess_sequences(cfg, phase="val")
+    #samples = preprocess_sequences(cfg, phase="val")
+    samples = None
     tsSet = RoadHazardDataset(
         cfg,
         samples,
