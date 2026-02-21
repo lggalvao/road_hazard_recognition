@@ -249,6 +249,8 @@ class RoadHazardDataset(Dataset):
     @timeit
     def __getitem__(self, index):
     
+        t1 =time.time()
+
         if index >= len(self.samples):
             raise IndexError(
                 f"Index {index} out of range for samples size {len(self.samples)}. Phase {self.phase}"
@@ -392,6 +394,9 @@ class RoadHazardDataset(Dataset):
             # ---------------------------------
             #   Return (NO FUSION HERE)
             # ---------------------------------
+            t2 =time.time()
+            dataloader_time += (t2 - t1)
+            print("dataloader_time", dataloader_time)
             return {
                 "images": img_tensors,               # list of [T, C, H, W]
                 "kinematic": kinematic,              # [T, K] 
@@ -407,7 +412,7 @@ class RoadHazardDataset(Dataset):
                 "hazard_name": seq["hazard_name_hist"],
                 "img_root": seq["img_path_root_hist"],
                 "original_frame_paths": seq["original_frame_path_hist"],
-            }
+            }, dataloader_time
 
 
 
