@@ -141,10 +141,10 @@ EXPERIMENTS_1 = [
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",
-        "stage": 0,
+        "stage": 0,     
         "loss_function": "FocalLoss",
         "batch_size": 64,
-        "cached_dataset": False,
+        "cached_dataset": True,
         "comments": None
     },
     #{
