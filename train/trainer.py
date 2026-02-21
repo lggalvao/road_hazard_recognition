@@ -126,14 +126,17 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
     move_to_device_time = 0
     prepare_inputs_time = 0
     gpu_transform_time = 0
+    dataloader_time = 0
 
     epoch_preds, epoch_targets = [], []
 
-    for data, dataloader_time in tqdm(dataloader, desc="Training..." if is_train else "Validating..."):
+    for data in tqdm(dataloader, desc="Training..." if is_train else "Validating..."):
    
         t1 = time.time()
         inputs, targets = prepare_inputs(data, cfg)
         t2 =time.time()
+        
+        dataloader_time += data["dataloader_time"]
         prepare_inputs_time += (t2 - t1)
         
         
@@ -171,7 +174,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
     print("move_to_device_time:", move_to_device_time)
     print("gpu_transform_time:", gpu_transform_time)
     print("dataloader_time:", dataloader_time)
-    
+
     
     avg_loss = epoch_loss / len(dataloader)
     return avg_loss, epoch_targets, epoch_preds

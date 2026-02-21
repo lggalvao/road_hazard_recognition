@@ -395,8 +395,7 @@ class RoadHazardDataset(Dataset):
             #   Return (NO FUSION HERE)
             # ---------------------------------
             t2 =time.time()
-            dataloader_time += (t2 - t1)
-            print("dataloader_time", dataloader_time)
+            dataloader_time = (t2 - t1)
             return {
                 "images": img_tensors,               # list of [T, C, H, W]
                 "kinematic": kinematic,              # [T, K] 
@@ -412,7 +411,8 @@ class RoadHazardDataset(Dataset):
                 "hazard_name": seq["hazard_name_hist"],
                 "img_root": seq["img_path_root_hist"],
                 "original_frame_paths": seq["original_frame_path_hist"],
-            }, dataloader_time
+                "dataloader_time":dataloader_time
+            }
 
 
 
