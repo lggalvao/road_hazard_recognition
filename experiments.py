@@ -165,6 +165,7 @@ EXPERIMENTS_1 = [
         "loss_function": "FocalLoss",
         "batch_size": 32,
         "learning_rate": 0.0001,
+        "cached_dataset": False,
         "comments": None
     },
     {
@@ -180,6 +181,7 @@ EXPERIMENTS_1 = [
         "loss_function": "FocalLoss",
         "batch_size": 32,
         "learning_rate": 0.00009,
+        "cached_dataset": False,
         "comments": None
     },
     {
