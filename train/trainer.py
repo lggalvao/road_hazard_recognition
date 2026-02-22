@@ -126,7 +126,10 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
     move_to_device_time = 0
     prepare_inputs_time = 0
     gpu_transform_time = 0
-    dataloader_time = 0
+    forward_pass_time = 0
+    compute_loss_time = 0
+    backward_time = 0
+    #dataloader_time = 0
 
     epoch_preds, epoch_targets = [], []
 
@@ -136,7 +139,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
         inputs, targets = prepare_inputs(data, cfg)
         t2 =time.time()
         
-        dataloader_time += data["dataloader_time"]
+        #dataloader_time += data["dataloader_time"]
         prepare_inputs_time += (t2 - t1)
         
         
@@ -156,13 +159,23 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
             optimizer.zero_grad()
 
         with torch.set_grad_enabled(is_train):
+            t1 = time.time()
             preds = forward_pass(net, inputs)
+            t2 =time.time()
+            gpu_transform_time += (t2 - t1)
+            
+            t1 = time.time()
             loss = compute_loss(criterion, preds, targets, cfg)
+            t2 =time.time()
+            forward_pass_time += (t2 - t1)
 
             if is_train:
+                t1 = time.time()
                 loss.backward()
                 torch.nn.utils.clip_grad_norm_(net.parameters(), cfg.training.clip_grad)
                 optimizer.step()
+                t2 =time.time()
+                gpu_transform_time += (t2 - t1)
 
         epoch_loss += loss.item()
 
@@ -173,7 +186,10 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
     print("prepare_inputs_time:", prepare_inputs_time)
     print("move_to_device_time:", move_to_device_time)
     print("gpu_transform_time:", gpu_transform_time)
-    print("dataloader_time:", dataloader_time)
+    print("forward_pass_time:", forward_pass_time)
+    print("compute_loss_time:", compute_loss_time)
+    print("backward_time:", backward_time)
+    #print("dataloader_time:", dataloader_time)
 
     
     avg_loss = epoch_loss / len(dataloader)
