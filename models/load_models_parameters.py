@@ -234,7 +234,7 @@ def single_img_input_parameters(cfg):
     cfg.training.batch_size = 16 #CNN:50, Vision Transformer:20
     cfg.training.num_epochs = 30
     cfg.training.optimizer = 'SGD' #SGD, Adam, AdamW
-    cfg.training.learning_rate = 0.0001 #0.00009#Learning rate for SGD(0.09), Adam(0.00006) using images
+    cfg.training.learning_rate = 0.00009 #0.00009#Learning rate for SGD(0.09), Adam(0.00006) using images
     cfg.training.cnn_lr = 1e-5
     cfg.training.weight_decay = 0.0001 #0.0001
     cfg.training.step_size = 30

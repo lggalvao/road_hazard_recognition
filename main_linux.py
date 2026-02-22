@@ -124,6 +124,7 @@ if __name__ == '__main__':
         cfg.training.stage = exp_config.stage
         cfg.training.batch_size = exp_config.batch_size
         cfg.data.cached_dataset = exp_config.cached_dataset
+        cfg.training.learning_rate = exp_config.learning_rate
         
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
         

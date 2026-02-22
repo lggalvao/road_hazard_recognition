@@ -162,12 +162,12 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
             t1 = time.time()
             preds = forward_pass(net, inputs)
             t2 =time.time()
-            gpu_transform_time += (t2 - t1)
+            forward_pass_time += (t2 - t1)
             
             t1 = time.time()
             loss = compute_loss(criterion, preds, targets, cfg)
             t2 =time.time()
-            forward_pass_time += (t2 - t1)
+            compute_loss_time += (t2 - t1)
 
             if is_train:
                 t1 = time.time()
@@ -175,7 +175,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
                 torch.nn.utils.clip_grad_norm_(net.parameters(), cfg.training.clip_grad)
                 optimizer.step()
                 t2 =time.time()
-                gpu_transform_time += (t2 - t1)
+                backward_time += (t2 - t1)
 
         epoch_loss += loss.item()
 

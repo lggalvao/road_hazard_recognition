@@ -1,6 +1,23 @@
 #["FocalLoss", "weighted_FocalLoss", "weighted_CELoss", "CELoss"]
 
 EXPERIMENTS_0 = [
+
+    {
+        "input_feature_type": "single_img_input",
+        "object_visible_side": None,
+        "tailight_status": None,
+        "model": "CNN_Transformer",
+        "input_img_type1": "img_local_context_ROI_1",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "loss_function": "FocalLoss",
+        "batch_size": 32,
+        "learning_rate": 0.00009, 
+        "cached_dataset": False,
+        "comments": None
+    },
     {
         "input_feature_type": "single_img_input",
         "object_visible_side": None,
@@ -13,6 +30,7 @@ EXPERIMENTS_0 = [
         "stage": 0,
         "loss_function": "FocalLoss",
         "batch_size": 32,
+        "learning_rate": 0.00009, 
         "cached_dataset": False,
         "comments": None
     },
@@ -20,14 +38,15 @@ EXPERIMENTS_0 = [
         "input_feature_type": "single_img_input",
         "object_visible_side": None,
         "tailight_status": None,
-        "model": "CNN_Transformer",
+        "model": "CNN_LSTM",
         "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",
         "stage": 0,
         "loss_function": "FocalLoss",
-        "batch_size": 64,
+        "batch_size": 32,
+        "learning_rate": 0.00008, 
         "cached_dataset": False,
         "comments": None
     },
@@ -132,6 +151,37 @@ EXPERIMENTS_0 = [
 
 
 EXPERIMENTS_1 = [
+
+    {
+        "input_feature_type": "explicit_and_single_img_input",
+        "object_visible_side": None,
+        "tailight_status": None,
+        "model": "Embedding_CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_1",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "all_classes",
+        "stage": 0,
+        "loss_function": "FocalLoss",
+        "batch_size": 32,
+        "learning_rate": 0.0001,
+        "comments": None
+    },
+    {
+        "input_feature_type": "explicit_and_single_img_input",
+        "object_visible_side": None,
+        "tailight_status": None,
+        "model": "Embedding_CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_1",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "all_classes",
+        "stage": 0,
+        "loss_function": "FocalLoss",
+        "batch_size": 32,
+        "learning_rate": 0.00009,
+        "comments": None
+    },
     {
         "input_feature_type": "single_img_input",
         "object_visible_side": None,
@@ -140,27 +190,14 @@ EXPERIMENTS_1 = [
         "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
-        "classes_type": "literature_classes",
-        "stage": 0,     
+        "classes_type": "all_classes",
+        "stage": 0,
         "loss_function": "FocalLoss",
-        "batch_size": 64,
-        "cached_dataset": True,
+        "batch_size": 32,
+        "learning_rate": 0.00009, 
+        "cached_dataset": False,
         "comments": None
     },
-    #{
-    #    "input_feature_type": "explicit_and_single_img_input",
-    #    "object_visible_side": None,
-    #    "tailight_status": None,
-    #    "model": "Embedding_CNN_LSTM",
-    #    "input_img_type1": "img_local_context_ROI_1",
-    #    "input_img_type2": None,
-    #    "enc_input_seq_length": 16,
-    #    "classes_type": "literature_classes",
-    #    "stage": 0,
-    #    "loss_function": "FocalLoss",
-    #    "batch_size": 64,
-    #    "comments": None
-    #},
     #{
     #    "input_feature_type": "explicit_and_single_img_input",
     #    "object_visible_side": None,
