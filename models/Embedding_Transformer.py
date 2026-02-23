@@ -34,7 +34,7 @@ class Embedding_Transformer(nn.Module):
         self.num_classes = cfg.model.num_classes
         self.num_heads = cfg.model.num_heads
         self.num_layers = cfg.model.enc_layers_num
-        self.dropout = cfg.model.dropout1
+        self.dropout = cfg.model.dropout_fc 
 
         # Linear embedding for each feature
         self.embedding = nn.Linear(self.num_features, self.d_model)

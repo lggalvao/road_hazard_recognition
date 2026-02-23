@@ -137,8 +137,8 @@ class Embedding_Temporal_LSTM(nn.Module):
         )
 
         # Regularization
-        self.dropout = nn.Dropout(cfg.model.dropout1)
-        self.cnn_dropout = nn.Dropout(0.3)
+        self.dropout = nn.Dropout(cfg.model.dropout_fc )
+        self.dropout_cnn = nn.Dropout(0.3)
 
         # Classification head
         self.num_classes = cfg.model.num_classes
@@ -215,7 +215,7 @@ class Embedding_Temporal_LSTM(nn.Module):
         x = dynamic_features.permute(0, 2, 1)                # (B, F, T)
         #x = dynamic_features.permute(0, 2, 1).contiguous()
         x = self.cnn_dynamic(x)
-        x = self.cnn_dropout(x)
+        x = self.dropout_cnn(x)
         x = x.permute(0, 2, 1)                                # (B, T, E)
     
         x = self.norm(x)

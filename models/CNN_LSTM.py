@@ -36,8 +36,8 @@ class CNN_LSTM(nn.Module):
         )
         
         # Dropout layer
-        dropout_rate = cfg.model.dropout1
-        self.dropout = nn.Dropout(dropout_rate)
+        self.dropout_fc = nn.Dropout(cfg.model.dropout_fc )
+        self.dropout_cnn = nn.Dropout(cgf.model.dropout_cnn)
     
         # Fully connected layer
         self.num_classes = cfg.model.num_classes
@@ -69,6 +69,7 @@ class CNN_LSTM(nn.Module):
         # ---------------------------
         mask = missing_object_mask.float()  # (B, T)
         resnet_out = resnet_out * mask.unsqueeze(-1)
+        resnet_out = self.dropout_cnn(resnet_out)
     
         # ---------------------------
         # LSTM
@@ -100,7 +101,7 @@ class CNN_LSTM(nn.Module):
         # ---------------------------
         # Classification head
         # ---------------------------
-        lstm_out = self.dropout(lstm_out)
+        lstm_out = self.dropout_fc(lstm_out)
         output = self.fc(lstm_out)
     
         return output
@@ -186,7 +187,7 @@ if __name__ == "__main__":
     cfg.model.enc_hidden_size = 256
     cfg.model.enc_layers_num = 1
     cfg.model.num_classes = num_classes
-    cfg.model.dropout1 = 0.3
+    cfg.model.dropout_fc  = 0.3
 
     model = CNN_LSTM(cfg).to(cfg.system.device)
 
