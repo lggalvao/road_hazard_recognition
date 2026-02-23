@@ -37,7 +37,7 @@ class CNN_LSTM(nn.Module):
         
         # Dropout layer
         self.dropout_fc = nn.Dropout(cfg.model.dropout_fc )
-        self.dropout_cnn = nn.Dropout(cgf.model.dropout_cnn)
+        self.dropout_cnn = nn.Dropout(cfg.model.dropout_cnn)
     
         # Fully connected layer
         self.num_classes = cfg.model.num_classes

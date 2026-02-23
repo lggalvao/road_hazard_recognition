@@ -228,7 +228,7 @@ def single_img_input_parameters(cfg):
     #Output parameters
     cfg.model.fc_output_size = None
     cfg.model.dropout_fc  = 0.5
-    cgf.model.dropout_cnn = 0.3
+    cfg.model.dropout_cnn = 0.3
     cfg.training.clip_grad = 5
     
     #Hyperparameters
