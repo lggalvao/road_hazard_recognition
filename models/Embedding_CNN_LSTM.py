@@ -53,7 +53,7 @@ class Embedding_CNN_LSTM(nn.Module):
             nn.LayerNorm(H),
             nn.Linear(H, H // 2),
             nn.GELU(),
-            nn.Dropout(cfg.model.dropout_fc ),
+            nn.Dropout(cfg.model.dropout_fc),
             nn.Linear(H // 2, cfg.model.num_classes)
         )
 
@@ -107,7 +107,7 @@ class Embedding_CNN_LSTM(nn.Module):
 #        self.classifier = nn.Sequential(
 #            nn.Linear(fusion_dim, fusion_dim // 2),
 #            nn.ReLU(),
-#            nn.Dropout(cfg.model.dropout_fc ),
+#            nn.Dropout(cfg.model.dropout_fc),
 #            nn.Linear(fusion_dim // 2, cfg.model.num_classes)
 #        )
 #

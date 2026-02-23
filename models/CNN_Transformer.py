@@ -56,7 +56,7 @@ class CNN_Transformer(nn.Module):
             num_layers=2
         )
 
-        self.dropout = nn.Dropout(cfg.model.dropout_fc )
+        self.dropout = nn.Dropout(cfg.model.dropout_fc)
 
         # --------------------------
         # Classifier
@@ -204,7 +204,7 @@ if __name__ == "__main__":
     cfg.model.enc_hidden_size = 256
     cfg.model.enc_layers_num = 1
     cfg.model.num_classes = num_classes
-    cfg.model.dropout_fc  = 0.3
+    cfg.model.dropout_fc = 0.3
 
     model = CNN_LSTM(cfg).to(cfg.system.device)
 

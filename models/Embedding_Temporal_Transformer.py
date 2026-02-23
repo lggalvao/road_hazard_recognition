@@ -137,7 +137,7 @@ class Embedding_Temporal_LSTM(nn.Module):
         )
 
         # Regularization
-        self.dropout = nn.Dropout(cfg.model.dropout_fc )
+        self.dropout = nn.Dropout(cfg.model.dropout_fc)
         self.dropout_cnn = nn.Dropout(0.3)
 
         # Classification head

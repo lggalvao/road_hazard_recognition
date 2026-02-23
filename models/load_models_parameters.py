@@ -121,7 +121,7 @@ def Trajectory_Embedding_LSTM_parameters(cfg):
 
     #FC Parameters
     cfg.model.fc_output_size = 128
-    cfg.model.dropout_fc  = 0.8
+    cfg.model.dropout_fc = 0.8
     cfg.training.clip_grad = 5
 
     #Hyperparameters
@@ -189,7 +189,7 @@ def explicit_feature_parameters(cfg):
     
     #FC Parameters
     cfg.model.fc_output_size = 128
-    cfg.model.dropout_fc  = 0.7
+    cfg.model.dropout_fc = 0.7
     cfg.training.clip_grad = 5
 
     #Hyperparameters
@@ -227,7 +227,7 @@ def single_img_input_parameters(cfg):
     
     #Output parameters
     cfg.model.fc_output_size = None
-    cfg.model.dropout_fc  = 0.5
+    cfg.model.dropout_fc = 0.5
     cfg.model.dropout_cnn = 0.3
     cfg.training.clip_grad = 5
     
@@ -263,7 +263,7 @@ def multi_img_input_parameters(cfg):
     
     #Output parameters
     cfg.model.fc_output_size = 'Not in use'
-    cfg.model.dropout_fc  = 0.8
+    cfg.model.dropout_fc = 0.8
     cfg.training.clip_grad = 5
     
     #Hyper-parameters
@@ -299,7 +299,7 @@ def explicit_and_single_img_input_parameters(cfg):
     
     #FC Parameters
     cfg.model.fc_output_size = 'Not in use'
-    cfg.model.dropout_fc  = 0.8
+    cfg.model.dropout_fc = 0.8
     cfg.training.clip_grad = 5
     
     #Hyperparameters
@@ -335,7 +335,7 @@ def explicit_and_multi_img_input_parameters(cfg):
     
     #FC Parameters
     cfg.model.fc_output_size = 128
-    cfg.model.dropout_fc  = 0.8
+    cfg.model.dropout_fc = 0.8
     cfg.training.clip_grad = 5
     
     #Hyperparameters
