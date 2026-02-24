@@ -107,8 +107,8 @@ def Trajectory_Embedding_LSTM_parameters(cfg):
     cfg.data.input_img_resize = None
     
     #Embedding parameters
-    cfg.model.object_visible_side = True
-    cfg.model.tailight_status = True
+    cfg.model.use_object_visible_side = True
+    cfg.model.use_rear_light_status = True
     cfg.model.output_embedding_size = 112
     cfg.model.dropout_embedding_feature = 0.25
     
@@ -174,8 +174,8 @@ def explicit_feature_parameters(cfg):
     cfg.data.input_img_resize = None
     
     #Embedding parameters
-    cfg.model.object_visible_side = True
-    cfg.model.tailight_status = True
+    cfg.model.use_object_visible_side = True
+    cfg.model.use_rear_light_status = True
     cfg.model.output_embedding_size = 112
     cfg.model.dropout_embedding_feature = 0.25
     
@@ -212,8 +212,8 @@ def single_img_input_parameters(cfg):
     cfg.data.input_img_resize = (224, 224) # (h, w) (128, 171) (112, 112)
     
     #Embedding parameters
-    cfg.model.object_visible_side = False
-    cfg.model.tailight_status = False
+    cfg.model.use_object_visible_side = False
+    cfg.model.use_rear_light_status = False
     cfg.model.output_embedding_size = None
     
     #LSTM parameters
@@ -251,8 +251,8 @@ def multi_img_input_parameters(cfg):
     cfg.data.input_img_resize = (224, 224)
     
     #Embedding parameters
-    cfg.model.object_visible_side = True
-    cfg.model.tailight_status = False
+    cfg.model.use_object_visible_side = True
+    cfg.model.use_rear_light_status = False
     cfg.model.output_embedding_size = 'Not in use'
     
     #LSTM parameters
@@ -286,8 +286,8 @@ def explicit_and_single_img_input_parameters(cfg):
     cfg.data.input_img_resize = (224,224)
     
     #Embedding parameters
-    cfg.model.object_visible_side = True
-    cfg.model.tailight_status = True
+    cfg.model.use_object_visible_side = True
+    cfg.model.use_rear_light_status = True
     cfg.model.output_embedding_size = 576
     cfg.model.dropout_embedding_feature = 0.1
     
@@ -322,8 +322,8 @@ def explicit_and_multi_img_input_parameters(cfg):
     cfg.data.input_img_resize = (224,224) # (h, w) (128, 171) (112, 112)
     
     #Embedding parameters
-    cfg.model.object_visible_side = True
-    cfg.model.tailight_status = True
+    cfg.model.use_object_visible_side = True
+    cfg.model.use_rear_light_status = True
     cfg.model.output_embedding_size = 576
     cfg.model.dropout_embedding_feature = 0.1
     

@@ -98,12 +98,12 @@ class ModelConfig:
             "object_coming_out", "object_pulling_up"
         ]
     )
-    object_visible_side: bool = True
-    tailight_status: bool = True
+    use_object_visible_side: bool = True
+    use_rear_light_status: bool = True
     num_heads: int = 2
     num_object_types: int = 0
     num_visible_sides: int = 0
-    num_tailight_statuses: int = 0
+    num_rear_light_statuses: int = 0
     num_kinematic_features: int = 0
     num_bbox_features: int = 0
     

@@ -73,7 +73,7 @@ if __name__ == '__main__':
     cmd_args = get_cmd_args()
 
     visible_side_arr = ['front_side', 'front_left_side', 'front_right_side', 'rear_side', 'rear_right_side', 'rear_left_side', 'left_side', 'right_side', 'UNK']
-    tailight_status_arr = ['BOO', 'OLO', 'OLR', 'OOO', 'OOR', 'BLO', 'BLR', 'BOR', 'REVERSE', 'UNK']
+    rear_light_status_arr = ['BOO', 'OLO', 'OLR', 'OOO', 'OOR', 'BLO', 'BLR', 'BOR', 'REVERSE', 'UNK']
 
     cfg.system.multi_gpu = False
     cfg.data.with_no_hazard_samples_flag = True
@@ -117,8 +117,8 @@ if __name__ == '__main__':
             print('log_file_path', log_file_path)
 
         select_config_setting(cfg)
-        cfg.model.object_visible_side = exp_config.object_visible_side
-        cfg.model.tailight_status = exp_config.tailight_status
+        cfg.model.use_object_visible_side = exp_config.use_object_visible_side
+        cfg.model.use_rear_light_status = exp_config.use_rear_light_status
         cfg.model.enc_input_seq_length = exp_config.enc_input_seq_length
         cfg.logging.comments = exp_config.comments
         cfg.training.stage = exp_config.stage
@@ -402,11 +402,11 @@ if __name__ == '__main__':
                         #        frame = cv2.imread(image_path)
                         #        frame = cv2.resize(frame, (new_img_width, new_img_height), interpolation = cv2.INTER_AREA)
                         #
-                        #        #['object_type', 'tailight_status_int', 'object_visible_side_int', 'xc', 'yc', 'w', 'h', 'xc_speed', 'yc_speed', 'x_1', 'y_1', 'x_2', 'y_2']
+                        #        #['object_type', 'use_rear_light_status_int', 'use_object_visible_side_int', 'xc', 'yc', 'w', 'h', 'xc_speed', 'yc_speed', 'x_1', 'y_1', 'x_2', 'y_2']
                         #        x_1, y_1, x_2, y_2 = int(all_together_all[y][9]), int(all_together_all[y][10]), int(all_together_all[y][11]), int(all_together_all[y][12])
                         #        xc, yc = int(all_together_all[y][3]), int(all_together_all[y][4])
-                        #        tailight_status = int(all_together_all[y][1])
-                        #        object_visible_side = int(all_together_all[y][2])
+                        #        use_rear_light_status = int(all_together_all[y][1])
+                        #        use_object_visible_side = int(all_together_all[y][2])
                         #
                         #        PR_int = "None"
                         #        PR_int = cfg.model.classes_name[int(test_lat_pred_np[i])]
@@ -422,11 +422,11 @@ if __name__ == '__main__':
                         #        cv2.putText(frame, 'f_1: '                  + str(end_frame[y]),         (475 , 15)        , font, 1, (240, 255, 0  ), 2, cv2.LINE_4)
                         #        cv2.putText(frame, 'PR_int: '               + PR_int + '|' + str(test_lat_pred_np[i]),                 (600 , 15)        , font, 1, (0  , 110, 255), 2, cv2.LINE_4)
                         #        cv2.putText(frame, 'GT_int: '               + GT_int + '|' + str(test_lat_true_np[i]),                 (850 , 15)        , font, 1, (0  , 110, 255), 2, cv2.LINE_4)
-                        #        cv2.putText(frame, 'T_S: '      + tailight_status_arr[tailight_status],        (int(xc), int(yc)-30), font, 1, (0  , 110, 255), 2, cv2.LINE_4)
-                        #        cv2.putText(frame, 'O_V_S: '  + visible_side_arr[object_visible_side],    (int(xc), int(yc)-15), font, 1, (0  , 110, 255), 2, cv2.LINE_4)
+                        #        cv2.putText(frame, 'T_S: '      + use_rear_light_status_arr[use_rear_light_status],        (int(xc), int(yc)-30), font, 1, (0  , 110, 255), 2, cv2.LINE_4)
+                        #        cv2.putText(frame, 'O_V_S: '  + visible_side_arr[use_object_visible_side],    (int(xc), int(yc)-15), font, 1, (0  , 110, 255), 2, cv2.LINE_4)
                         #        cv2.circle(frame, (int(xc), int(yc)), radius=5, color=(0, 255, 255), thickness=-1)
                         #        frame = cv2.rectangle(frame, (x_1, y_1), (x_2, y_2), (0, 255, 0), 1)
-                        #        'tailight_status', 'object_visible_side'
+                        #        'use_rear_light_status', 'use_object_visible_side'
                         #
                         #        cv2.imshow('frame',frame)
                         #        cv2.waitKey(10)
@@ -547,11 +547,11 @@ if __name__ == '__main__':
                         frame = cv2.imread(image_path)
                         frame = cv2.resize(frame, (new_img_width, new_img_height), interpolation = cv2.INTER_AREA)
 
-                        #['object_type', 'tailight_status_int', 'object_visible_side_int', 'xc', 'yc', 'w', 'h', 'xc_speed', 'yc_speed', 'x_1', 'y_1', 'x_2', 'y_2']
+                        #['object_type', 'use_rear_light_status_int', 'use_object_visible_side_int', 'xc', 'yc', 'w', 'h', 'xc_speed', 'yc_speed', 'x_1', 'y_1', 'x_2', 'y_2']
                         x_1, y_1, x_2, y_2 = int(all_together_all[y][9]), int(all_together_all[y][10]), int(all_together_all[y][11]), int(all_together_all[y][12])
                         xc, yc = int(all_together_all[y][3]), int(all_together_all[y][4])
-                        tailight_status = int(all_together_all[y][1])
-                        object_visible_side = int(all_together_all[y][2])
+                        use_rear_light_status = int(all_together_all[y][1])
+                        use_object_visible_side = int(all_together_all[y][2])
 
                         PR_int = "None"
                         PR_int = cfg.model.classes_name[int(lat_pred_all[y])]
@@ -567,8 +567,8 @@ if __name__ == '__main__':
                         cv2.putText(frame, 'f_1: '                  + str(f1_all[y]),         (475 , 15)        , font, 1, (240, 255, 0  ), 2, cv2.LINE_4)
                         cv2.putText(frame, 'PR_int: '               + PR_int + '|' + str(lat_pred_all[y]),                 (600 , 15)        , font, 1, (0  , 110, 255), 2, cv2.LINE_4)
                         cv2.putText(frame, 'GT_int: '               + GT_int + '|' + str(lat_true_all[y]),                 (850 , 15)        , font, 1, (0  , 110, 255), 2, cv2.LINE_4)
-                        cv2.putText(frame, 'T_S: '      + tailight_status_arr[tailight_status],        (int(xc), int(yc)-30), font, 1, (0  , 110, 255), 2, cv2.LINE_4)
-                        cv2.putText(frame, 'O_V_S: '  + visible_side_arr[object_visible_side],    (int(xc), int(yc)-15), font, 1, (0  , 110, 255), 2, cv2.LINE_4)
+                        cv2.putText(frame, 'T_S: '      + use_rear_light_status_arr[use_rear_light_status],        (int(xc), int(yc)-30), font, 1, (0  , 110, 255), 2, cv2.LINE_4)
+                        cv2.putText(frame, 'O_V_S: '  + visible_side_arr[use_object_visible_side],    (int(xc), int(yc)-15), font, 1, (0  , 110, 255), 2, cv2.LINE_4)
                         cv2.circle(frame, (int(xc), int(yc)), radius=5, color=(0, 255, 255), thickness=-1)
                         frame = cv2.rectangle(frame, (x_1, y_1), (x_2, y_2), (0, 255, 0), 1)
-                        'tailight_status', 'object_visible_side'
+                        'use_rear_light_status', 'use_object_visible_side'

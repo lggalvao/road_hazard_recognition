@@ -99,7 +99,7 @@ class Embedding_Temporal_LSTM(nn.Module):
             cfg.model.num_bbox_features +
             cfg.model.emb_dim_object_type +
             cfg.model.emb_dim_visible_side +
-            cfg.model.emb_dim_tailight_status
+            cfg.model.emb_dim_rear_light_status
         )
         
         self.embedding_size = cfg.model.output_embedding_size
@@ -115,8 +115,8 @@ class Embedding_Temporal_LSTM(nn.Module):
             padding_idx=0
         )
         self.rear_light_emb = nn.Embedding(
-            cfg.model.num_tailight_statuses,
-            cfg.model.emb_dim_tailight_status,
+            cfg.model.num_rear_light_statuses,
+            cfg.model.emb_dim_rear_light_status,
             padding_idx=0
         )
         
@@ -155,7 +155,7 @@ class Embedding_Temporal_LSTM(nn.Module):
                 bbox: (B, T, B)
                 object_type: (B, T)
                 object_visible_side: (B, T)
-                tailight_status: (B, T)
+                rear_light_status: (B, T)
                 missing_object_mask: (B, T)
     
         Returns:
@@ -165,27 +165,27 @@ class Embedding_Temporal_LSTM(nn.Module):
         bbox = inputs["bbox"]                    # (B, T, B)
         object_type = inputs["object_type"]      # (B, T)
         visible_side = inputs["object_visible_side"]
-        tailight_status = inputs["tailight_status"]
+        use_rear_light_status = inputs["rear_light_status"]
         mask = inputs.get("missing_object_mask", None)
         
         assert object_type.min().item() >= 0
         assert visible_side.min().item() >= 0
-        assert tailight_status.min().item() >= 0
+        assert use_rear_light_status.min().item() >= 0
         
         assert object_type.dtype == torch.long
         assert visible_side.dtype == torch.long
-        assert tailight_status.dtype == torch.long
+        assert use_rear_light_status.dtype == torch.long
         
         assert object_type.max().item() < self.object_type_emb.num_embeddings
         assert visible_side.max().item() < self.visible_side_emb.num_embeddings
-        assert tailight_status.max().item() < self.rear_light_emb.num_embeddings
+        assert use_rear_light_status.max().item() < self.rear_light_emb.num_embeddings
         
         # --------------------------------------------------
         # 1. Embed categorical features
         # --------------------------------------------------
         obj_emb = self.object_type_emb(object_type)          # (B, T, E1)
         side_emb = self.visible_side_emb(visible_side)       # (B, T, E2)
-        light_emb = self.rear_light_emb(tailight_status)     # (B, T, E3)
+        light_emb = self.rear_light_emb(use_rear_light_status)     # (B, T, E3)
         
         cat_emb = torch.cat(
             [obj_emb, side_emb, light_emb],

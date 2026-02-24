@@ -92,16 +92,9 @@ class Embedding_Temporal_LSTM(nn.Module):
 
         self.device = cfg.system.device
         self.batch_size = cfg.training.batch_size
-
-        # Feature dimensions
-        self.num_dynamic_features = (
-            cfg.model.num_kinematic_features +
-            cfg.model.num_bbox_features +
-            cfg.model.emb_dim_object_type +
-            cfg.model.emb_dim_visible_side +
-            cfg.model.emb_dim_tailight_status
-        )
         
+        self.use_object_visible_side = cfg.model.use_object_visible_side
+        self.use_rear_light_status = cfg.model.use_rear_light_status
         self.embedding_size = cfg.model.output_embedding_size
 
         self.object_type_emb = nn.Embedding(
@@ -109,15 +102,34 @@ class Embedding_Temporal_LSTM(nn.Module):
             cfg.model.emb_dim_object_type,
             padding_idx=0
         )
-        self.visible_side_emb = nn.Embedding(
-            cfg.model.num_visible_sides,
-            cfg.model.emb_dim_visible_side,
-            padding_idx=0
-        )
-        self.rear_light_emb = nn.Embedding(
-            cfg.model.num_tailight_statuses,
-            cfg.model.emb_dim_tailight_status,
-            padding_idx=0
+        
+        cat_dim = 0
+        
+        if self.use_object_visible_side:
+            self.visible_side_emb = nn.Embedding(
+                cfg.model.num_visible_sides,
+                cfg.model.emb_dim_visible_side,
+                padding_idx=0
+            )
+            
+            cat_dim += cfg.model.emb_dim_visible_side
+        
+        if self.use_rear_light_status:
+            self.rear_light_emb = nn.Embedding(
+                cfg.model.num_rear_light_statuses,
+                cfg.model.emb_dim_rear_light_status,
+                padding_idx=0
+            )
+            
+            cat_dim += cfg.model.emb_dim_rear_light_status
+        
+        
+        # Feature dimensions
+        self.num_dynamic_features = (
+            cfg.model.num_kinematic_features +
+            cfg.model.num_bbox_features +
+            cfg.model.emb_dim_object_type +
+            cat_dim
         )
         
         # ---- Temporal feature embedding ----
@@ -154,8 +166,8 @@ class Embedding_Temporal_LSTM(nn.Module):
                 kinematic: (B, T, K)
                 bbox: (B, T, B)
                 object_type: (B, T)
-                object_visible_side: (B, T)
-                tailight_status: (B, T)
+                use_object_visible_side: (B, T)
+                use_rear_light_status: (B, T)
                 missing_object_mask: (B, T)
     
         Returns:
@@ -164,33 +176,39 @@ class Embedding_Temporal_LSTM(nn.Module):
         kinematic = inputs["kinematic"]          # (B, T, K)
         bbox = inputs["bbox"]                    # (B, T, B)
         object_type = inputs["object_type"]      # (B, T)
-        visible_side = inputs["object_visible_side"]
-        tailight_status = inputs["tailight_status"]
+        
         mask = inputs.get("missing_object_mask", None)
         
         assert object_type.min().item() >= 0
-        assert visible_side.min().item() >= 0
-        assert tailight_status.min().item() >= 0
-        
         assert object_type.dtype == torch.long
-        assert visible_side.dtype == torch.long
-        assert tailight_status.dtype == torch.long
-        
         assert object_type.max().item() < self.object_type_emb.num_embeddings
-        assert visible_side.max().item() < self.visible_side_emb.num_embeddings
-        assert tailight_status.max().item() < self.rear_light_emb.num_embeddings
         
         # --------------------------------------------------
         # 1. Embed categorical features
         # --------------------------------------------------
         obj_emb = self.object_type_emb(object_type)          # (B, T, E1)
-        side_emb = self.visible_side_emb(visible_side)       # (B, T, E2)
-        light_emb = self.rear_light_emb(tailight_status)     # (B, T, E3)
         
-        cat_emb = torch.cat(
-            [obj_emb, side_emb, light_emb],
-            dim=-1
-        )                                                     # (B, T, Ec)
+        cat_features = [obj_emb]
+        
+        if self.use_object_visible_side:
+            visible_side = inputs["object_visible_side"]
+            assert visible_side.dtype == torch.long
+            assert visible_side.min().item() >= 0
+            assert visible_side.max().item() < self.visible_side_emb.num_embeddings
+            
+            side_emb = self.visible_side_emb(visible_side)
+            cat_features.append(side_emb)
+    
+        if self.use_rear_light_status:
+            use_rear_light_status = inputs["rear_light_status"]
+            assert use_rear_light_status.dtype == torch.long
+            assert use_rear_light_status.min().item() >= 0
+            assert use_rear_light_status.max().item() < self.rear_light_emb.num_embeddings
+        
+            light_emb = self.rear_light_emb(use_rear_light_status)
+            cat_features.append(light_emb)
+        
+        cat_emb = torch.cat(cat_features, dim=-1)
 
         # --------------------------------------------------
         # 2. Concatenate numeric + categorical

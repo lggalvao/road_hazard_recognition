@@ -84,13 +84,14 @@ def preprocess_sequences(cfg, phase):
         #of clsses might not get all the object classes
         cfg.model.num_object_types = len(data["object_type_consecutive"].unique())
         cfg.model.num_visible_sides = len(data["object_visible_side_int"].unique())
-        cfg.model.num_tailight_statuses = len(data["tailight_status_int"].unique())
+        cfg.model.num_rear_light_statuses = len(data["tailight_status_int"].unique())
         cfg.model.emb_dim_object_type = 5
         cfg.model.emb_dim_visible_side = 2
-        cfg.model.emb_dim_tailight_status = 5
+        cfg.model.emb_dim_rear_light_status = 5
         
         if phase == "train":
             dataset_split_path = cfg.data.train_csv_set_output_path
+            
         else:
             dataset_split_path = cfg.data.test_csv_set_output_path
         
@@ -113,8 +114,8 @@ def preprocess_sequences(cfg, phase):
         
         # build features here (args could be cfg.model and cfg flags)
         args_dict = {
-            "object_visible_side": cfg.model.object_visible_side,
-            "tailight_status": cfg.model.tailight_status,
+            "use_object_visible_side": cfg.model.use_object_visible_side,
+            "use_rear_light_status": cfg.model.use_rear_light_status,
             "model": cfg.model.model,
         }
         
@@ -136,6 +137,13 @@ def preprocess_sequences(cfg, phase):
         
         # ---- Create temporal sequences ----
         logger.info("Creating Temporal Sequences")
+        
+        if phase =="train":
+            stride = cfg.data.sequence_stride
+        
+        else:
+            stride = 1
+        
         samples = create_temporal_sequences(
             cfg,
             df=data,
@@ -191,7 +199,7 @@ def cache_sequences_tensor(cfg, samples, phase):
             "bbox": torch.from_numpy(seq["bbox_hist"]).float(),
             "object_type": torch.from_numpy(seq["object_type_feats_hist"]).long(),
             "object_visible_side": torch.from_numpy(seq["object_visible_side_int_feats_hist"]).long(),
-            "tailight_status": torch.from_numpy(seq["tailight_status_int_feats_hist"]).long(),
+            "rear_light_status": torch.from_numpy(seq["rear_light_status_int_feats_hist"]).long(),
             "missing_object_mask": torch.from_numpy(seq["object_detected_hist"]).float(),
             "true_hazard_enc": torch.tensor(seq["true_hazard_enc"], dtype=torch.long),
             "frame_n": torch.tensor(seq["frame_n"], dtype=torch.long),
@@ -331,8 +339,8 @@ class RoadHazardDataset(Dataset):
                 seq["object_visible_side_int_feats_hist"]
             ).long()
             
-            tailight_status = torch.from_numpy(
-                seq["tailight_status_int_feats_hist"]
+            rear_light_status = torch.from_numpy(
+                seq["rear_light_status_int_feats_hist"]
             ).long()
         
             # ---------------------------------
@@ -404,7 +412,7 @@ class RoadHazardDataset(Dataset):
                 "bbox": bbox,                        # [T, B]
                 "object_type": object_type,          # [T]
                 "object_visible_side": object_visible_side,
-                "tailight_status": tailight_status,
+                "rear_light_status": rear_light_status,
                 "true_hazard_enc": true_hazard_enc,
                 "frame_n": frame_n,
                 "start_frame": start_frame,
@@ -452,7 +460,7 @@ def prepare_inputs(batch, cfg):
     kinematic = (batch.get("kinematic"))                # list(Tensor) or None
     bbox = (batch.get("bbox"))                # list(Tensor) or None
     object_visible_side = (batch.get("object_visible_side"))                # list(Tensor) or None
-    tailight_status = (batch.get("tailight_status"))                # list(Tensor) or None
+    rear_light_status = (batch.get("rear_light_status"))                # list(Tensor) or None
     object_type = (batch.get("object_type"))                # list(Tensor) or None
     
     missing_object_mask = (batch.get("missing_object_mask")) #List of tensors 
@@ -480,7 +488,7 @@ def prepare_inputs(batch, cfg):
                 "bbox": bbox,
                 "object_type": object_type,
                 "object_visible_side": object_visible_side,
-                "tailight_status": tailight_status,
+                "rear_light_status": rear_light_status,
                 "missing_object_mask": missing_object_mask
             },
             labels
@@ -520,7 +528,7 @@ def prepare_inputs(batch, cfg):
                 "bbox": bbox,
                 "object_type": object_type,
                 "object_visible_side": object_visible_side,
-                "tailight_status": tailight_status,
+                "rear_light_status": rear_light_status,
                 "images": images[0],
                 "missing_object_mask": missing_object_mask
             },

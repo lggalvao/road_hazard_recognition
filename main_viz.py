@@ -56,7 +56,7 @@ shape_features = [
 
 categorical_numeric = [
     "object_type",
-    "tailight_status_int",
+    "rear_light_status_int",
     "object_visible_side_int",
 ]
 

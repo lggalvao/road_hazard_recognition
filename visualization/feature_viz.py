@@ -88,7 +88,7 @@ def plot_tailight_vs_hazard(df: pd.DataFrame, save_dir="./output/visualizations"
     fig, ax = plt.subplots(figsize=(10, 6))
 
     # Crosstab plot
-    cross = pd.crosstab(df['tailight_status'], df['hazard_flag'])
+    cross = pd.crosstab(df['use_rear_light_status'], df['hazard_flag'])
     cross.plot(kind='bar', stacked=True, ax=ax)
 
     # Labels and title
@@ -111,10 +111,10 @@ def plot_visible_side_vs_hazard(df: pd.DataFrame, save_dir="./output/visualizati
     Plot object visible side vs hazard flag and save the figure.
     """
     # Create crosstab
-    cross = pd.crosstab(df['object_visible_side'], df['hazard_flag'])
+    cross = pd.crosstab(df['use_object_visible_side'], df['hazard_flag'])
 
     if cross.empty:
-        print("No data found for object_visible_side vs hazard_flag.")
+        print("No data found for use_object_visible_side vs hazard_flag.")
         return None
 
     # Ensure save directory exists
@@ -134,7 +134,7 @@ def plot_visible_side_vs_hazard(df: pd.DataFrame, save_dir="./output/visualizati
 
     # Layout and save
     fig.tight_layout()
-    fig.savefig(save_dir / "object_visible_side_vs_hazard.png", dpi=300)
+    fig.savefig(save_dir / "use_object_visible_side_vs_hazard.png", dpi=300)
 
     # Close figure to free memory
     plt.close(fig)

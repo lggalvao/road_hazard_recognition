@@ -138,7 +138,7 @@ def create_temporal_sequences(
         object_detected = np.stack(group["object_detected"].values)
         object_type_feats = np.stack(group["object_type_consecutive"].values)
         object_visible_side = np.stack(group["object_visible_side_int"].values)
-        tailight_status = np.stack(group["tailight_status_int"].values)
+        rear_light_status = np.stack(group["rear_light_status_int"].values)
         categorical_feats = np.stack(group["categorical"].values)
         kinematic_feats = np.stack(group["kinematic"].values)
         bbox_feats = np.stack(group["bbox"].values)
@@ -171,7 +171,7 @@ def create_temporal_sequences(
 
                 "object_visible_side_int_feats_hist": object_visible_side[start:end],
 
-                "tailight_status_int_feats_hist": tailight_status[start:end],
+                "rear_light_status_int_feats_hist": rear_light_status[start:end],
 
                 "categorical_hist": categorical_feats[start:end],
 

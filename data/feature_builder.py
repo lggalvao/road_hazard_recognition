@@ -6,7 +6,7 @@ import pandas as pd
 
 raw_cols = [
     "object_type",
-    "tailight_status_int",
+    "rear_light_status_int",
     "object_visible_side_int",
     "xc", "yc", "w", "h",
     "x_1", "y_1", "x_2", "y_2"
@@ -41,8 +41,8 @@ def build_all_together_features(video_df: pd.DataFrame, args: dict) -> pd.DataFr
     if args.get("object_visible_side", False):
         categorical.append("object_visible_side_int")
 
-    if args.get("tailight_status", False):
-        categorical.append("tailight_status_int")
+    if args.get("rear_light_status", False):
+        categorical.append("rear_light_status_int")
 
     # ---- Normalized numeric features (ONLY numeric) ----
     norm_cols = kinematic + bbox + categorical
