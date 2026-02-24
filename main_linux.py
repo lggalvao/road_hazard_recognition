@@ -128,6 +128,9 @@ if __name__ == '__main__':
         cfg.model.dropout_fc= exp_config.dropout_fc
         cfg.model.dropout_cnn = exp_config.dropout_cnn
         cfg.data.sequence_stride = exp_config.sequence_stride
+        cfg.model.dropout_cnn = exp_config.dropout_cnn
+        cfg.model.dropout_pre_attention = exp_config.dropout_pre_attention
+        cfg.model.dropout_fc = exp_config.dropout_fc
         
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
         

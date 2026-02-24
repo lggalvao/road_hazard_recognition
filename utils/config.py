@@ -87,8 +87,9 @@ class ModelConfig:
     output_embedding_size: int = 112
     dropout_embedding_feature: float = 0.25
     fc_output_size: int = 128
-    dropout_fc: float = 0.8
     dropout_cnn: float = 0.3
+    dropout_pre_attention = 0.2
+    dropout_fc: float = 0.8
     num_classes: int = 10
     classes_type: str = "motion_towards"
     classes_name: List[str] = field(

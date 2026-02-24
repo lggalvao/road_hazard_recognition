@@ -149,8 +149,11 @@ class Embedding_Temporal_LSTM(nn.Module):
         )
 
         # Regularization
-        self.dropout = nn.Dropout(cfg.model.dropout_fc)
-        self.dropout_cnn = nn.Dropout(0.3)
+        self.dropout_cnn = nn.Dropout(cfg.model.dropout_cnn)
+        self.dropout_pre_attention = nn.Dropout(cfg.model.dropout_pre_attention)
+        self.dropout_fc = nn.Dropout(cfg.model.dropout_fc)
+        
+        
 
         # Classification head
         self.num_classes = cfg.model.num_classes
@@ -237,12 +240,13 @@ class Embedding_Temporal_LSTM(nn.Module):
         x = x.permute(0, 2, 1)                                # (B, T, E)
     
         x = self.norm(x)
+        x = self.dropout_pre_attention(x)
     
         # --------------------------------------------------
         # 4. Temporal attention
         # --------------------------------------------------
         attended_features, attn_weights = self.temporal_attention(x, mask)
-        attended_features = self.dropout(attended_features)
+        attended_features = self.dropout_fc(attended_features)
     
         # --------------------------------------------------
         # 5. Classification
