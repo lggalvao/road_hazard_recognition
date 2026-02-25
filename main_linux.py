@@ -82,7 +82,7 @@ if __name__ == '__main__':
     cfg.model.freeze_strategy = "head"
     cfg.training.ts_augme = False
     cfg.loss.focal_loss_gamma = 1
-    cfg.training.patience = 5
+    cfg.training.patience = 3
     cfg.data.split_dataset = True
     cfg.logging.pred_save_wrong = False
     cfg.logging.pred_save_frame_flag = False

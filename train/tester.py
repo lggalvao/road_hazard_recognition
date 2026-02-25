@@ -28,6 +28,7 @@ def test_model(cfg, net, allsetDataloader, run_wandb, log_file_path):
     is_train = False
     for load_file in best_paths:
     
+        print(f"Testing model: {load_file}")
         net.load_state_dict(torch.load(load_file, map_location=torch.device(cfg.system.device), weights_only=True))
         net.eval()  #switches certain layers into inference mode e.g., BatchNorm, Dropout
         
@@ -72,6 +73,7 @@ def test_model(cfg, net, allsetDataloader, run_wandb, log_file_path):
             classes=cfg.model.classes_name
         )
         
+        print(f"F1_Macro %: {metrics['f1_macro']:.3f}")
         update_results_csv(cfg, metrics)
 
 @timeit

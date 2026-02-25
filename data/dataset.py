@@ -138,17 +138,17 @@ def preprocess_sequences(cfg, phase):
         # ---- Create temporal sequences ----
         logger.info("Creating Temporal Sequences")
         
-        if phase =="train":
+        if phase == "train":
             stride = cfg.data.sequence_stride
         
-        else:
+        elif phase == "val":
             stride = 1
         
         samples = create_temporal_sequences(
             cfg,
             df=data,
             seq_len=cfg.model.enc_input_seq_length,
-            stride=cfg.data.sequence_stride,
+            stride=stride,
             label_key="hazard_type_int",
             phase = phase
         )

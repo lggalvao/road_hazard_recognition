@@ -58,6 +58,8 @@ class GPUTransform(torch.nn.Module):
 def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criterion, early_stopping, run_wandb, log_file_path):
 
     gpu_transform = GPUTransform().to(cfg.system.device)
+    previous_train_F1 = None
+    best_val_f1 = 0
     
     for epoch in range(cfg.training.num_epochs):
         print(f"\nEpoch {epoch}/{cfg.training.num_epochs-1}")
@@ -102,20 +104,27 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
 
             if is_train:
                 exp_lr_scheduler.step()
+                previous_train_F1 = metrics["f1_macro"]
 
             else:  # validation
-                f1_macro = metrics["f1_macro"]
+                current_val_f1_macro = metrics["f1_macro"]
+                f1_train_val_gap = previous_train_F1 - current_val_f1_macro
+                
                 early_stopping(
-                    #-f1_macro,
                     avg_loss,
                     net
                 )
-                #save_checkpoint(net, log_file_path, f"epoch{epoch}")
+                
                 if early_stopping.early_stop:
                     print("Early stopping triggered.")
                     print_average_timings()
                     return
-        
+                
+                if current_val_f1_macro > best_val_f1 and f1_train_val_gap < 0.15:
+                    print(f"Val F1 Macro increased: {best_val_f1:3f}-->{current_val_f1_macro:.3f}")
+                    best_val_f1 = current_val_f1_macro
+                    save_checkpoint(net, log_file_path, "f1_macro_val_best")
+
         print_average_timings()
 
 @timeit
@@ -183,12 +192,12 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
         epoch_targets.extend(targets.detach().cpu().numpy())
         epoch_preds.extend(torch.argmax(preds, dim=1).detach().cpu().numpy())
 
-    print("prepare_inputs_time:", prepare_inputs_time)
-    print("move_to_device_time:", move_to_device_time)
-    print("gpu_transform_time:", gpu_transform_time)
-    print("forward_pass_time:", forward_pass_time)
-    print("compute_loss_time:", compute_loss_time)
-    print("backward_time:", backward_time)
+    print(f"prepare_inputs_time: {prepare_inputs_time:.3f}")
+    print(f"move_to_device_time: {move_to_device_time:.3f}")
+    print(f"gpu_transform_time: {gpu_transform_time:.3f}")
+    print(f"forward_pass_time: {forward_pass_time:.3f}")
+    print(f"compute_loss_time: {compute_loss_time:.3f}")
+    print(f"backward_time: {backward_time:.3f}")
     #print("dataloader_time:", dataloader_time)
 
     
