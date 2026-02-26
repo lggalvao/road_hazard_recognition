@@ -13,7 +13,7 @@ EXPERIMENTS_0 = [
         "stage": 0,
         "loss_function": "FocalLoss",
         "batch_size": 64,
-        "dropout_cnn": 0.0,
+        "dropout_cnn": 0.1,
         "dropout_pre_attention": 0.1,
         "dropout_fc": 0.5,
         "learning_rate": 0.0001,
