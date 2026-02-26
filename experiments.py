@@ -101,26 +101,6 @@ EXPERIMENTS_0 = [
         "cached_dataset": False,
         "comments": None
     },
-#    {
-#        "input_feature_type": "single_img_input",
-#        "use_object_visible_side": None,
-#        "use_rear_light_status": None,
-#        "model": "CNN_LSTM",
-#        "input_img_type1": "img_local_context_ROI_1",
-#        "input_img_type2": None,
-#        "enc_input_seq_length": 16,
-#        "classes_type": "literature_classes",
-#        "stage": 0,
-#        "loss_function": "FocalLoss",
-#        "batch_size": 32,
-#        "dropout_cnn": 0.5,
-#        "dropout_pre_attention": 0.3,
-#        "dropout_fc": 0.2,
-#        "learning_rate": 0.0001,
-#        "sequence_stride": 3, 
-#        "cached_dataset": False,
-#        "comments": None
-#    },
 ]
 
 
@@ -138,10 +118,10 @@ EXPERIMENTS_1 = [
         "loss_function": "FocalLoss",
         "batch_size": 32,
         "dropout_cnn": 0.5,
-        "dropout_pre_attention": 0.3,
-        "dropout_fc": 0.2,
+        "dropout_pre_attention": 0.0,
+        "dropout_fc": 0.0,
         "learning_rate": 0.0001,
-        "sequence_stride": 1, 
+        "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": None
     },
@@ -157,11 +137,11 @@ EXPERIMENTS_1 = [
         "stage": 0,
         "loss_function": "FocalLoss",
         "batch_size": 32,
-        "dropout_cnn": 0.5,
-        "dropout_pre_attention": 0.3,
-        "dropout_fc": 0.2,
+        "dropout_cnn": 0.0,
+        "dropout_pre_attention": 0.0,
+        "dropout_fc": 0.5,
         "learning_rate": 0.0001,
-        "sequence_stride": 2, 
+        "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": None
     },
