@@ -93,6 +93,7 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
 
             metrics = evaluate_predictions(targets, preds, phase, cfg.model.classes_name)
             metrics["loss"] = avg_loss
+            metrics["best_val_f1"] = best_val_f1
 
             log_results(
                 epoch = epoch,

@@ -102,7 +102,7 @@ EXPERIMENTS_1 = [
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
         "dropout_fc": 0.5,
-        "learning_rate": 0.0003,
+        "learning_rate": 0.0004,
         "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": None
@@ -122,7 +122,7 @@ EXPERIMENTS_1 = [
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
         "dropout_fc": 0.5,
-        "learning_rate": 0.0001,
+        "learning_rate": 0.0004,
         "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": None
@@ -142,7 +142,7 @@ EXPERIMENTS_1 = [
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
         "dropout_fc": 0.5,
-        "learning_rate": 0.0001,
+        "learning_rate": 0.0004,
         "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": None
@@ -162,7 +162,7 @@ EXPERIMENTS_1 = [
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
         "dropout_fc": 0.5,
-        "learning_rate": 0.0001,
+        "learning_rate": 0.0004,
         "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": None
@@ -182,7 +182,7 @@ EXPERIMENTS_1 = [
         "dropout_cnn": 0.0,
         "dropout_pre_attention": 0.0,
         "dropout_fc": 0.5,
-        "learning_rate": 0.0001,
+        "learning_rate": 0.0004,
         "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": None
