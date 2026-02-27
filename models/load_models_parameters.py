@@ -5,7 +5,8 @@ from models import (
     Embedding_Transformer,
     CNN_LSTM,
     Embedding_CNN_LSTM,
-    CNN_Transformer
+    CNN_Transformer,
+    TimeSformerNet
 )
 from utils.timing import timeit
 
@@ -70,6 +71,9 @@ def load_model(cfg, allsetDataloader):
             net = CNN_Transformer.CNN_Transformer(cfg)
             if cfg.training.stage == 1:
                 freeze_cnn(net)
+        
+        elif model_name == "TimeSformerNet":
+            net = TimeSformerNet.TimeSformerNet(cfg)
         
         else:
             raise ValueError(f"Unsupported model {model_name}")
