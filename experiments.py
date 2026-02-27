@@ -67,7 +67,7 @@ EXPERIMENTS_0 = [
 
 EXPERIMENTS_1 = [
        {
-        "input_feature_type": "explicit_and_multi_img_input",
+        "input_feature_type": "explicit_and_single_img_input_parameters",
         "use_object_visible_side": False,
         "use_rear_light_status": False,
         "model": "CNN_LSTM",
@@ -87,7 +87,7 @@ EXPERIMENTS_1 = [
         "comments": None
     },
        {
-        "input_feature_type": "explicit_and_multi_img_input",
+        "input_feature_type": "explicit_and_single_img_input_parameters",
         "use_object_visible_side": True,
         "use_rear_light_status": False,
         "model": "CNN_LSTM",
@@ -107,7 +107,7 @@ EXPERIMENTS_1 = [
         "comments": None
     },
        {
-        "input_feature_type": "explicit_and_multi_img_input",
+        "input_feature_type": "explicit_and_single_img_input_parameters",
         "use_object_visible_side": False,
         "use_rear_light_status": True,
         "model": "CNN_LSTM",
@@ -127,7 +127,7 @@ EXPERIMENTS_1 = [
         "comments": None
     },
        {
-        "input_feature_type": "explicit_and_multi_img_input",
+        "input_feature_type": "explicit_and_single_img_input_parameters",
         "use_object_visible_side": True,
         "use_rear_light_status": True,
         "model": "CNN_LSTM",
@@ -147,7 +147,7 @@ EXPERIMENTS_1 = [
         "comments": None
     },
        {
-        "input_feature_type": "explicit_and_multi_img_input",
+        "input_feature_type": "explicit_and_single_img_input_parameters",
         "use_object_visible_side": False,
         "use_rear_light_status": False,
         "model": "CNN_LSTM",
