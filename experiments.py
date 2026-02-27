@@ -13,7 +13,7 @@ EXPERIMENTS_0 = [
         "stage": 0,
         "loss_function": "FocalLoss",
         "batch_size": 32,
-        "freeze_strategy": "head",  #head, partial, full
+        "freeze_strategy": "full",  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
@@ -57,7 +57,7 @@ EXPERIMENTS_0 = [
         "stage": 0,
         "loss_function": "FocalLoss",
         "batch_size": 32,
-        "freeze_strategy": "full",  #head, partial, full
+        "freeze_strategy": "head",  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
