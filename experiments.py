@@ -13,6 +13,7 @@ EXPERIMENTS_0 = [
         "stage": 0,
         "loss_function": "FocalLoss",
         "batch_size": 32,
+        "freeze_strategy": "head",  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
@@ -26,7 +27,7 @@ EXPERIMENTS_0 = [
         "input_feature_type": "single_img_input",
         "use_object_visible_side": None,
         "use_rear_light_status": None,
-        "model": "CNN_LSTM",
+        "model": "TimeSformerNet",
         "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
@@ -34,11 +35,12 @@ EXPERIMENTS_0 = [
         "stage": 0,
         "loss_function": "FocalLoss",
         "batch_size": 32,
+        "freeze_strategy": "partial",  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
         "dropout_fc": 0.5,
-        "learning_rate": 0.0002,
+        "learning_rate": 0.0001,
         "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": None
@@ -47,7 +49,7 @@ EXPERIMENTS_0 = [
         "input_feature_type": "single_img_input",
         "use_object_visible_side": None,
         "use_rear_light_status": None,
-        "model": "CNN_LSTM",
+        "model": "TimeSformerNet",
         "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
@@ -55,15 +57,39 @@ EXPERIMENTS_0 = [
         "stage": 0,
         "loss_function": "FocalLoss",
         "batch_size": 32,
+        "freeze_strategy": "full",  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
         "dropout_fc": 0.5,
-        "learning_rate": 0.00009,
+        "learning_rate": 0.0001,
         "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": None
     },
+
+    #{
+    #    "input_feature_type": "single_img_input",
+    #    "use_object_visible_side": None,
+    #    "use_rear_light_status": None,
+    #    "model": "CNN_LSTM",
+    #    "input_img_type1": "img_local_context_ROI_1",
+    #    "input_img_type2": None,
+    #    "enc_input_seq_length": 16,
+    #    "classes_type": "literature_classes",
+    #    "stage": 0,
+    #    "loss_function": "FocalLoss",
+    #    "batch_size": 32,
+    #    "freeze_strategy": "full",  #head, partial, full
+    #    "dropout_cnn_dynamic": 0.0,
+    #    "dropout_cnn": 0.5,
+    #    "dropout_pre_attention": 0.0,
+    #    "dropout_fc": 0.5,
+    #    "learning_rate": 0.00009,
+    #    "sequence_stride": 4, 
+    #    "cached_dataset": False,
+    #    "comments": None
+    #},
 
    #{
    #     "input_feature_type": "explicit_feature",
@@ -103,6 +129,7 @@ EXPERIMENTS_1 = [
         "stage": 0,
         "loss_function": "FocalLoss",
         "batch_size": 32,
+        "freeze_strategy": "head",  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
@@ -124,6 +151,7 @@ EXPERIMENTS_1 = [
         "stage": 0,
         "loss_function": "FocalLoss",
         "batch_size": 32,
+        "freeze_strategy": "head",  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
@@ -145,6 +173,7 @@ EXPERIMENTS_1 = [
         "stage": 0,
         "loss_function": "FocalLoss",
         "batch_size": 32,
+        "freeze_strategy": "head",  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
@@ -166,6 +195,7 @@ EXPERIMENTS_1 = [
         "stage": 0,
         "loss_function": "FocalLoss",
         "batch_size": 32,
+        "freeze_strategy": "head",  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,

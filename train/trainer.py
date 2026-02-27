@@ -139,7 +139,6 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
     forward_pass_time = 0
     compute_loss_time = 0
     backward_time = 0
-    #dataloader_time = 0
 
     epoch_preds, epoch_targets = [], []
 
@@ -149,7 +148,6 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
         inputs, targets = prepare_inputs(data, cfg)
         t2 =time.time()
         
-        #dataloader_time += data["dataloader_time"]
         prepare_inputs_time += (t2 - t1)
         
         
@@ -199,10 +197,9 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
     print(f"forward_pass_time: {forward_pass_time:.3f}")
     print(f"compute_loss_time: {compute_loss_time:.3f}")
     print(f"backward_time: {backward_time:.3f}")
-    #print("dataloader_time:", dataloader_time)
-
     
     avg_loss = epoch_loss / len(dataloader)
+    
     return avg_loss, epoch_targets, epoch_preds
 
 

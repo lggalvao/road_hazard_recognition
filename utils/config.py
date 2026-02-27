@@ -78,7 +78,7 @@ class DataConfig:
 class ModelConfig:
     model: str = "Embedding_Temporal_LSTM"
     cnn_model: Optional[str] = None
-    freeze_strategy: str = "head"
+    freeze_strategy: str = "head"  #for TimeSformerNet: head, partial, full
     encoder_type: str = "LSTM"
     enc_hidden_size: int = 112
     enc_input_seq_length: int = 13
