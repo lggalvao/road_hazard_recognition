@@ -12,7 +12,7 @@ EXPERIMENTS_0 = [
         "classes_type": "literature_classes",
         "stage": 0,
         "loss_function": "FocalLoss",
-        "batch_size": 16,
+        "batch_size": 32,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
         "dropout_fc": 0.5,
