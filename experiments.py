@@ -16,7 +16,7 @@ EXPERIMENTS_0 = [
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
         "dropout_fc": 0.5,
-        "learning_rate": 0.001,
+        "learning_rate": 0.0001,
         "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": None
