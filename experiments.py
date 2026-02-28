@@ -128,7 +128,7 @@ EXPERIMENTS_1 = [
         "classes_type": "literature_classes",
         "stage": 0,
         "loss_function": "FocalLoss",
-        "batch_size": 16,
+        "batch_size": 8,
         "freeze_strategy": "full",  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
