@@ -126,10 +126,11 @@ if __name__ == '__main__':
         cfg.data.cached_dataset = exp_config.cached_dataset
         cfg.training.learning_rate = exp_config.learning_rate
         cfg.model.dropout_fc= exp_config.dropout_fc
-        cfg.model.dropout_cnn = exp_config.dropout_cnn
         cfg.data.sequence_stride = exp_config.sequence_stride
         cfg.model.dropout_cnn = exp_config.dropout_cnn
         cfg.model.dropout_pre_attention = exp_config.dropout_pre_attention
+        cfg.model.dropout_cnn_dynamic = exp_config.dropout_cnn_dynamic
+        cfg.model.freeze_strategy = exp_config.freeze_strategy
         cfg.model.dropout_fc = exp_config.dropout_fc
         
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
