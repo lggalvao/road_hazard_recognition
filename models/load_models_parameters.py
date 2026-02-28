@@ -6,7 +6,8 @@ from models import (
     CNN_LSTM,
     Embedding_CNN_LSTM,
     CNN_Transformer,
-    TimeSformerNet
+    TimeSformerNet,
+    VideoMAENet
 )
 from utils.timing import timeit
 
@@ -75,6 +76,9 @@ def load_model(cfg, allsetDataloader):
         elif model_name == "TimeSformerNet":
             net = TimeSformerNet.TimeSformerNet(cfg)
         
+        elif model_name == "VideoMAENet":
+            net = VideoMAENet.VideoMAENet(cfg)
+            
         else:
             raise ValueError(f"Unsupported model {model_name}")
     
