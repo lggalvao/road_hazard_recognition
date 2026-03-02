@@ -115,7 +115,8 @@ class ModelConfig:
 class TrainingConfig:
     batch_size: int = 128
     num_epochs: int = 30
-    learning_rate: float = 1e-4
+    backbone_lr: float = 1e-4
+    head_lr: float = 1e-4
     cnn_lr: float = 1e-4
     optimizer: str = "Adam"
     weight_decay: float = 0.0006

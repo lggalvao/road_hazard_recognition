@@ -126,7 +126,9 @@ if __name__ == '__main__':
         cfg.training.stage = exp_config.stage
         cfg.training.batch_size = exp_config.batch_size
         cfg.data.cached_dataset = exp_config.cached_dataset
-        cfg.training.learning_rate = exp_config.learning_rate
+        cfg.training.backbone_lr = exp_config.backbone_lr
+        cfg.training.head_lr = exp_config.head_lr
+        cfg.training.weight_decay = exp_config.weight_decay
         cfg.model.dropout_fc= exp_config.dropout_fc
         cfg.data.sequence_stride = exp_config.sequence_stride
         cfg.model.dropout_cnn = exp_config.dropout_cnn

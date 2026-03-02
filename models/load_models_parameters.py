@@ -136,7 +136,8 @@ def Trajectory_Embedding_LSTM_parameters(cfg):
     cfg.training.batch_size = 128
     cfg.training.num_epochs = 40  #15
     cfg.training.optimizer = 'Adam'  #SGD, Adam, AdamW
-    cfg.training.learning_rate = 0.0001  #Learnign rate for SGD(0.09), Adam(0.00006) using images
+    cfg.training.backbone_lr = 0.0001  #Learnign rate for SGD(0.09), Adam(0.00006) using images
+    cfg.training.head_lr = 5e-4
     cfg.training.cnn_lr = 1e-5
     cfg.training.weight_decay = 0.0006
     cfg.training.step_size = 25
@@ -206,7 +207,8 @@ def explicit_feature_parameters(cfg):
     cfg.training.batch_size = 128
     cfg.training.num_epochs = 30#30 15
     cfg.training.optimizer = 'Adam' #SGD, Adam, AdamW
-    cfg.training.learning_rate = 0.0001#Learnign rate for SGD(0.09), Adam(0.00006) using images
+    cfg.training.backbone_lr = 0.0001#Learnign rate for SGD(0.09), Adam(0.00006) using images
+    cfg.training.head_lr = 5e-4
     cfg.training.cnn_lr = 1e-5
     cfg.training.weight_decay = 0.0009
     cfg.training.step_size = 30
@@ -245,7 +247,8 @@ def single_img_input_parameters(cfg):
     cfg.training.batch_size = 16 #CNN:50, Vision Transformer:20
     cfg.training.num_epochs = 30
     cfg.training.optimizer = 'SGD' #SGD, Adam, AdamW
-    cfg.training.learning_rate = 0.00009 #0.00009#Learning rate for SGD(0.09), Adam(0.00006) using images
+    cfg.training.backbone_lr = 0.00009 #0.00009#Learning rate for SGD(0.09), Adam(0.00006) using images
+    cfg.training.head_lr = 5e-4
     cfg.training.cnn_lr = 1e-5
     cfg.training.weight_decay = 0.0001 #0.0001
     cfg.training.step_size = 30
@@ -280,7 +283,8 @@ def multi_img_input_parameters(cfg):
     cfg.training.batch_size = 64
     cfg.training.num_epochs = 30
     cfg.training.optimizer = 'SGD' #SGD, Adam, AdamW
-    cfg.training.learning_rate = 0.0003#Learning rate for SGD(0.09), Adam(0.00006) using images
+    cfg.training.backbone_lr = 0.0003#Learning rate for SGD(0.09), Adam(0.00006) using images
+    cfg.training.head_lr = 5e-4
     cfg.training.cnn_lr = 1e-5
     cfg.training.weight_decay = 0.0001 #0.0001
     cfg.training.step_size = 30
@@ -316,7 +320,8 @@ def explicit_and_single_img_input_parameters(cfg):
     cfg.training.batch_size = 64
     cfg.training.num_epochs = 40
     cfg.training.optimizer = 'SGD' #SGD, Adam, AdamW
-    cfg.training.learning_rate = 0.0001#Learnign rate for SGD(0.09), Adam(0.00006) using images
+    cfg.training.backbone_lr = 0.0001#Learnign rate for SGD(0.09), Adam(0.00006) using images
+    cfg.training.head_lr = 5e-4
     cfg.training.cnn_lr = 1e-5
     cfg.training.weight_decay = 0.0001 #0.0001
     cfg.training.step_size = 40
@@ -352,7 +357,8 @@ def explicit_and_multi_img_input_parameters(cfg):
     cfg.training.batch_size = 64
     cfg.training.num_epochs = 40 #25
     cfg.training.optimizer = 'SGD' #SGD, Adam, AdamW
-    cfg.training.learning_rate = 0.0003 #Learnign rate for SGD(0.09), Adam(0.00006) using images
+    cfg.training.backbone_lr = 0.0003 #Learnign rate for SGD(0.09), Adam(0.00006) using images
+    cfg.training.head_lr = 5e-4
     cfg.training.cnn_lr = 1e-5
     cfg.training.weight_decay = 0.0001
     cfg.training.step_size = 40
