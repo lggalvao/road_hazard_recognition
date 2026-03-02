@@ -132,6 +132,7 @@ if __name__ == '__main__':
         cfg.model.dropout_cnn_dynamic = exp_config.dropout_cnn_dynamic
         cfg.model.freeze_strategy = exp_config.freeze_strategy
         cfg.model.dropout_fc = exp_config.dropout_fc
+        cfg.training.optimizer = exp_config.optimizer
         
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
         

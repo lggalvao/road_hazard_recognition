@@ -55,22 +55,22 @@ def get_optimizer(cfg, net):
     # ------------------------
     # Select optimizer
     # ------------------------
-    optimizer_type = cfg.training.optimizer.lower()
-    if optimizer_type == 'adam':
+    optimizer_type = cfg.training.optimizer
+    if optimizer_type == 'Adam':
         optimizer = torch.optim.Adam(
             param_groups,
             weight_decay=cfg.training.weight_decay
         )
-    elif optimizer_type == 'sgd':
+    elif optimizer_type == 'SGD':
         optimizer = torch.optim.SGD(
             param_groups,
             momentum=getattr(cfg.training, 'momentum', 0.9),
             weight_decay=cfg.training.weight_decay
         )
-    elif optimizer_type == "adamw":
+    elif optimizer_type == "AdamW":
         optimizer = torch.optim.AdamW(
             param_groups,
-            lr=learning_rate,
+            #lr=learning_rate,
             weight_decay=cfg.training.weight_decay
         )
     else:
