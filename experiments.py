@@ -164,7 +164,7 @@ EXPERIMENTS_1 = [
         "classes_type": "literature_classes",
         "stage": 0,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
-        "optimizer": "AdamW",  #SGD, Adam, AdamW
+        "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "batch_size": 16,
         "freeze_strategy": "partial",  #head, partial, full
