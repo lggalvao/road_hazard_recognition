@@ -160,6 +160,32 @@ EXPERIMENTS_1 = [
         "model": "TimeSformerNet",
         "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "optimizer": "AdamW",  #SGD, Adam, AdamW
+        "loss_function": "FocalLoss",
+        "batch_size": 16,
+        "freeze_strategy": "partial",  #head, partial, full
+        "dropout_cnn_dynamic": 0.0,
+        "dropout_cnn": 0.5,
+        "dropout_pre_attention": 0.0,
+        "dropout_fc": 0.5,
+        "backbone_lr": 5e-5,
+        "head_lr": 5e-4,
+        "weight_decay": 0.05,
+        "sequence_stride": 4, 
+        "cached_dataset": False,
+        "comments": None
+    },
+    {
+        "input_feature_type": "single_img_input",
+        "use_object_visible_side": None,
+        "use_rear_light_status": None,
+        "model": "TimeSformerNet",
+        "input_img_type1": "img_local_context_ROI_1",
+        "input_img_type2": None,
         "enc_input_seq_length": 8,
         "classes_type": "literature_classes",
         "stage": 0,
