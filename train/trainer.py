@@ -77,7 +77,8 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
                     criterion,
                     cfg,
                     is_train,
-                    gpu_transform
+                    gpu_transform,
+                    exp_lr_scheduler
                 )
                 logger.info("Torch Profile Done")
             
@@ -88,7 +89,8 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
                 criterion,
                 cfg,
                 is_train,
-                gpu_transform
+                gpu_transform,
+                exp_lr_scheduler
             )
 
             metrics = evaluate_predictions(targets, preds, phase, cfg.model.classes_name)
@@ -104,7 +106,7 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
             )
 
             if is_train:
-                exp_lr_scheduler.step()
+                #exp_lr_scheduler.step()
                 previous_train_F1 = metrics["f1_macro"]
 
             else:  # validation
@@ -129,7 +131,7 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
         print_average_timings()
 
 @timeit
-def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transform):
+def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transform, exp_lr_scheduler):
 
     net.train() if is_train else net.eval()
     epoch_loss = 0.0
@@ -164,7 +166,8 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
             gpu_transform_time += (t2 - t1)
 
         if is_train:
-            optimizer.zero_grad()
+            #optimizer.zero_grad()
+            optimizer.zero_grad(set_to_none=True)
 
         with torch.set_grad_enabled(is_train):
             t1 = time.time()
@@ -184,6 +187,11 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
                 optimizer.step()
                 t2 =time.time()
                 backward_time += (t2 - t1)
+                
+                exp_lr_scheduler.step()
+            
+            if is_train and torch.rand(1).item() < 0.001:
+                print("LR:", optimizer.param_groups[0]["lr"])
 
         epoch_loss += loss.item()
 
@@ -203,7 +211,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
     return avg_loss, epoch_targets, epoch_preds
 
 
-def run_epoch_profile(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transform):
+def run_epoch_profile(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transform, exp_lr_scheduler):
 
     net.train() if is_train else net.eval()
 

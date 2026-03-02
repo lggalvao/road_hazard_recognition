@@ -11,9 +11,10 @@ EXPERIMENTS_0 = [
         "enc_input_seq_length": 8,
         "classes_type": "literature_classes",
         "stage": 0,
+        "lr_scheduler": "CosineAnnealingLR",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
         "optimizer": "AdamW",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
-        "batch_size": 32,
+        "batch_size": 16,
         "freeze_strategy": "partial",  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,

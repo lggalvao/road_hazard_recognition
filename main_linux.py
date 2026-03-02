@@ -56,6 +56,8 @@ if __name__ == '__main__':
         EXPERIMENTS_1
     )
     from types import SimpleNamespace
+    from transformers import get_cosine_schedule_with_warmup
+    
     
     import torch
 
@@ -133,6 +135,7 @@ if __name__ == '__main__':
         cfg.model.freeze_strategy = exp_config.freeze_strategy
         cfg.model.dropout_fc = exp_config.dropout_fc
         cfg.training.optimizer = exp_config.optimizer
+        cfg.training.lr_scheduler = exp_config.lr_scheduler
         
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
         
@@ -151,11 +154,49 @@ if __name__ == '__main__':
             if cfg.training.stage == 0:
                 optimizer = get_optimizer(cfg, net)
 
-                exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(
-                    optimizer,
-                    step_size=cfg.training.step_size,
-                    gamma=cfg.training.gamma
-                )
+                if cfg.training.lr_scheduler == "StepLR":
+                    exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(
+                        optimizer,
+                        step_size=cfg.training.step_size,
+                        gamma=cfg.training.gamma
+                    )
+                
+                elif cfg.training.lr_scheduler == "CosineAnnealingLR":
+                    exp_lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+                        optimizer,
+                        T_max=cfg.training.num_epochs,
+                        eta_min=1e-6  # small but not zero
+                    )
+                
+                elif cfg.training.lr_scheduler == "CosineAnnealingLRWarmUp":
+                    steps_per_epoch = len(allsetDataloader["train"])
+                    print("dataloader trian len", steps_per_epoch)
+                    total_steps = cfg.training.num_epochs * steps_per_epoch
+                    warmup_steps = int(0.1 * total_steps)
+                
+                    # 1️ Warmup scheduler (linear increase)
+                    warmup_scheduler = torch.optim.lr_scheduler.LinearLR(
+                        optimizer,
+                        start_factor=0.01,  # start at 1% of base LR
+                        total_iters=warmup_steps
+                    )
+                
+                    # 2️ Cosine decay scheduler
+                    cosine_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+                        optimizer,
+                        T_max=total_steps - warmup_steps,
+                        eta_min=1e-6
+                    )
+                    
+                    # 3️ Combine them
+                    exp_lr_scheduler = torch.optim.lr_scheduler.SequentialLR(
+                        optimizer,
+                        schedulers=[warmup_scheduler, cosine_scheduler],
+                        milestones=[warmup_steps]
+                    )
+                    
+                else:
+                    raise ValueError(f"Unsupported optimizer: {cfg.training.optimizer}")
     
                 criterion = get_loss_function(cfg)
                 

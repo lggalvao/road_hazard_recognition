@@ -126,6 +126,7 @@ class TrainingConfig:
     gamma: float = 0.1
     momentum: float = 0.9
     stage: int = 1
+    lr_scheduler: str = "StepLR"
 
 
 @dataclass
