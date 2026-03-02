@@ -190,8 +190,8 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
                 
                 exp_lr_scheduler.step()
             
-            if is_train and torch.rand(1).item() < 0.001:
-                print("LR:", optimizer.param_groups[0]["lr"])
+            #if is_train and torch.rand(1).item() < 0.001:
+            print("LR:", optimizer.param_groups[0]["lr"])
 
         epoch_loss += loss.item()
 
