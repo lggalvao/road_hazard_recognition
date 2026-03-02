@@ -138,6 +138,7 @@ if __name__ == '__main__':
         cfg.model.dropout_fc = exp_config.dropout_fc
         cfg.training.optimizer = exp_config.optimizer
         cfg.training.lr_scheduler = exp_config.lr_scheduler
+        cfg.training.amp_enabled = exp_config.amp_enabled
         
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
         
@@ -184,10 +185,12 @@ if __name__ == '__main__':
                     )
                 
                     # 2️ Cosine decay scheduler
+                    #T_max = total_steps - warmup_steps
+                    T_max = int(1.5 * (total_steps - warmup_steps))
                     cosine_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
                         optimizer,
-                        T_max=total_steps - warmup_steps,
-                        eta_min=1e-6
+                        T_max=T_max,
+                        eta_min=1e-5
                     )
                     
                     # 3️ Combine them

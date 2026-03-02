@@ -12,8 +12,11 @@ import time
 import kornia.augmentation as K
 import torch.profiler
 import logging
+from torch.cuda.amp import autocast
+from torch.cuda.amp import GradScaler
 
 logger = logging.getLogger("hazard_recognition")
+
 
 class GPUTransform(torch.nn.Module):
     def __init__(self):
@@ -57,6 +60,8 @@ class GPUTransform(torch.nn.Module):
 @timeit
 def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criterion, early_stopping, run_wandb, log_file_path):
 
+    scaler = GradScaler(enabled=cfg.training.amp_enabled)
+    print("AMP enabled:", scaler.is_enabled())
     gpu_transform = GPUTransform().to(cfg.system.device)
     previous_train_F1 = None
     best_val_f1 = 0
@@ -78,7 +83,8 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
                     cfg,
                     is_train,
                     gpu_transform,
-                    exp_lr_scheduler
+                    exp_lr_scheduler,
+                    scaler
                 )
                 logger.info("Torch Profile Done")
             
@@ -90,7 +96,8 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
                 cfg,
                 is_train,
                 gpu_transform,
-                exp_lr_scheduler
+                exp_lr_scheduler,
+                scaler
             )
 
             metrics = evaluate_predictions(targets, preds, phase, cfg.model.classes_name)
@@ -131,7 +138,7 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
         print_average_timings()
 
 @timeit
-def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transform, exp_lr_scheduler):
+def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transform, exp_lr_scheduler, scaler):
 
     net.train() if is_train else net.eval()
     epoch_loss = 0.0
@@ -170,28 +177,51 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
             optimizer.zero_grad(set_to_none=True)
 
         with torch.set_grad_enabled(is_train):
-            t1 = time.time()
-            preds = forward_pass(net, inputs)
-            t2 =time.time()
-            forward_pass_time += (t2 - t1)
             
-            t1 = time.time()
-            loss = compute_loss(criterion, preds, targets, cfg)
-            t2 =time.time()
-            compute_loss_time += (t2 - t1)
+            if cfg.training.amp_enabled:
+                #with autocast(enabled=is_train):
+                with autocast(enabled=cfg.training.amp_enabled):
+                    t1 = time.time()
+                    preds = forward_pass(net, inputs)
+                    t2 =time.time()
+                    forward_pass_time += (t2 - t1)
+                    
+                    t1 = time.time()
+                    loss = compute_loss(criterion, preds, targets, cfg)
+                    t2 =time.time()
+                    compute_loss_time += (t2 - t1)
+            
+            else:
+                t1 = time.time()
+                preds = forward_pass(net, inputs)
+                t2 =time.time()
+                forward_pass_time += (t2 - t1)
+                
+                t1 = time.time()
+                loss = compute_loss(criterion, preds, targets, cfg)
+                t2 =time.time()
+                compute_loss_time += (t2 - t1)
 
             if is_train:
-                t1 = time.time()
-                loss.backward()
-                torch.nn.utils.clip_grad_norm_(net.parameters(), cfg.training.clip_grad)
-                optimizer.step()
-                t2 =time.time()
-                backward_time += (t2 - t1)
+                if cfg.training.amp_enabled:
+                    scaler.scale(loss).backward()
+                    # Clipping should be done on unscaled gradients.
+                    scaler.unscale_(optimizer)
+                    torch.nn.utils.clip_grad_norm_(net.parameters(), cfg.training.clip_grad)
+                    scaler.step(optimizer)
+                    scaler.update()
+                else:
+                    t1 = time.time()
+                    loss.backward()
+                    torch.nn.utils.clip_grad_norm_(net.parameters(), cfg.training.clip_grad)
+                    optimizer.step()
+                    t2 =time.time()
+                    backward_time += (t2 - t1)
                 
                 exp_lr_scheduler.step()
             
-            #if is_train and torch.rand(1).item() < 0.001:
-            print("LR:", optimizer.param_groups[0]["lr"])
+            if is_train and torch.rand(1).item() < 0.001:
+                print("LR:", optimizer.param_groups[0]["lr"])
 
         epoch_loss += loss.item()
 

@@ -128,6 +128,7 @@ class TrainingConfig:
     momentum: float = 0.9
     stage: int = 1
     lr_scheduler: str = "StepLR"
+    amp_enabled: bool = True
 
 
 @dataclass
