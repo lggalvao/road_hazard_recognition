@@ -20,6 +20,9 @@ class TimeSformerNet(nn.Module):
         config.num_frames = cfg.model.enc_input_seq_length  # <-- set here
         config.image_size = 224                          # must match your frame size
         config.num_channels = 3                          # RGB
+        config.hidden_dropout_prob = 0.1
+        config.attention_probs_dropout_prob = 0.1
+        config.drop_path_rate = 0.1
         
         # Load pretrained model with adjusted config
         self.model = TimesformerForVideoClassification.from_pretrained(

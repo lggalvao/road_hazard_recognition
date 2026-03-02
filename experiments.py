@@ -117,6 +117,50 @@ EXPERIMENTS_0 = [
 
 
 EXPERIMENTS_1 = [
+        {
+        "input_feature_type": "single_img_input",
+        "use_object_visible_side": None,
+        "use_rear_light_status": None,
+        "model": "TimeSformerNet",
+        "input_img_type1": "img_global_context",
+        "input_img_type2": None,
+        "enc_input_seq_length": 8,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "loss_function": "FocalLoss",
+        "batch_size": 32,
+        "freeze_strategy": "partial",  #head, partial, full
+        "dropout_cnn_dynamic": 0.0,
+        "dropout_cnn": 0.5,
+        "dropout_pre_attention": 0.0,
+        "dropout_fc": 0.5,
+        "learning_rate": 0.0001,
+        "sequence_stride": 4, 
+        "cached_dataset": False,
+        "comments": None
+    },
+    {
+        "input_feature_type": "single_img_input",
+        "use_object_visible_side": None,
+        "use_rear_light_status": None,
+        "model": "CNN_LSTM",
+        "input_img_type1": "img_global_context",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "loss_function": "FocalLoss",
+        "batch_size": 32,
+        "freeze_strategy": "full",  #head, partial, full
+        "dropout_cnn_dynamic": 0.0,
+        "dropout_cnn": 0.5,
+        "dropout_pre_attention": 0.0,
+        "dropout_fc": 0.5,
+        "learning_rate": 0.0004,
+        "sequence_stride": 4, 
+        "cached_dataset": False,
+        "comments": None
+    },
     {
         "input_feature_type": "single_img_input",
         "use_object_visible_side": None,
