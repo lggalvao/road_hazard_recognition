@@ -11,7 +11,7 @@ EXPERIMENTS_0 = [
         "enc_input_seq_length": 8,
         "classes_type": "literature_classes",
         "stage": 0,
-        "lr_scheduler": "CosineAnnealingLR",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
         "optimizer": "AdamW",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "batch_size": 16,
