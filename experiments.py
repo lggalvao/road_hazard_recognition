@@ -131,8 +131,8 @@ EXPERIMENTS_1 = [
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
         "dropout_fc": 0.5,
-        "backbone_lr": 5e-5,
-        "head_lr": 5e-4,
+        "backbone_lr": 2e-4, 0.00002
+        "head_lr": 2e-4,
         "weight_decay": 0.05,
         "sequence_stride": 4, 
         "cached_dataset": False,
