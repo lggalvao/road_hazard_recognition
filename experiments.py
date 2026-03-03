@@ -15,7 +15,7 @@ EXPERIMENTS_0 = [
         "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
-        "amp_enabled": True,
+        "amp_enabled": False,
         "batch_size": 32,
         "freeze_strategy": "partial",  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
@@ -120,7 +120,7 @@ EXPERIMENTS_1 = [
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",
         "stage": 0,
-        "lr_scheduler": "StepLR",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
         "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
