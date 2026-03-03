@@ -113,7 +113,8 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
             )
 
             if is_train:
-                #exp_lr_scheduler.step()
+                if cfg.training.lr_scheduler == "StepLR":
+                    exp_lr_scheduler.step()
                 previous_train_F1 = metrics["f1_macro"]
 
             else:  # validation
@@ -218,7 +219,8 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
                     t2 =time.time()
                     backward_time += (t2 - t1)
                 
-                exp_lr_scheduler.step()
+                if cfg.training.lr_scheduler == "CosineAnnealingLR" or cfg.training.lr_scheduler == "CosineAnnealingLRWarmUp":
+                    exp_lr_scheduler.step()
             
             if is_train and torch.rand(1).item() < 0.001:
                 print("LR:", optimizer.param_groups[0]["lr"])

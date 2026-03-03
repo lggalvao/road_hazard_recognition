@@ -15,7 +15,7 @@ EXPERIMENTS_0 = [
         "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
-        "amp_enabled": False,
+        "amp_enabled": True,
         "batch_size": 16,
         "freeze_strategy": "partial",  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
