@@ -186,7 +186,7 @@ if __name__ == '__main__':
                 
                     # 2️ Cosine decay scheduler
                     #T_max = total_steps - warmup_steps
-                    T_max = int(1.5 * (total_steps - warmup_steps))
+                    T_max = int(2 * (total_steps - warmup_steps))
                     cosine_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
                         optimizer,
                         T_max=T_max,
