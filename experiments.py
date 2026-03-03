@@ -12,6 +12,7 @@ EXPERIMENTS_0 = [
         "classes_type": "literature_classes",
         "stage": 0,
         "lr_scheduler": "StepLR",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,

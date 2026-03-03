@@ -129,6 +129,7 @@ class TrainingConfig:
     stage: int = 1
     lr_scheduler: str = "StepLR"
     amp_enabled: bool = True
+    global_lr: bool = True
 
 
 @dataclass

@@ -18,28 +18,30 @@ def get_optimizer(cfg, net):
     # Determine parameter groups
     # ------------------------
     if cfg.training.stage == 0:
-        backbone_decay = []
-        backbone_no_decay = []
-        head_params = []
+        if cfg.training.global_lr:
+            param_groups = [{'params': [p for p in net.parameters() if p.requires_grad],
+                            'lr': cfg.training.backbone_lr}]
+        else:
+            backbone_decay = []
+            backbone_no_decay = []
+            head_params = []
+            
+            for name, param in net.named_parameters():
+                if not param.requires_grad:
+                    continue
+                if "classifier" in name:  # adjust depending on your head naming
+                    head_params.append(param)
+                elif param.ndim == 1 or name.endswith(".bias"):
+                    backbone_no_decay.append(param)
+                else:
+                    backbone_decay.append(param)
+            
+            param_groups = [
+                {"params": backbone_decay, "lr": cfg.training.backbone_lr, "weight_decay": cfg.training.weight_decay},
+                {"params": backbone_no_decay, "lr": cfg.training.backbone_lr, "weight_decay": 0.0},
+                {"params": head_params, "lr": cfg.training.head_lr, "weight_decay": cfg.training.weight_decay},
+            ]
         
-        for name, param in net.named_parameters():
-            if not param.requires_grad:
-                continue
-            if "classifier" in name:  # adjust depending on your head naming
-                head_params.append(param)
-            elif param.ndim == 1 or name.endswith(".bias"):
-                backbone_no_decay.append(param)
-            else:
-                backbone_decay.append(param)
-        
-        param_groups = [
-            {"params": backbone_decay, "lr": cfg.training.backbone_lr, "weight_decay": cfg.training.weight_decay},
-            {"params": backbone_no_decay, "lr": cfg.training.backbone_lr, "weight_decay": 0.0},
-            {"params": head_params, "lr": cfg.training.head_lr, "weight_decay": cfg.training.weight_decay},
-        ]
-        ## Stage 0: train everything
-        #param_groups = [{'params': [p for p in net.parameters() if p.requires_grad],
-        #                 'lr': cfg.training.backbone_lr}]
         stage_name = "Stage 0: train entire network"
 
     elif cfg.training.stage == 1:
