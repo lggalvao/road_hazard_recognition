@@ -15,7 +15,7 @@ EXPERIMENTS_0 = [
         "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
-        "amp_enabled": True,
+        "amp_enabled": False,
         "batch_size": 16,
         "freeze_strategy": "partial",  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
@@ -24,7 +24,7 @@ EXPERIMENTS_0 = [
         "dropout_fc": 0.5,
         "backbone_lr": 2e-4,
         "head_lr": 2e-4,
-        "weight_decay": 0.05,
+        "weight_decay": 0.0001,
         "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": None
@@ -121,6 +121,7 @@ EXPERIMENTS_1 = [
         "classes_type": "literature_classes",
         "stage": 0,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "global_lr": True,
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,

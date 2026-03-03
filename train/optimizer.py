@@ -20,7 +20,8 @@ def get_optimizer(cfg, net):
     if cfg.training.stage == 0:
         if cfg.training.global_lr:
             param_groups = [{'params': [p for p in net.parameters() if p.requires_grad],
-                            'lr': cfg.training.backbone_lr}]
+                            'lr': cfg.training.backbone_lr,
+                             "weight_decay": cfg.training.weight_decay}]
         else:
             backbone_decay = []
             backbone_no_decay = []
