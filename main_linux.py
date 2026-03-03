@@ -159,9 +159,10 @@ if __name__ == '__main__':
             if cfg.training.stage == 0:
                 optimizer = get_optimizer(cfg, net)
 
-                logger.info(f"LR Scheduler: {cfg.training.lr_scheduler}")
+                
                 
                 if cfg.training.lr_scheduler == "StepLR":
+                    logger.info(f"LR Scheduler: StepLR")
                     
                     exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(
                         optimizer,
@@ -170,6 +171,8 @@ if __name__ == '__main__':
                     )
                 
                 elif cfg.training.lr_scheduler == "CosineAnnealingLR":
+                    logger.info(f"LR Scheduler: CosineAnnealingLR")
+                    
                     T_max = cfg.training.num_epochs * steps_per_epoch
                     exp_lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
                         optimizer,
@@ -178,6 +181,8 @@ if __name__ == '__main__':
                     )
                 
                 elif cfg.training.lr_scheduler == "CosineAnnealingLRWarmUp":
+                    logger.info(f"LR Scheduler: CosineAnnealingLRWarmUp")
+                    
                     steps_per_epoch = len(allsetDataloader["train"])
                     print("dataloader trian len", steps_per_epoch)
                     total_steps = cfg.training.num_epochs * steps_per_epoch

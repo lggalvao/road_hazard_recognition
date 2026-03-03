@@ -29,6 +29,35 @@ EXPERIMENTS_0 = [
         "cached_dataset": False,
         "comments": None
     },
+    {
+        "input_feature_type": "single_img_input",
+        "use_object_visible_side": None,
+        "use_rear_light_status": None,
+        "model": "CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_1",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "lr_scheduler": "StepLR",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "global_lr": True, 
+        "optimizer": "SGD",  #SGD, Adam, AdamW
+        "loss_function": "FocalLoss",
+        "amp_enabled": False,
+        "batch_size": 32,
+        "freeze_strategy": "partial",  #head, partial, full
+        "dropout_cnn_dynamic": 0.0,
+        "dropout_cnn": 0.5,
+        "dropout_pre_attention": 0.0,
+        "dropout_fc": 0.5,
+        "backbone_lr": 2e-4,
+        "head_lr": 2e-4,
+        "weight_decay": 0.0001,
+        "sequence_stride": 4, 
+        "cached_dataset": False,
+        "comments": None
+    },
+
     #{
     #    "input_feature_type": "single_img_input",
     #    "use_object_visible_side": None,
@@ -133,6 +162,34 @@ EXPERIMENTS_1 = [
         "dropout_fc": 0.5,
         "backbone_lr": 2e-4,
         "head_lr": 2e-4,
+        "weight_decay": 0.0001,
+        "sequence_stride": 4, 
+        "cached_dataset": False,
+        "comments": None
+    },
+    {
+        "input_feature_type": "single_img_input",
+        "use_object_visible_side": None,
+        "use_rear_light_status": None,
+        "model": "CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_1",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "lr_scheduler": "CosineAnnealingLR",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "global_lr": True, 
+        "optimizer": "SGD",  #SGD, Adam, AdamW
+        "loss_function": "FocalLoss",
+        "amp_enabled": False,
+        "batch_size": 32,
+        "freeze_strategy": "partial",  #head, partial, full
+        "dropout_cnn_dynamic": 0.0,
+        "dropout_cnn": 0.5,
+        "dropout_pre_attention": 0.0,
+        "dropout_fc": 0.5,
+        "backbone_lr": 1e-4,
+        "head_lr": 1e-4,
         "weight_decay": 0.0001,
         "sequence_stride": 4, 
         "cached_dataset": False,
