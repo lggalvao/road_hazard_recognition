@@ -173,7 +173,7 @@ if __name__ == '__main__':
                 elif cfg.training.lr_scheduler == "CosineAnnealingLR":
                     logger.info(f"LR Scheduler: CosineAnnealingLR")
                     
-                    T_max = cfg.training.num_epochs * steps_per_epoch
+                    T_max = int(1.5 * (total_steps - warmup_steps))
                     exp_lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
                         optimizer,
                         T_max=T_max,
