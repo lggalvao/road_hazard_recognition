@@ -118,7 +118,6 @@ def Trajectory_Embedding_LSTM_parameters(cfg):
     cfg.model.use_object_visible_side = True
     cfg.model.use_rear_light_status = True
     cfg.model.output_embedding_size = 112
-    cfg.model.dropout_embedding_feature = 0.25
     
     #LSTM parameters
     cfg.model.enc_hidden_size = cfg.model.output_embedding_size
@@ -186,7 +185,6 @@ def explicit_feature_parameters(cfg):
     cfg.model.use_object_visible_side = True
     cfg.model.use_rear_light_status = True
     cfg.model.output_embedding_size = 112
-    cfg.model.dropout_embedding_feature = 0.25
     
     #LSTM parameters
     cfg.model.enc_hidden_size = cfg.model.output_embedding_size
@@ -303,7 +301,6 @@ def explicit_and_single_img_input_parameters(cfg):
     cfg.model.use_object_visible_side = True
     cfg.model.use_rear_light_status = True
     cfg.model.output_embedding_size = 576
-    cfg.model.dropout_embedding_feature = 0.1
     
     #LSTM parameters
     cfg.model.enc_hidden_size = 128
@@ -340,7 +337,6 @@ def explicit_and_multi_img_input_parameters(cfg):
     cfg.model.use_object_visible_side = True
     cfg.model.use_rear_light_status = True
     cfg.model.output_embedding_size = 576
-    cfg.model.dropout_embedding_feature = 0.1
     
     #LSTM parameters
     cfg.model.enc_hidden_size = 128

@@ -9,7 +9,7 @@ EXPERIMENTS_0 = [
         "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
-        "classes_type": "motion_towards",  #motion_towards, all_classes, literature_classes
+        "classes_type": "all_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
         "global_lr": True, 
@@ -17,17 +17,17 @@ EXPERIMENTS_0 = [
         "loss_function": "FocalLoss",
         "amp_enabled": True,
         "batch_size": 32,
-        "freeze_strategy": "partial",  #head, partial, full
+        "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
         "dropout_fc": 0.5,
-        "backbone_lr": 2e-4,
-        "head_lr": 2e-4,
-        "weight_decay": 0.0001,
+        "backbone_lr": 1e-4,
+        "head_lr": 1e-4,
+        "weight_decay": 0.001,
         "sequence_stride": 4, 
         "cached_dataset": False,
-        "comments": None
+        "comments": "Testing CNN_LSTM + all_classes + CosineAnnealingLRWarmUp + Increased weight_decay"
     },
     {
         "input_feature_type": "single_img_input",
@@ -39,211 +39,111 @@ EXPERIMENTS_0 = [
         "enc_input_seq_length": 16,
         "classes_type": "all_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
-        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "lr_scheduler": "StepLR",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
         "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
         "batch_size": 32,
-        "freeze_strategy": "partial",  #head, partial, full
-        "dropout_cnn_dynamic": 0.0,
-        "dropout_cnn": 0.5,
-        "dropout_pre_attention": 0.0,
-        "dropout_fc": 0.5,
-        "backbone_lr": 2e-4,
-        "head_lr": 2e-4,
-        "weight_decay": 0.0001,
-        "sequence_stride": 4, 
-        "cached_dataset": False,
-        "comments": None
-    },
-    
-    #{
-    #    "input_feature_type": "single_img_input",
-    #    "use_object_visible_side": None,
-    #    "use_rear_light_status": None,
-    #    "model": "CNN_LSTM",
-    #    "input_img_type1": "img_local_context_ROI_1",
-    #    "input_img_type2": None,
-    #    "enc_input_seq_length": 16,
-    #    "classes_type": "literature_classes",
-    #    "stage": 0,
-    #    "lr_scheduler": "StepLR",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
-    #    "global_lr": True, 
-    #    "optimizer": "SGD",  #SGD, Adam, AdamW
-    #    "loss_function": "FocalLoss",
-    #    "amp_enabled": False,
-    #    "batch_size": 32,
-    #    "freeze_strategy": "partial",  #head, partial, full
-    #    "dropout_cnn_dynamic": 0.0,
-    #    "dropout_cnn": 0.5,
-    #    "dropout_pre_attention": 0.0,
-    #    "dropout_fc": 0.5,
-    #    "backbone_lr": 2e-4,
-    #    "head_lr": 2e-4,
-    #    "weight_decay": 0.0001,
-    #    "sequence_stride": 4, 
-    #    "cached_dataset": False,
-    #    "comments": None
-    #},
-
-    #{
-    #    "input_feature_type": "single_img_input",
-    #    "use_object_visible_side": None,
-    #    "use_rear_light_status": None,
-    #    "model": "TimeSformerNet",
-    #    "input_img_type1": "img_local_context_ROI_1",
-    #    "input_img_type2": None,
-    #    "enc_input_seq_length": 16,
-    #    "classes_type": "literature_classes",
-    #    "stage": 0,
-    #    "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
-    #    "optimizer": "SGD",  #SGD, Adam, AdamW
-    #    "loss_function": "FocalLoss",
-    #    "amp_enabled": False,
-    #    "batch_size": 16,
-    #    "freeze_strategy": "partial",  #head, partial, full
-    #    "dropout_cnn_dynamic": 0.0,
-    #    "dropout_cnn": 0.5,
-    #    "dropout_pre_attention": 0.0,
-    #    "dropout_fc": 0.5,
-    #    "backbone_lr": 5e-5,
-    #    "head_lr": 5e-4,
-    #    "weight_decay": 0.05,
-    #    "sequence_stride": 4, 
-    #    "cached_dataset": False,
-    #    "comments": None
-    #},
-
-    #{
-    #    "input_feature_type": "single_img_input",
-    #    "use_object_visible_side": None,
-    #    "use_rear_light_status": None,
-    #    "model": "CNN_LSTM",
-    #    "input_img_type1": "img_local_context_ROI_1",
-    #    "input_img_type2": None,
-    #    "enc_input_seq_length": 16,
-    #    "classes_type": "literature_classes",
-    #    "stage": 0,
-    #    "loss_function": "FocalLoss",
-    #    "batch_size": 32,
-    #    "freeze_strategy": "full",  #head, partial, full
-    #    "dropout_cnn_dynamic": 0.0,
-    #    "dropout_cnn": 0.5,
-    #    "dropout_pre_attention": 0.0,
-    #    "dropout_fc": 0.5,
-    #    "backbone_lr": 0.00009,
-    #    "head_lr": 5e-4,
-    #    "weight_decay": 0.05,
-    #    "sequence_stride": 4, 
-    #    "cached_dataset": False,
-    #    "comments": None
-    #},
-
-   #{
-   #     "input_feature_type": "explicit_feature",
-   #     "use_object_visible_side": False,
-   #     "use_rear_light_status": False,
-   #     "model": "Embedding_Temporal_LSTM",
-   #     "input_img_type1": "img_local_context_ROI_1",
-   #     "input_img_type2": None,
-   #     "enc_input_seq_length": 16,
-   #     "classes_type": "literature_classes",
-   #     "stage": 0,
-   #     "loss_function": "FocalLoss",
-   #     "batch_size": 64,
-   #     "dropout_cnn_dynamic": 0.0,
-   #     "dropout_cnn": 0.0,
-   #     "dropout_pre_attention": 0.0,
-   #     "dropout_fc": 0.5,
-   #     "backbone_lr": 0.0001,
-   #     "head_lr": 5e-4,
-   #     "weight_decay": 0.05,
-   #     "sequence_stride": 4, 
-   #     "cached_dataset": False,
-   #     "comments": None
-   # },
-
-]
-
-
-EXPERIMENTS_1 = [
-
-    {
-        "input_feature_type": "single_img_input",
-        "use_object_visible_side": None,
-        "use_rear_light_status": None,
-        "model": "CNN_LSTM",
-        "input_img_type1": "img_local_context_ROI_1",
-        "input_img_type2": None,
-        "enc_input_seq_length": 16,
-        "classes_type": "literature_classes",
-        "stage": 0,
-        "lr_scheduler": "CosineAnnealingLR",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
-        "global_lr": True, 
-        "optimizer": "SGD",  #SGD, Adam, AdamW
-        "loss_function": "FocalLoss",
-        "amp_enabled": False,
-        "batch_size": 32,
-        "freeze_strategy": "partial",  #head, partial, full
+        "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
         "dropout_fc": 0.5,
         "backbone_lr": 1e-4,
         "head_lr": 1e-4,
-        "weight_decay": 0.0001,
+        "weight_decay": 0.001,
+        "sequence_stride": 4, 
+        "cached_dataset": False,
+        "comments": "Testing CNN_LSTM + StepLR + all_classes"
+    },
+]
+
+
+EXPERIMENTS_1 = [
+    {
+        "input_feature_type": "explicit_feature",
+        "use_object_visible_side": True,
+        "use_rear_light_status": True,
+        "model": "Embedding_Temporal_LSTM",
+        "input_img_type1": None,
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "global_lr": True, 
+        "optimizer": "SGD",  #SGD, Adam, AdamW
+        "loss_function": "FocalLoss",
+        "amp_enabled": False,
+        "batch_size": 64,
+        "freeze_strategy": None,  #head, partial, full
+        "dropout_cnn_dynamic": 0.0,
+        "dropout_cnn": 0.0,
+        "dropout_pre_attention": 0.0,
+        "dropout_fc": 0.5,
+        "backbone_lr": 1e-04,
+        "head_lr": 1e-04,
+        "weight_decay": 0.0009,
         "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": None
     },
-    #{
-    #    "input_feature_type": "single_img_input",
-    #    "use_object_visible_side": None,
-    #    "use_rear_light_status": None,
-    #    "model": "TimeSformerNet",
-    #    "input_img_type1": "img_local_context_ROI_1",
-    #    "input_img_type2": None,
-    #    "enc_input_seq_length": 16,
-    #    "classes_type": "literature_classes",
-    #    "stage": 0,
-    #    "loss_function": "FocalLoss",
-    #    "batch_size": 16,
-    #    "freeze_strategy": "partial",  #head, partial, full
-    #    "dropout_cnn_dynamic": 0.0,
-    #    "dropout_cnn": 0.5,
-    #    "dropout_pre_attention": 0.0,
-    #    "dropout_fc": 0.5,
-    #    "backbone_lr": 0.0001,
-    #    "sequence_stride": 4,
-    #    "head_lr": 5e-4,
-    #    "weight_decay": 0.05,
-    #    "cached_dataset": False,
-    #    "comments": None
-    #},
-    #{
-    #    "input_feature_type": "single_img_input",
-    #    "use_object_visible_side": None,
-    #    "use_rear_light_status": None,
-    #    "model": "TimeSformerNet",
-    #    "input_img_type1": "img_local_context_ROI_1",
-    #    "input_img_type2": None,
-    #    "enc_input_seq_length": 16,
-    #    "classes_type": "literature_classes",
-    #    "stage": 0,
-    #    "loss_function": "FocalLoss",
-    #    "batch_size": 16,
-    #    "freeze_strategy": "head",  #head, partial, full
-    #    "dropout_cnn_dynamic": 0.0,
-    #    "dropout_cnn": 0.5,
-    #    "dropout_pre_attention": 0.0,
-    #    "dropout_fc": 0.5,
-    #    "backbone_lr": 0.0001,
-    #    "head_lr": 5e-4,
-    #    "weight_decay": 0.05,
-    #    "sequence_stride": 4, 
-    #    "cached_dataset": False,
-    #    "comments": None
-    #},
+    {
+        "input_feature_type": "explicit_feature",
+        "use_object_visible_side": True,
+        "use_rear_light_status": True,
+        "model": "Embedding_Temporal_LSTM",
+        "input_img_type1": None,
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "global_lr": True, 
+        "optimizer": "Adam",  #SGD, Adam, AdamW
+        "loss_function": "FocalLoss",
+        "amp_enabled": False,
+        "batch_size": 64,
+        "freeze_strategy": None,  #head, partial, full
+        "dropout_cnn_dynamic": 0.0,
+        "dropout_cnn": 0.0,
+        "dropout_pre_attention": 0.0,
+        "dropout_fc": 0.5,
+        "backbone_lr": 1e-04,
+        "head_lr": 1e-04,
+        "weight_decay": 0.0009,
+        "sequence_stride": 4, 
+        "cached_dataset": False,
+        "comments": None
+    },
+    {
+        "input_feature_type": "explicit_and_single_img_input",  #explicit_feature, single_img_input, multi_img_input, explicit_and_single_img_input, explicit_and_multi_img_input, 
+        "use_object_visible_side": None,
+        "use_rear_light_status": None,
+        "model": "explicit_and_single_img_input",  # 
+        "input_img_type1": "img_local_context_ROI_1",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",
+        "stage": 0,
+        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "global_lr": True, 
+        "optimizer": "SGD",  #SGD, Adam, AdamW
+        "loss_function": "FocalLoss",
+        "amp_enabled": False,
+        "batch_size": 32,
+        "freeze_strategy": None,  #head, partial, full
+        "dropout_cnn_dynamic": 0.0,
+        "dropout_cnn": 0.5,
+        "dropout_pre_attention": 0.0,
+        "dropout_fc": 0.5,
+        "backbone_lr": 4e-4,
+        "head_lr": 4e-4,
+        "weight_decay": 0.0001,
+        "sequence_stride": 4, 
+        "cached_dataset": False,
+        "comments": None
+    }
 
 ]

@@ -85,7 +85,6 @@ class ModelConfig:
     enc_layers_num: int = 1
     bi_directional: bool = False
     output_embedding_size: int = 112
-    dropout_embedding_feature: float = 0.25
     fc_output_size: int = 128
     dropout_cnn_dynamic: float = 0.0
     dropout_cnn: float = 0.5
