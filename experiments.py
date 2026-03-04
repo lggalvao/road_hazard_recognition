@@ -13,7 +13,7 @@ EXPERIMENTS_0 = [
         "stage": 0,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
         "global_lr": False, 
-        "optimizer": "AdamW",  #SGD, Adam, AdamW
+        "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
         "batch_size": 64,
@@ -56,8 +56,8 @@ EXPERIMENTS_1 = [
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
         "dropout_fc": 0.5,
-        "backbone_lr": 3e-5,
-        "head_lr": 1e-4,
+        "backbone_lr": 3e-6,
+        "head_lr": 1e-5,
         "weight_decay": 0.01,
         "sequence_stride": 1, 
         "cached_dataset": False,
