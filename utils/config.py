@@ -58,10 +58,10 @@ class DataConfig:
     dataset_event_time_csv_file_path: str = ""
     dataset_csv_file_path: str = ""
     
-    num_workers: int = 0 # int(os.cpu_count() * 0.6)
-    pin_memory = False
-    persistent_workers = False
-    prefetch_factor = None
+    num_workers: int = int(os.cpu_count() * 0.8)
+    pin_memory = True
+    persistent_workers = True
+    prefetch_factor = 2
     
     #if os.name == "nt":  # Windows
     #    num_workers: int = 0 # int(os.cpu_count() * 0.6)
