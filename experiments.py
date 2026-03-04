@@ -11,6 +11,7 @@ EXPERIMENTS_0 = [
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
+        "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
         "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
@@ -45,6 +46,7 @@ EXPERIMENTS_1 = [
         "enc_input_seq_length": 16,
         "classes_type": "all_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
+        "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
         "global_lr": True, 
         "optimizer": "AdamW",  #SGD, Adam, AdamW
@@ -55,8 +57,8 @@ EXPERIMENTS_1 = [
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
-        "dropout_fc": 0.6,
-        "backbone_lr": 3e-6,
+        "dropout_fc": 0.7,
+        "backbone_lr": 1e-5,
         "head_lr": 1e-5,
         "weight_decay": 0.01,
         "sequence_stride": 1, 

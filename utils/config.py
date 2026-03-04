@@ -58,11 +58,6 @@ class DataConfig:
     dataset_event_time_csv_file_path: str = ""
     dataset_csv_file_path: str = ""
     
-    num_workers: int = int(os.cpu_count() * 0.8)
-    pin_memory = True
-    persistent_workers = True
-    prefetch_factor = 2
-    
     if os.name == "nt":  # Windows
         num_workers: int = 0 # int(os.cpu_count() * 0.6)
         pin_memory = False
@@ -134,6 +129,7 @@ class TrainingConfig:
     lr_scheduler: str = "StepLR"
     amp_enabled: bool = True
     global_lr: bool = True
+    run_epoch_profile: bool = False
 
 
 @dataclass
