@@ -14,7 +14,7 @@ EXPERIMENTS_0 = [
         "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
         "global_lr": True, 
-        "optimizer": "SGD",  #SGD, Adam, AdamW
+        "optimizer": "AdamW",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
         "batch_size": 32,
@@ -44,7 +44,7 @@ EXPERIMENTS_1 = [
         "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
-        "classes_type": "all_classes",  #motion_towards, all_classes, literature_classes
+        "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
         "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
@@ -52,7 +52,7 @@ EXPERIMENTS_1 = [
         "optimizer": "AdamW",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
-        "batch_size": 64,
+        "batch_size": 32,
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
@@ -63,7 +63,7 @@ EXPERIMENTS_1 = [
         "weight_decay": 0.01,
         "sequence_stride": 1, 
         "cached_dataset": False,
-        "comments": "Testing CNN_LSTM + all_classes + CosineAnnealingLRWarmUp + Increased weight_decay"
+        "comments": None
     },
     
     #{
