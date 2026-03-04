@@ -90,7 +90,7 @@ EXPERIMENTS_1 = [
         "dropout_fc": 0.7,
         "backbone_lr": 1e-5,
         "head_lr": 1e-5,
-        "weight_decay": 0.01,
+        "weight_decay": 0.05,
         "sequence_stride": 1, 
         "cached_dataset": False,
         "comments": None
