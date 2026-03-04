@@ -249,7 +249,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
     return avg_loss, epoch_targets, epoch_preds
 
 
-def run_epoch_profile(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transform, exp_lr_scheduler):
+def run_epoch_profile(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transform, exp_lr_scheduler, scaler):
 
     net.train() if is_train else net.eval()
 
