@@ -61,7 +61,7 @@ class GPUTransform(torch.nn.Module):
 def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criterion, early_stopping, run_wandb, log_file_path):
 
     scaler = GradScaler(enabled=cfg.training.amp_enabled)
-    logger.info("AMP enabled:", scaler.is_enabled())
+    logger.info(f"AMP enabled: {scaler.is_enabled()}")
     gpu_transform = GPUTransform().to(cfg.system.device)
     previous_train_F1 = None
     best_val_f1 = 0
@@ -140,7 +140,7 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
         print_average_timings()
         
         if f1_train_val_gap > 0.2:
-            logger.info("Trainign stopped due to big difference betwee tain and val F1 macro.")
+            logger.info("Training stopped due to big difference between tain and val F1 macro.")
             break 
 
 @timeit

@@ -55,7 +55,7 @@ EXPERIMENTS_1 = [
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
-        "dropout_fc": 0.5,
+        "dropout_fc": 0.6,
         "backbone_lr": 3e-6,
         "head_lr": 1e-5,
         "weight_decay": 0.01,
