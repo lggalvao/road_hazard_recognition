@@ -130,6 +130,8 @@ class TrainingConfig:
     amp_enabled: bool = True
     global_lr: bool = True
     run_epoch_profile: bool = False
+    lr_cosine_t_max: float = 1.0
+    lr_cosine_eta_min: float = 1e-5
 
 
 @dataclass

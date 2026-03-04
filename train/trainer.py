@@ -44,10 +44,10 @@ class GPUTransform(torch.nn.Module):
         x = x.float() / 255.0
         x = x.view(B * T, C, H, W)
 
-        #if is_train:
-        #    x = self.augs(x)
+        if is_train:
+            x = self.augs(x)
 
-        #x = self.normalize(x)
+        x = self.normalize(x)
 
         x = x.view(B, T, C, H, W)
         return x

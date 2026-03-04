@@ -141,6 +141,9 @@ if __name__ == '__main__':
         cfg.training.amp_enabled = exp_config.amp_enabled
         cfg.training.global_lr = exp_config.global_lr
         cfg.training.run_epoch_profile = exp_config.run_epoch_profile
+        cfg.training.lr_cosine_t_max = exp_config.lr_cosine_t_max
+        cfg.training.lr_cosine_eta_min = exp_config.lr_cosine_eta_min
+        
         
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
         
@@ -159,8 +162,6 @@ if __name__ == '__main__':
             if cfg.training.stage == 0:
                 optimizer = get_optimizer(cfg, net)
 
-                
-                
                 if cfg.training.lr_scheduler == "StepLR":
                     logger.info(f"LR Scheduler: StepLR")
                     
@@ -174,11 +175,11 @@ if __name__ == '__main__':
                     logger.info(f"LR Scheduler: CosineAnnealingLR")
                     
                     total_steps = cfg.training.num_epochs * steps_per_epoch
-                    T_max = int(1.5 * (total_steps))
+                    T_max = int(cfg.training.lr_cosine_t_max * (total_steps))
                     exp_lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
                         optimizer,
                         T_max=T_max,
-                        eta_min=1e-5  # small but not zero
+                        eta_min=cfg.training.lr_cosine_eta_min # small but not zero
                     )
                 
                 elif cfg.training.lr_scheduler == "CosineAnnealingLRWarmUp":
@@ -198,11 +199,11 @@ if __name__ == '__main__':
                 
                     # 2️ Cosine decay scheduler
                     #T_max = total_steps - warmup_steps
-                    T_max = int(1.5 * (total_steps - warmup_steps))
+                    T_max = int(cfg.training.lr_cosine_t_max * (total_steps - warmup_steps))
                     cosine_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
                         optimizer,
                         T_max=T_max,
-                        eta_min=1e-5
+                        eta_min=cfg.training.lr_cosine_eta_minx
                     )
                     
                     # 3️ Combine them
