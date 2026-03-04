@@ -175,7 +175,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
         
         if cfg.data.input_feature_type != "explicit_feature":
             t1 = time.time()
-            inputs["images"] = gpu_transform(inputs["images"], is_train)
+            #inputs["images"] = gpu_transform(inputs["images"], is_train)
             t2 =time.time()
             gpu_transform_time += (t2 - t1)
 
