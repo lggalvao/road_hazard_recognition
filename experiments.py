@@ -71,7 +71,7 @@ EXPERIMENTS_1 = [
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",
         "stage": 0,
-        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "lr_scheduler": "StepLR",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
         "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
@@ -97,9 +97,9 @@ EXPERIMENTS_1 = [
         "input_img_type1": None,
         "input_img_type2": None,
         "enc_input_seq_length": 16,
-        "classes_type": "literature_classes",
+        "classes_type": "all_classes",
         "stage": 0,
-        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "lr_scheduler": "StepLR",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
         "global_lr": True, 
         "optimizer": "Adam",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
@@ -121,7 +121,7 @@ EXPERIMENTS_1 = [
         "input_feature_type": "explicit_and_single_img_input",  #explicit_feature, single_img_input, multi_img_input, explicit_and_single_img_input, explicit_and_multi_img_input, 
         "use_object_visible_side": None,
         "use_rear_light_status": None,
-        "model": "explicit_and_single_img_input",  # 
+        "model": "Embedding_CNN_LSTM",  # 
         "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
@@ -131,7 +131,7 @@ EXPERIMENTS_1 = [
         "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
-        "amp_enabled": False,
+        "amp_enabled": True,
         "batch_size": 32,
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
