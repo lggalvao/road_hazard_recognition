@@ -445,27 +445,31 @@ def prepare_inputs(batch, cfg):
     labels : Tensor
         Ground-truth labels.
     """
-    device = cfg.system.device
+    def stack_if_list(x):
+        if isinstance(x, list):
+            return torch.stack(x)
+        return x
+    
     feature_type = cfg.data.input_feature_type
 
-    # ========= Helper: Move tensors or lists of tensors to device =========
-    def move(x):
-        if isinstance(x, torch.Tensor):
-            return x.to(device)
-        if isinstance(x, list):
-            return [t.to(device) for t in x]
-        return x
-
     # ========= Extract batch fields =========
-    kinematic = (batch.get("kinematic"))                # list(Tensor) or None
-    bbox = (batch.get("bbox"))                # list(Tensor) or None
-    object_visible_side = (batch.get("object_visible_side"))                # list(Tensor) or None
-    rear_light_status = (batch.get("rear_light_status"))                # list(Tensor) or None
-    object_type = (batch.get("object_type"))                # list(Tensor) or None
+    kinematic = stack_if_list(batch.get("kinematic"))
+    bbox = stack_if_list(batch.get("bbox"))
+    object_visible_side = stack_if_list(batch.get("object_visible_side"))
+    rear_light_status = stack_if_list(batch.get("rear_light_status"))
+    object_type = stack_if_list(batch.get("object_type"))
+    images = stack_if_list(batch.get("images"))
+    missing_object_mask = stack_if_list(batch.get("missing_object_mask"))
     
-    missing_object_mask = (batch.get("missing_object_mask")) #List of tensors 
-    images = batch.get("images")                # list(Tensor) or None
-    labels = (batch["true_hazard_enc"])           # Tensor, always present
+    #kinematic = (batch.get("kinematic"))
+    #bbox = (batch.get("bbox"))
+    #object_visible_side = (batch.get("object_visible_side"))
+    #rear_light_status = (batch.get("rear_light_status"))
+    #object_type = (batch.get("object_type"))
+    
+    #missing_object_mask = (batch.get("missing_object_mask"))
+    #images = batch.get("images")
+    labels = (batch["true_hazard_enc"])
 
     # Normalize images structure
     if images is None:
@@ -542,13 +546,13 @@ def prepare_inputs(batch, cfg):
             raise ValueError("explicit_and_multi_img_input requires features_norm.")
         if num_imgs < 2:
             raise ValueError("explicit_and_multi_img_input requires multiple images (>=2).")
-        return (move(features_norm), *images, missing_object_mask), labels
+        return (features_norm, *images, missing_object_mask), labels
 
     # ----- Trajectory Model -----
     elif cfg.model.model == "Trajectory_Embedding_LSTM":
         if features_norm is None:
             raise ValueError("Trajectory_Embedding_LSTM requires features_norm.")
-        return (move(features_norm), missing_object_mask), labels
+        return (features_norm, missing_object_mask), labels
 
     else:
         raise ValueError(f"Unsupported cfg.data.input_feature_type: {feature_type}")

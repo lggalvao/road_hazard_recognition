@@ -11,7 +11,7 @@ EXPERIMENTS_0 = [
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
-        "run_epoch_profile": True,
+        "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
         "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
