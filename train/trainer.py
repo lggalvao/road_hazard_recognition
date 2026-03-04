@@ -61,10 +61,11 @@ class GPUTransform(torch.nn.Module):
 def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criterion, early_stopping, run_wandb, log_file_path):
 
     scaler = GradScaler(enabled=cfg.training.amp_enabled)
-    print("AMP enabled:", scaler.is_enabled())
+    logger.info("AMP enabled:", scaler.is_enabled())
     gpu_transform = GPUTransform().to(cfg.system.device)
     previous_train_F1 = None
     best_val_f1 = 0
+    f1_train_val_gap = 0
     
     for epoch in range(cfg.training.num_epochs):
         print(f"\nEpoch {epoch}/{cfg.training.num_epochs-1}")
@@ -137,11 +138,16 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
                     save_checkpoint(net, log_file_path, "f1_macro_val_best")
 
         print_average_timings()
+        
+        if f1_train_val_gap > 0.2:
+            logger.info("Trainign stopped due to big difference betwee tain and val F1 macro.")
+            break 
 
 @timeit
 def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transform, exp_lr_scheduler, scaler):
 
     net.train() if is_train else net.eval()
+    
     epoch_loss = 0.0
     move_to_device_time = 0
     prepare_inputs_time = 0
@@ -180,7 +186,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
         with torch.set_grad_enabled(is_train):
             
             if cfg.training.amp_enabled:
-                #with autocast(enabled=is_train):
+
                 with autocast(enabled=cfg.training.amp_enabled):
                     t1 = time.time()
                     preds = forward_pass(net, inputs)
@@ -222,8 +228,8 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
                 if cfg.training.lr_scheduler == "CosineAnnealingLR" or cfg.training.lr_scheduler == "CosineAnnealingLRWarmUp":
                     exp_lr_scheduler.step()
             
-            if is_train and torch.rand(1).item() < 0.001:
-                print("LR:", optimizer.param_groups[0]["lr"])
+            #if is_train and torch.rand(1).item() < 0.001:
+            #    print("LR:", optimizer.param_groups[0]["lr"])
 
         epoch_loss += loss.item()
 
