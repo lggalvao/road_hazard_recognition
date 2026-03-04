@@ -3,15 +3,15 @@
 EXPERIMENTS_0 = [
     {
         "input_feature_type": "single_img_input",
-        "use_object_visible_side": None,
-        "use_rear_light_status": None,
-        "model": "CNN_LSTM",
+        "use_object_visistatus": None,
+        "model": "CNN_LSble_side": None,
+        "use_rear_light_TM",
         "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
-        "run_epoch_profile": False,
+        "run_epoch_profile": True,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
         "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
