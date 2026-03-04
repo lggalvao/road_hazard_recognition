@@ -12,7 +12,7 @@ EXPERIMENTS_0 = [
         "classes_type": "all_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
-        "global_lr": False, 
+        "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
@@ -21,8 +21,8 @@ EXPERIMENTS_0 = [
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
-        "dropout_fc": 0.5,
-        "backbone_lr": 3e-5,
+        "dropout_fc": 0.7,
+        "backbone_lr": 1e-4,
         "head_lr": 1e-4,
         "weight_decay": 0.01,
         "sequence_stride": 1, 
