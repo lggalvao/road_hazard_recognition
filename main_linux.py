@@ -203,7 +203,7 @@ if __name__ == '__main__':
                     cosine_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
                         optimizer,
                         T_max=T_max,
-                        eta_min=cfg.training.lr_cosine_eta_minx
+                        eta_min=cfg.training.lr_cosine_eta_min
                     )
                     
                     # 3️ Combine them
