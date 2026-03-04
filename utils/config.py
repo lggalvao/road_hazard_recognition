@@ -63,16 +63,16 @@ class DataConfig:
     persistent_workers = True
     prefetch_factor = 2
     
-    #if os.name == "nt":  # Windows
-    #    num_workers: int = 0 # int(os.cpu_count() * 0.6)
-    #    pin_memory = False
-    #    persistent_workers = False
-    #    prefetch_factor = None
-    #else:
-    #    num_workers: int = int(os.cpu_count() * 0.33)
-    #    pin_memory = True
-    #    persistent_workers = True
-    #    prefetch_factor = 2
+    if os.name == "nt":  # Windows
+        num_workers: int = 0 # int(os.cpu_count() * 0.6)
+        pin_memory = False
+        persistent_workers = False
+        prefetch_factor = None
+    else:
+        num_workers: int = int(os.cpu_count() * 0.33)
+        pin_memory = True
+        persistent_workers = True
+        prefetch_factor = 2
     
     cached_dataset: bool = True
     cached_dataset_dir_path: str = ""
