@@ -41,7 +41,7 @@ EXPERIMENTS_0 = [
         "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
-        "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
+        "classes_type": "all_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
         "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
