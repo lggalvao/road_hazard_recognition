@@ -279,9 +279,17 @@ def run_epoch_profile(net, dataloader, optimizer, criterion, cfg, is_train, gpu_
 
         for step, data in enumerate(dataloader):
 
-            inputs, targets = prepare_inputs(data, cfg)
-            targets = move_to_device(targets, cfg.system.device)
-            inputs = move_to_device(inputs, cfg.system.device)
+            #inputs, targets = prepare_inputs(data, cfg)
+            #targets = move_to_device(targets, cfg.system.device)
+            #inputs = move_to_device(inputs, cfg.system.device)
+            
+            inputs, targets = data
+            targets = targets.to(cfg.system.device, non_blocking=True)
+            for k, v in inputs.items():
+                if isinstance(v, list):
+                    inputs[k] = [t.to(cfg.system.device, non_blocking=True) for t in v]
+                else:
+                    inputs[k] = v.to(cfg.system.device, non_blocking=True)
 
             if cfg.data.input_feature_type != "explicit_feature":
                 inputs["images"] = gpu_transform(inputs["images"], is_train)
