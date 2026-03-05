@@ -179,14 +179,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
         #inputs = move_to_device(inputs, cfg.system.device)
         t2 =time.time()
         move_to_device_time += (t2 - t1)
-        
-        
-        for k, v in inputs.items():
-            if isinstance(v, list):
-                print(k, len(v))
-            else:
-                print(k, v.shape)
-        
+
         if cfg.data.input_feature_type != "explicit_feature":
             t1 = time.time()
             inputs["images"] = gpu_transform(inputs["images"], is_train)
