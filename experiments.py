@@ -85,6 +85,7 @@ EXPERIMENTS_1 = [
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
         "lr_cosine_t_max": 1.0,
         "lr_cosine_eta_min": 1e-6,
+        "num_epochs": 10,
         "global_lr": True, 
         "optimizer": "AdamW",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
@@ -116,6 +117,7 @@ EXPERIMENTS_1 = [
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
         "lr_cosine_t_max": 1.0,
         "lr_cosine_eta_min": 1e-6,
+        "num_epochs": 5,
         "global_lr": True, 
         "optimizer": "AdamW",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
