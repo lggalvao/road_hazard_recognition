@@ -137,10 +137,10 @@ def preprocess_sequences(cfg, phase):
         
         # ---- Create temporal sequences ----
         logger.info("Creating Temporal Sequences")
-        
+    
         if phase == "train":
             stride = cfg.data.sequence_stride
-        
+
         elif phase == "val":
             stride = 1
         

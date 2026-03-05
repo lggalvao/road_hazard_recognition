@@ -28,7 +28,18 @@ def create_temporal_sequences(
 
     # Pre-sort once globally (instead of per group)
     df = df.sort_values(["video_n", "frame_n"])
-
+    class_counts = df["hazard_type_name"].value_counts()
+    #print("class_counts", class_counts)
+    max_stride = cfg.data.sequence_stride
+    
+    stride_map = {
+        cls: max(1, int((count / class_counts.max()) * max_stride))
+        for cls, count in class_counts.items()
+    }
+    
+    #print("stride_map", stride_map)
+    
+    
     for vid, group in df.groupby("video_n", sort=False):
 
         # Filter once
@@ -156,6 +167,8 @@ def create_temporal_sequences(
         # ===============================
         # ---- Sliding Window ----
         # ===============================
+        cls = group["hazard_type_name"].iloc[0]
+        stride = min(stride_map[cls], cfg.data.sequence_stride)
         for start in range(0, n - (seq_len + 1), stride):
 
             end = start + seq_len
