@@ -166,8 +166,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
         t2 =time.time()
         
         prepare_inputs_time += (t2 - t1)
-        
-        
+
         t1 = time.time()
         targets = targets.to(cfg.system.device, non_blocking=True)
         for k, v in inputs.items():

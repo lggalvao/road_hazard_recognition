@@ -36,10 +36,18 @@ def test_model(cfg, net, allsetDataloader, run_wandb, log_file_path):
         test_trues_np = []
         
         for i, data in enumerate(tqdm(allsetDataloader['test'], desc="Testing...")):
-            inputs, targets = prepare_inputs(data, cfg)
+            #inputs, targets = prepare_inputs(data, cfg)
+            inputs, targets = data
             
-            targets = move_to_device(targets, cfg.system.device)
-            inputs = move_to_device(inputs, cfg.system.device)
+            targets = targets.to(cfg.system.device, non_blocking=True)
+            for k, v in inputs.items():
+                if isinstance(v, list):
+                    inputs[k] = [t.to(cfg.system.device, non_blocking=True) for t in v]
+                else:
+                    inputs[k] = v.to(cfg.system.device, non_blocking=True)
+                
+            #targets = move_to_device(targets, cfg.system.device)
+            #inputs = move_to_device(inputs, cfg.system.device)
             if cfg.data.input_feature_type != "explicit_feature":
                 inputs["images"] = gpu_transform(inputs["images"], is_train)
             
