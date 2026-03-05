@@ -168,7 +168,7 @@ def create_temporal_sequences(
         # ---- Sliding Window ----
         # ===============================
         cls = group["hazard_type_name"].iloc[0]
-        stride = min(stride_map[cls], cfg.data.sequence_stride)
+        #stride = min(stride_map[cls], cfg.data.sequence_stride)
         for start in range(0, n - (seq_len + 1), stride):
 
             end = start + seq_len

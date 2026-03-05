@@ -30,7 +30,7 @@ EXPERIMENTS_0 = [
         "backbone_lr": 2e-4,
         "head_lr": 2e-4,
         "weight_decay": 0.0001,
-        "sequence_stride": 6, 
+        "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": "sequence_stride and backbone_lr"
     },
