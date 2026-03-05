@@ -13,8 +13,9 @@ EXPERIMENTS_0 = [
         "stage": 0,
         "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
-        "lr_cosine_t_max": 0.2,
+        "lr_cosine_t_max": 1,
         "lr_cosine_eta_min": 1e-6,
+        "num_epochs": 5,
         "global_lr": True, 
         "optimizer": "AdamW",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
@@ -30,7 +31,7 @@ EXPERIMENTS_0 = [
         "weight_decay": 0.01,
         "sequence_stride": 1, 
         "cached_dataset": False,
-        "comments": "lr_cosine_t_max : 0.2"
+        "comments": "num_epochs : 5"
     },
     {
         "input_feature_type": "single_img_input",
@@ -44,8 +45,9 @@ EXPERIMENTS_0 = [
         "stage": 0,
         "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
-        "lr_cosine_t_max": 1.5,
+        "lr_cosine_t_max": 1,
         "lr_cosine_eta_min": 1e-6,
+        "num_epochs": 10,
         "global_lr": True, 
         "optimizer": "AdamW",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",

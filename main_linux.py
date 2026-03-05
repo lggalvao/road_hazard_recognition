@@ -143,6 +143,8 @@ if __name__ == '__main__':
         cfg.training.run_epoch_profile = exp_config.run_epoch_profile
         cfg.training.lr_cosine_t_max = exp_config.lr_cosine_t_max
         cfg.training.lr_cosine_eta_min = exp_config.lr_cosine_eta_min
+        cfg.training.num_epochs = exp_config.num_epochs
+        
         
         
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
