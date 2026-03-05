@@ -161,15 +161,22 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
     for data in tqdm(dataloader, desc="Training..." if is_train else "Validating..."):
    
         t1 = time.time()
-        inputs, targets = prepare_inputs(data, cfg)
+        #inputs, targets = prepare_inputs(data, cfg)
+        inputs, targets = data
         t2 =time.time()
         
         prepare_inputs_time += (t2 - t1)
         
         
         t1 = time.time()
-        targets = move_to_device(targets, cfg.system.device)
-        inputs = move_to_device(inputs, cfg.system.device)
+        targets = targets.to(cfg.system.device, non_blocking=True)
+        for k, v in inputs.items():
+            if isinstance(v, list):
+                inputs[k] = [t.to(cfg.system.device, non_blocking=True) for t in v]
+            else:
+                inputs[k] = v.to(cfg.system.device, non_blocking=True)
+        #targets = move_to_device(targets, cfg.system.device)
+        #inputs = move_to_device(inputs, cfg.system.device)
         t2 =time.time()
         move_to_device_time += (t2 - t1)
         

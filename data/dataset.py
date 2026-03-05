@@ -68,6 +68,113 @@ NUMERIC_KEYS = [
 ]
 
 
+def build_collate_fn(cfg):
+    feature_type = cfg.data.input_feature_type
+    cached_dataset = cfg.data.cached_dataset
+
+    def collate_fn(batch):
+
+        # -------------------------
+        # Labels
+        # -------------------------
+        targets = torch.stack([b["true_hazard_enc"] for b in batch])
+
+        # -------------------------
+        # Numeric features
+        # -------------------------
+        kinematic = torch.stack([b["kinematic"] for b in batch]) if "kinematic" in batch[0] else None
+        bbox = torch.stack([b["bbox"] for b in batch]) if "bbox" in batch[0] else None
+        object_type = torch.stack([b["object_type"] for b in batch]) if "object_type" in batch[0] else None
+        object_visible_side = torch.stack([b["object_visible_side"] for b in batch]) if "object_visible_side" in batch[0] else None
+        rear_light_status = torch.stack([b["rear_light_status"] for b in batch]) if "rear_light_status" in batch[0] else None
+        missing_object_mask = torch.stack([b["missing_object_mask"] for b in batch]) if "missing_object_mask" in batch[0] else None
+
+        # -------------------------
+        # Images
+        # -------------------------
+        images = None
+        if "images" in batch[0] and batch[0]["images"] is not None:
+
+            # images are stored as list of streams
+            # each stream is [T,C,H,W]
+            num_streams = len(batch[0]["images"])
+
+            images = []
+            for s in range(num_streams):
+
+                # stack batch dimension
+                stream = torch.stack(
+                    [sample["images"][s] for sample in batch]
+                )  # (B, T, C, H, W)
+
+                images.append(stream)
+
+        # -------------------------
+        # Dispatch by feature type
+        # -------------------------
+        if feature_type == "explicit_feature":
+
+            inputs = {
+                "kinematic": kinematic,
+                "bbox": bbox,
+                "object_type": object_type,
+                "object_visible_side": object_visible_side,
+                "rear_light_status": rear_light_status,
+                "missing_object_mask": missing_object_mask,
+            }
+
+        elif feature_type == "single_img_input":
+
+            if cached_dataset:
+                img_tensor = images
+            else:
+                img_tensor = images[0]
+
+            inputs = {
+                "images": img_tensor,
+                "missing_object_mask": missing_object_mask
+            }
+
+        elif feature_type == "multi_img_input":
+
+            inputs = {
+                "images": images,
+                "missing_object_mask": missing_object_mask
+            }
+
+        elif feature_type == "explicit_and_single_img_input":
+
+            inputs = {
+                "kinematic": kinematic,
+                "bbox": bbox,
+                "object_type": object_type,
+                "object_visible_side": object_visible_side,
+                "rear_light_status": rear_light_status,
+                "images": images[0],
+                "missing_object_mask": missing_object_mask
+            }
+
+        elif feature_type == "explicit_and_multi_img_input":
+
+            inputs = {
+                "kinematic": kinematic,
+                "bbox": bbox,
+                "object_type": object_type,
+                "object_visible_side": object_visible_side,
+                "rear_light_status": rear_light_status,
+                "images": images,
+                "missing_object_mask": missing_object_mask
+            }
+
+        else:
+            raise ValueError(f"Unsupported input_feature_type: {feature_type}")
+
+        return inputs, targets
+
+    return collate_fn
+
+
+
 def _filter_by_split(data: pd.DataFrame, split_df: pd.DataFrame) -> pd.DataFrame:
     """Filter rows by the provided split CSV."""
     if "video_n" in split_df.columns:
@@ -581,6 +688,9 @@ def _set_class_weights(cfg):
 
 def _build_dataloader(dataset, cfg, shuffle, drop_last, sampler):
     """Centralized DataLoader construction."""
+    
+    collate_fn = build_collate_fn(cfg)
+    
     return DataLoader(
         dataset,
         batch_size=cfg.training.batch_size,
@@ -590,7 +700,8 @@ def _build_dataloader(dataset, cfg, shuffle, drop_last, sampler):
         drop_last=drop_last,
         pin_memory=cfg.data.pin_memory,
         persistent_workers=cfg.data.persistent_workers,
-        prefetch_factor=cfg.data.prefetch_factor
+        prefetch_factor=cfg.data.prefetch_factor,
+        collate_fn=collate_fn
     )
 
 

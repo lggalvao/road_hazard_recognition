@@ -21,18 +21,12 @@ def load_model(cfg, allsetDataloader):
     # ----------------------------------------------------------------------
     # 1. Pull ONE batch from dataloader to infer shapes
     # ----------------------------------------------------------------------
-    batch = next(iter(allsetDataloader["train"]))
+    batch, targets= next(iter(allsetDataloader["train"]))
 
     # ----------------------------------------------------------------------
     # 2. Extract feature shapes based on input_feature_type
     # ----------------------------------------------------------------------
     feature_type = cfg.data.input_feature_type
-
-    kinematic = batch["kinematic"]
-    bbox = batch["bbox"]
-
-    cfg.model.num_kinematic_features = kinematic.shape[-1]
-    cfg.model.num_bbox_features = bbox.shape[-1]
 
     # Image inputs vary depending on mode
     if feature_type in ["single_img_input", "explicit_and_single_img_input"]:
@@ -52,6 +46,11 @@ def load_model(cfg, allsetDataloader):
     model_name = cfg.model.model
 
     if feature_type == "explicit_feature":
+        kinematic = batch["kinematic"]
+        bbox = batch["bbox"]
+        cfg.model.num_kinematic_features = kinematic.shape[-1]
+        cfg.model.num_bbox_features = bbox.shape[-1]
+    
         if model_name == "Embedding_Transformer":
             net = Embedding_Transformer.Embedding_Transformer(cfg)
 
@@ -83,6 +82,10 @@ def load_model(cfg, allsetDataloader):
             raise ValueError(f"Unsupported model {model_name}")
     
     elif feature_type == "explicit_and_single_img_input":
+        kinematic = batch["kinematic"]
+        bbox = batch["bbox"]
+        cfg.model.num_kinematic_features = kinematic.shape[-1]
+        cfg.model.num_bbox_features = bbox.shape[-1]
         
         if model_name == "Embedding_CNN_LSTM":
             emb_net = Embedding_Temporal_LSTM.Embedding_Temporal_LSTM(cfg)
