@@ -43,7 +43,7 @@ EXPERIMENTS_0 = [
         "enc_input_seq_length": 16,
         "classes_type": "all_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
-        "run_epoch_profile": True,
+        "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
         "lr_cosine_t_max": 1,
         "lr_cosine_eta_min": 1e-6,
