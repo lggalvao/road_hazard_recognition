@@ -29,7 +29,7 @@ EXPERIMENTS_0 = [
         "dropout_fc": 0.5,
         "backbone_lr": 2e-4,
         "head_lr": 2e-4,
-        "weight_decay": 0.0001,
+        "weight_decay": 0.0004,
         "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": "sequence_stride and backbone_lr"
@@ -46,7 +46,7 @@ EXPERIMENTS_0 = [
         "stage": 0,
         "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
-        "lr_cosine_t_max": 2,
+        "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
         "global_lr": True, 
@@ -61,11 +61,139 @@ EXPERIMENTS_0 = [
         "dropout_fc": 0.5,
         "backbone_lr": 2e-4,
         "head_lr": 2e-4,
-        "weight_decay": 0.0001,
+        "weight_decay": 0.0006,
         "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": "sequence_stride and backbone_lr"
     },
+    {
+        "input_feature_type": "single_img_input",
+        "use_object_visible_side": None,
+        "use_rear_light_status": None,
+        "model": "CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_1",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
+        "stage": 0,
+        "run_epoch_profile": False,
+        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "lr_cosine_t_max": 1.5,
+        "lr_cosine_eta_min": 1e-6,
+        "num_epochs": 30,
+        "global_lr": True, 
+        "optimizer": "SGD",  #SGD, Adam, AdamW
+        "loss_function": "FocalLoss",
+        "amp_enabled": True,
+        "batch_size": 32,
+        "freeze_strategy": None,  #head, partial, full
+        "dropout_cnn_dynamic": 0.0,
+        "dropout_cnn": 0.5,
+        "dropout_pre_attention": 0.0,
+        "dropout_fc": 0.5,
+        "backbone_lr": 2e-4,
+        "head_lr": 2e-4,
+        "weight_decay": 0.0008,
+        "sequence_stride": 4, 
+        "cached_dataset": False,
+        "comments": "sequence_stride and backbone_lr"
+    },
+    {
+        "input_feature_type": "single_img_input",
+        "use_object_visible_side": None,
+        "use_rear_light_status": None,
+        "model": "CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_1",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
+        "stage": 0,
+        "run_epoch_profile": False,
+        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "lr_cosine_t_max": 1.5,
+        "lr_cosine_eta_min": 1e-6,
+        "num_epochs": 30,
+        "global_lr": True, 
+        "optimizer": "SGD",  #SGD, Adam, AdamW
+        "loss_function": "FocalLoss",
+        "amp_enabled": True,
+        "batch_size": 32,
+        "freeze_strategy": None,  #head, partial, full
+        "dropout_cnn_dynamic": 0.0,
+        "dropout_cnn": 0.5,
+        "dropout_pre_attention": 0.0,
+        "dropout_fc": 0.5,
+        "backbone_lr": 2e-4,
+        "head_lr": 2e-4,
+        "weight_decay": 0.0009,
+        "sequence_stride": 4, 
+        "cached_dataset": False,
+        "comments": "sequence_stride and backbone_lr"
+    },
+    {
+        "input_feature_type": "single_img_input",
+        "use_object_visible_side": None,
+        "use_rear_light_status": None,
+        "model": "CNN_LSTM",
+        "input_img_type1": "img_local_context_ROI_1",
+        "input_img_type2": None,
+        "enc_input_seq_length": 16,
+        "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
+        "stage": 0,
+        "run_epoch_profile": False,
+        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "lr_cosine_t_max": 1.5,
+        "lr_cosine_eta_min": 1e-6,
+        "num_epochs": 30,
+        "global_lr": True, 
+        "optimizer": "SGD",  #SGD, Adam, AdamW
+        "loss_function": "FocalLoss",
+        "amp_enabled": True,
+        "batch_size": 32,
+        "freeze_strategy": None,  #head, partial, full
+        "dropout_cnn_dynamic": 0.0,
+        "dropout_cnn": 0.5,
+        "dropout_pre_attention": 0.0,
+        "dropout_fc": 0.5,
+        "backbone_lr": 2e-4,
+        "head_lr": 2e-4,
+        "weight_decay": 0.001,
+        "sequence_stride": 4, 
+        "cached_dataset": False,
+        "comments": "sequence_stride and backbone_lr"
+    },
+    #{
+    #    "input_feature_type": "single_img_input",
+    #    "use_object_visible_side": None,
+    #    "use_rear_light_status": None,
+    #    "model": "CNN_LSTM",
+    #    "input_img_type1": "img_local_context_ROI_1",
+    #    "input_img_type2": None,
+    #    "enc_input_seq_length": 16,
+    #    "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
+    #    "stage": 0,
+    #    "run_epoch_profile": False,
+    #    "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+    #    "lr_cosine_t_max": 2,
+    #    "lr_cosine_eta_min": 1e-6,
+    #    "num_epochs": 30,
+    #    "global_lr": True, 
+    #    "optimizer": "SGD",  #SGD, Adam, AdamW
+    #    "loss_function": "FocalLoss",
+    #    "amp_enabled": True,
+    #    "batch_size": 32,
+    #    "freeze_strategy": None,  #head, partial, full
+    #    "dropout_cnn_dynamic": 0.0,
+    #    "dropout_cnn": 0.5,
+    #    "dropout_pre_attention": 0.0,
+    #    "dropout_fc": 0.5,
+    #    "backbone_lr": 2e-4,
+    #    "head_lr": 2e-4,
+    #    "weight_decay": 0.0001,
+    #    "sequence_stride": 4, 
+    #    "cached_dataset": False,
+    #    "comments": "sequence_stride and backbone_lr"
+    #},
     
     #{
     #    "input_feature_type": "single_img_input",
