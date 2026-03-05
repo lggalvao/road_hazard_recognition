@@ -140,10 +140,13 @@ if __name__ == '__main__':
         cfg.training.lr_scheduler = exp_config.lr_scheduler
         cfg.training.amp_enabled = exp_config.amp_enabled
         cfg.training.global_lr = exp_config.global_lr
+        print(exp_config.run_epoch_profile)
         cfg.training.run_epoch_profile = exp_config.run_epoch_profile
         cfg.training.lr_cosine_t_max = exp_config.lr_cosine_t_max
         cfg.training.lr_cosine_eta_min = exp_config.lr_cosine_eta_min
         cfg.training.num_epochs = exp_config.num_epochs
+        print(exp_config.run_epoch_profile)
+        print(exp_config.run_epoch_profile)
 
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
         
