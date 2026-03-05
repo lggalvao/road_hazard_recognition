@@ -30,7 +30,7 @@ EXPERIMENTS_0 = [
         "weight_decay": 0.01,
         "sequence_stride": 1, 
         "cached_dataset": False,
-        "comments": None
+        "comments": "lr_cosine_t_max : 0.2"
     },
     {
         "input_feature_type": "single_img_input",
@@ -61,7 +61,7 @@ EXPERIMENTS_0 = [
         "weight_decay": 0.01,
         "sequence_stride": 1, 
         "cached_dataset": False,
-        "comments": "lr_cosine_t_max"
+        "comments": "lr_cosine_t_max: 1.5"
     },
 
 ]
@@ -98,7 +98,7 @@ EXPERIMENTS_1 = [
         "weight_decay": 0.02,
         "sequence_stride": 1, 
         "cached_dataset": False,
-        "comments": "weight decay"
+        "comments": "weight decay: 0.02"
     },
     {
         "input_feature_type": "single_img_input",
@@ -129,7 +129,7 @@ EXPERIMENTS_1 = [
         "weight_decay": 0.05,
         "sequence_stride": 1, 
         "cached_dataset": False,
-        "comments": "weight decay"
+        "comments": "weight decay: 0.05"
     },
     
     #{
