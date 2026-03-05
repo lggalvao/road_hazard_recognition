@@ -153,7 +153,7 @@ EXPERIMENTS_1 = [
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
         "global_lr": True, 
-        "optimizer": "AdamW",  #SGD, Adam, AdamW
+        "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
         "batch_size": 32,
@@ -185,7 +185,7 @@ EXPERIMENTS_1 = [
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
         "global_lr": True, 
-        "optimizer": "AdamW",  #SGD, Adam, AdamW
+        "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
         "batch_size": 32,
@@ -217,7 +217,7 @@ EXPERIMENTS_1 = [
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
         "global_lr": True, 
-        "optimizer": "AdamW",  #SGD, Adam, AdamW
+        "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
         "batch_size": 32,
@@ -249,7 +249,7 @@ EXPERIMENTS_1 = [
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
         "global_lr": True, 
-        "optimizer": "AdamW",  #SGD, Adam, AdamW
+        "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
         "batch_size": 32,
@@ -281,7 +281,7 @@ EXPERIMENTS_1 = [
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
         "global_lr": True, 
-        "optimizer": "AdamW",  #SGD, Adam, AdamW
+        "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
         "batch_size": 32,
@@ -313,7 +313,7 @@ EXPERIMENTS_1 = [
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
         "global_lr": True, 
-        "optimizer": "AdamW",  #SGD, Adam, AdamW
+        "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
         "batch_size": 32,
@@ -345,7 +345,7 @@ EXPERIMENTS_1 = [
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
         "global_lr": True, 
-        "optimizer": "AdamW",  #SGD, Adam, AdamW
+        "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
         "batch_size": 32,
@@ -377,7 +377,7 @@ EXPERIMENTS_1 = [
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
         "global_lr": True, 
-        "optimizer": "AdamW",  #SGD, Adam, AdamW
+        "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
         "batch_size": 32,
@@ -409,7 +409,7 @@ EXPERIMENTS_1 = [
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
         "global_lr": True, 
-        "optimizer": "AdamW",  #SGD, Adam, AdamW
+        "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
         "batch_size": 32,
