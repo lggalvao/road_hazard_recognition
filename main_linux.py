@@ -144,6 +144,8 @@ if __name__ == '__main__':
         cfg.training.lr_cosine_t_max = exp_config.lr_cosine_t_max
         cfg.training.lr_cosine_eta_min = exp_config.lr_cosine_eta_min
         cfg.training.num_epochs = exp_config.num_epochs
+        cfg.training.step_size = exp_config.step_size
+        cfg.training.gamma = exp_config.gamma
 
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
         
