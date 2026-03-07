@@ -13,10 +13,11 @@ EXPERIMENTS_0 = [
         "stage": 0,
         "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "step_size": 20,
         "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
-        "global_lr": True, 
+        "global_lr": False, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
@@ -45,13 +46,14 @@ EXPERIMENTS_0 = [
         "stage": 0,
         "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+        "step_size": 20,
         "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
-        "global_lr": True, 
+        "global_lr": False, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
-        "amp_enabled": True,
+        "amp_enabled": False,
         "batch_size": 32,
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
