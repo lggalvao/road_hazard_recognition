@@ -163,7 +163,7 @@ class Embedding_Temporal_LSTM(nn.Module):
 
         # Classification head
         self.num_classes = cfg.model.num_classes
-        self.fc = nn.Linear(self.hidden_size, self.num_classes)
+        self.classifier = nn.Linear(self.hidden_size, self.num_classes)
 
         # Optional: stabilize CNN output (uncomment if features are noisy)
         self.norm = nn.LayerNorm(self.embedding_size)
@@ -253,6 +253,6 @@ class Embedding_Temporal_LSTM(nn.Module):
         # --------------------------------------------------
         # 5. Classification
         # --------------------------------------------------
-        logits = self.fc(attended_features)
+        logits = self.classifier(attended_features)
     
         return logits
