@@ -149,6 +149,9 @@ if __name__ == '__main__':
         cfg.training.enc_layers_num = exp_config.enc_layers_num
         cfg.training.lstm_dropout = exp_config.lstm_dropout
         
+        print("cfg.training.enc_layers_num", cfg.training.enc_layers_num)
+        print("cfg.training.lstm_dropout", cfg.training.lstm_dropout)
+
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
         
         setup_seed(cfg.system.seed)
