@@ -32,8 +32,8 @@ def get_optimizer(cfg, net):
                     continue
                 if "classifier" in name:  # adjust depending on your head naming
                     head_params.append(param)
-                elif param.ndim == 1 or name.endswith(".bias"):
-                    backbone_no_decay.append(param)
+                #elif param.ndim == 1 or name.endswith(".bias"):
+                #    backbone_no_decay.append(param)
                 else:
                     backbone_decay.append(param)
             
