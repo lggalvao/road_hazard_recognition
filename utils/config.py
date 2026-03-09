@@ -83,6 +83,7 @@ class ModelConfig:
     enc_hidden_size: int = 112
     enc_input_seq_length: int = 13
     enc_layers_num: int = 1
+    lstm_dropout: float = 0.0
     bi_directional: bool = False
     output_embedding_size: int = 112
     fc_output_size: int = 128
