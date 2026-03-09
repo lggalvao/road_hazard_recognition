@@ -39,7 +39,7 @@ def get_optimizer(cfg, net):
             
             param_groups = [
                 {"params": backbone_decay, "lr": cfg.training.backbone_lr, "weight_decay": cfg.training.weight_decay},
-                {"params": backbone_no_decay, "lr": cfg.training.backbone_lr, "weight_decay": 0.0},
+                #{"params": backbone_no_decay, "lr": cfg.training.backbone_lr, "weight_decay": 0.0},
                 {"params": head_params, "lr": cfg.training.head_lr, "weight_decay": cfg.training.weight_decay},
             ]
         
