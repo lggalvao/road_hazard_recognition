@@ -30,7 +30,7 @@ EXPERIMENTS_0 = [
         "dropout_fc": 0.5,
         "backbone_lr": 4e-4,
         "head_lr": 2e-6,
-        "weight_decay": 0.0001,
+        "weight_decay": 0.001,
         "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": None
@@ -64,7 +64,7 @@ EXPERIMENTS_0 = [
         "dropout_fc": 0.5,
         "backbone_lr": 4e-4,
         "head_lr": 2e-6,
-        "weight_decay": 0.0001,
+        "weight_decay": 0.001,
         "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": None
@@ -98,7 +98,7 @@ EXPERIMENTS_0 = [
         "dropout_fc": 0.5,
         "backbone_lr": 4e-4,
         "head_lr": 2e-6,
-        "weight_decay": 0.0001,
+        "weight_decay": 0.001,
         "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": None
@@ -132,7 +132,7 @@ EXPERIMENTS_0 = [
         "dropout_fc": 0.5,
         "backbone_lr": 4e-4,
         "head_lr": 2e-6,
-        "weight_decay": 0.0001,
+        "weight_decay": 0.001,
         "sequence_stride": 4, 
         "cached_dataset": False,
         "comments": None
