@@ -239,7 +239,7 @@ EXPERIMENTS_1 = [
         "backbone_lr": 3e-3,
         "head_lr": 3e-3,
         "weight_decay": 0.0009,
-        "sequence_stride": 4, 
+        "sequence_stride": 1, 
         "cached_dataset": False,
         "comments": None
     },
@@ -275,7 +275,7 @@ EXPERIMENTS_1 = [
         "backbone_lr": 3e-3,
         "head_lr": 3e-3,
         "weight_decay": 0.0009,
-        "sequence_stride": 4, 
+        "sequence_stride": 1, 
         "cached_dataset": False,
         "comments": None
     },
@@ -311,7 +311,7 @@ EXPERIMENTS_1 = [
         "backbone_lr": 3e-3,
         "head_lr": 3e-3,
         "weight_decay": 0.0009,
-        "sequence_stride": 4, 
+        "sequence_stride": 1, 
         "cached_dataset": False,
         "comments": None
     },
@@ -347,7 +347,7 @@ EXPERIMENTS_1 = [
         "backbone_lr": 3e-3,
         "head_lr": 3e-3,
         "weight_decay": 0.0009,
-        "sequence_stride": 4, 
+        "sequence_stride": 1, 
         "cached_dataset": False,
         "comments": None
     },
