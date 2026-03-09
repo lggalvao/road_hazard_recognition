@@ -151,6 +151,7 @@ if __name__ == '__main__':
         
         print("cfg.training.enc_layers_num", cfg.training.enc_layers_num)
         print("cfg.training.lstm_dropout", cfg.training.lstm_dropout)
+        exit()
 
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
         
