@@ -146,7 +146,9 @@ if __name__ == '__main__':
         cfg.training.num_epochs = exp_config.num_epochs
         cfg.training.step_size = exp_config.step_size
         cfg.training.gamma = exp_config.gamma
-
+        cfg.training.enc_layers_num = exp_config.enc_layers_num
+        cfg.training.lstm_dropout = exp_config.lstm_dropout
+        
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
         
         setup_seed(cfg.system.seed)

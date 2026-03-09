@@ -14,14 +14,16 @@ class TemporalAttention(nn.Module):
     missing or padded timesteps safely.
     """
 
-    def __init__(self, input_size: int, hidden_size: int):
+    def __init__(self, input_size: int, hidden_size: int, enc_layers_num: int, dropout: float):
         super().__init__()
 
         # Temporal encoder
         self.rnn = nn.LSTM(
             input_size=input_size,
             hidden_size=hidden_size,
-            batch_first=True
+            num_layers=enc_layers_num,
+            batch_first=True,
+            dropout=dropout
         )
 
         # Attention projection (scalar score per timestep)
@@ -143,9 +145,13 @@ class Embedding_Temporal_LSTM(nn.Module):
 
         # ---- Temporal attention ----
         self.hidden_size = cfg.model.enc_hidden_size
+        self.enc_layers_num = cfg.model.enc_layers_num
+        self.lstm_dropout = cfg.model.lstm_dropout
         self.temporal_attention = TemporalAttention(
             input_size=self.embedding_size,
-            hidden_size=self.hidden_size
+            hidden_size=self.hidden_size,
+            enc_layers_num=self.enc_layers_num,
+            dropout=self.lstm_dropout
         )
 
         # Regularization
@@ -224,9 +230,6 @@ class Embedding_Temporal_LSTM(nn.Module):
             dim=-1
         )                                                     # (B, T, F)
 
-        #if torch.isnan(dynamic_features).any():
-        #    raise RuntimeError("NaNs in dynamic_features")
-
         assert dynamic_features.shape[2] == self.cnn_dynamic.in_channels, \
             f"Feature mismatch: {dynamic_features.shape[2]} vs {self.cnn_dynamic.in_channels}"
     
@@ -234,7 +237,6 @@ class Embedding_Temporal_LSTM(nn.Module):
         # 3. Temporal CNN embedding
         # --------------------------------------------------
         x = dynamic_features.permute(0, 2, 1)                # (B, F, T)
-        #x = dynamic_features.permute(0, 2, 1).contiguous()
         x = self.cnn_dynamic(x)
         x = self.dropout_cnn_dynamic(x)
         x = x.permute(0, 2, 1)                                # (B, T, E)

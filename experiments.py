@@ -215,6 +215,8 @@ EXPERIMENTS_1 = [
         "input_img_type1": None,
         "input_img_type2": None,
         "enc_input_seq_length": 16,
+        "enc_layers_num": 2,
+        "lstm_dropout":0.0,
         "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
         "run_epoch_profile": False,
@@ -241,14 +243,16 @@ EXPERIMENTS_1 = [
         "cached_dataset": False,
         "comments": None
     },
-        {
+    {
         "input_feature_type": "explicit_feature",  #explicit_feature, single_img_input, multi_img_input, explicit_and_single_img_input, explicit_and_multi_img_input"
-        "use_object_visible_side": True,
+        "use_object_visible_side": False,
         "use_rear_light_status": False,
         "model": "Embedding_Temporal_LSTM",
         "input_img_type1": None,
         "input_img_type2": None,
         "enc_input_seq_length": 16,
+        "enc_layers_num": 2,
+        "lstm_dropout":0.2,
         "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
         "run_epoch_profile": False,
@@ -275,14 +279,16 @@ EXPERIMENTS_1 = [
         "cached_dataset": False,
         "comments": None
     },
-        {
+    {
         "input_feature_type": "explicit_feature",  #explicit_feature, single_img_input, multi_img_input, explicit_and_single_img_input, explicit_and_multi_img_input"
         "use_object_visible_side": False,
-        "use_rear_light_status": True,
+        "use_rear_light_status": False,
         "model": "Embedding_Temporal_LSTM",
         "input_img_type1": None,
         "input_img_type2": None,
         "enc_input_seq_length": 16,
+        "enc_layers_num": 2,
+        "lstm_dropout":0.4,
         "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
         "run_epoch_profile": False,
@@ -309,14 +315,16 @@ EXPERIMENTS_1 = [
         "cached_dataset": False,
         "comments": None
     },
-        {
+    {
         "input_feature_type": "explicit_feature",  #explicit_feature, single_img_input, multi_img_input, explicit_and_single_img_input, explicit_and_multi_img_input"
-        "use_object_visible_side": True,
-        "use_rear_light_status": True,
+        "use_object_visible_side": False,
+        "use_rear_light_status": False,
         "model": "Embedding_Temporal_LSTM",
         "input_img_type1": None,
         "input_img_type2": None,
         "enc_input_seq_length": 16,
+        "enc_layers_num": 2,
+        "lstm_dropout":0.5,
         "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
         "run_epoch_profile": False,
