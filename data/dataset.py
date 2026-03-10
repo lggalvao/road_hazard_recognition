@@ -690,12 +690,13 @@ def _build_dataloader(dataset, cfg, shuffle, drop_last, sampler):
     """Centralized DataLoader construction."""
     
     collate_fn = build_collate_fn(cfg)
-    
+
     return DataLoader(
         dataset,
         batch_size=cfg.training.batch_size,
         num_workers=cfg.data.num_workers,
-        shuffle=False,#shuffle if cfg.data.sampler is None else False,
+        # changed on 09/03/2026 shuffle=False,#shuffle if cfg.data.sampler is None else False,
+        shuffle=True if cfg.data.sampler is None else False,
         sampler=sampler,
         drop_last=drop_last,
         pin_memory=cfg.data.pin_memory,
