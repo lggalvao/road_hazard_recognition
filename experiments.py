@@ -23,7 +23,7 @@ EXPERIMENTS_0 = [
         "optimizer": "Adam",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
-        "batch_size": 32,
+        "batch_size": 24,
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": None,
         "dropout_cnn": 0.5,
@@ -59,7 +59,7 @@ EXPERIMENTS_0 = [
         "optimizer": "Adam",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
-        "batch_size": 32,
+        "batch_size": 24,
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": None,
         "dropout_cnn": 0.5,
@@ -81,7 +81,7 @@ EXPERIMENTS_0 = [
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "enc_layers_num": 1,
-        "lstm_dropout": 0.0, 
+        "lstm_dropout": 0.0, d
         "classes_type": "all_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
         "run_epoch_profile": False,
@@ -95,7 +95,7 @@ EXPERIMENTS_0 = [
         "optimizer": "Adam",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
-        "batch_size": 32,
+        "batch_size": 24,
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": None,
         "dropout_cnn": 0.5,
