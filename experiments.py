@@ -107,7 +107,7 @@ EXPERIMENTS_0 = [
         "sequence_stride": 1, 
         "cached_dataset": False,
         "comments": None
-    }
+    },
         {
         "input_feature_type": "single_img_input",
         "use_object_visible_side": None,
@@ -143,7 +143,7 @@ EXPERIMENTS_0 = [
         "sequence_stride": 1, 
         "cached_dataset": False,
         "comments": None
-    }
+    },
         {
         "input_feature_type": "single_img_input",
         "use_object_visible_side": None,
