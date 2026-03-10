@@ -81,7 +81,7 @@ EXPERIMENTS_0 = [
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "enc_layers_num": 1,
-        "lstm_dropout": 0.0, d
+        "lstm_dropout": 0.0,
         "classes_type": "all_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
         "run_epoch_profile": False,
