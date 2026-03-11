@@ -3,7 +3,6 @@ import torch.nn as nn
 import math
 from typing import Optional
 
-#neg_inf = torch.finfo(scores.dtype).min
 
 class TemporalAttention(nn.Module):
     """
@@ -66,7 +65,7 @@ class TemporalAttention(nn.Module):
         # Apply temporal mask if provided
         if mask is not None:
             mask = (mask > 0).unsqueeze(-1)       # (B, T, 1), boolean
-            scores = scores.masked_fill(~mask, -1e4)  #
+            scores = scores.masked_fill(~mask, -1e9)
 
         # Normalize over time
         attn_weights = torch.softmax(scores, dim=1)  # (B, T, 1)
