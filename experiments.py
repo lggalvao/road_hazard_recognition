@@ -63,7 +63,7 @@ EXPERIMENTS_1 = [
         "optimizer": "Adam",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "amp_enabled": True,
-        "batch_size": 32clear,
+        "batch_size": 32,
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": None,
         "dropout_cnn": 0.4,
