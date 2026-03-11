@@ -3,7 +3,7 @@ import torch.nn as nn
 import math
 from typing import Optional
 
-neg_inf = torch.finfo(scores.dtype).min
+#neg_inf = torch.finfo(scores.dtype).min
 
 class TemporalAttention(nn.Module):
     """
