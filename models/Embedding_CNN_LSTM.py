@@ -18,7 +18,7 @@ class Embedding_CNN_LSTM(nn.Module):
 
         # Remove internal classifiers
         self.cnn_model.fc = nn.Identity()
-        self.embedding_model.fc = nn.Identity()
+        self.embedding_model.classifier = nn.Identity()
 
         H = cfg.model.enc_hidden_size
 
