@@ -31,7 +31,7 @@ EXPERIMENTS_0 = [
         "dropout_fc": 0.5,
         "backbone_lr": 2e-6,
         "head_lr": None,
-        "weight_decay": 0.013,
+        "weight_decay": 0.008,
         "sequence_stride": 1, 
         "cached_dataset": False,
         "comments": "Changing weight_decay"
@@ -67,7 +67,7 @@ EXPERIMENTS_0 = [
         "dropout_fc": 0.5,
         "backbone_lr": 2e-6,
         "head_lr": None,
-        "weight_decay": 0.016,
+        "weight_decay": 0.009,
         "sequence_stride": 1, 
         "cached_dataset": False,
         "comments": "Changing weight_decay"
@@ -100,7 +100,7 @@ EXPERIMENTS_0 = [
         "dropout_cnn_dynamic": None,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": None,
-        "dropout_fc": 0.6,
+        "dropout_fc": 0.4,
         "backbone_lr": 2e-6,
         "head_lr": None,
         "weight_decay": 0.01,
@@ -142,7 +142,7 @@ EXPERIMENTS_1 = [
         "dropout_cnn_dynamic": None,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": None,
-        "dropout_fc": 0.7,
+        "dropout_fc": 0.3,
         "backbone_lr": 2e-6,
         "head_lr": None,
         "weight_decay": 0.01,
@@ -176,7 +176,7 @@ EXPERIMENTS_1 = [
         "batch_size": 32,
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": None,
-        "dropout_cnn": 0.6,
+        "dropout_cnn": 0.4,
         "dropout_pre_attention": None,
         "dropout_fc": 0.5,
         "backbone_lr": 2e-6,
@@ -212,7 +212,7 @@ EXPERIMENTS_1 = [
         "batch_size": 32,
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": None,
-        "dropout_cnn": 0.7,
+        "dropout_cnn": 0.3,
         "dropout_pre_attention": None,
         "dropout_fc": 0.5,
         "backbone_lr": 2e-6,
