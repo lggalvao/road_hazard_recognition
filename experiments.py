@@ -24,7 +24,7 @@ EXPERIMENTS_0 = [
         "amp_enabled": True,
         "batch_size": 32,
         "freeze_strategy": None,  #head, partial, full
-        "dropout_cnn_dynamic": 0.0,
+        "dropout_cnn_dynamic": None,
         "dropout_cnn": 0.4,
         "dropout_pre_attention": None,
         "dropout_fc": 0.6,
@@ -64,7 +64,7 @@ EXPERIMENTS_1 = [
         "amp_enabled": True,
         "batch_size": 32,
         "freeze_strategy": None,  #head, partial, full
-        "dropout_cnn_dynamic": None,
+        "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": None,
         "dropout_fc": 0.5,
