@@ -61,6 +61,8 @@ class Embedding_CNN_LSTM(nn.Module):
 
         cnn_feat = self.cnn_model(inputs)         # (B,H)
         embed_feat = self.embedding_model(inputs) # (B,H)
+        
+        print("embed_feat.shape", embed_feat.shape)
 
         # Project
         cnn_feat = self.proj_cnn(cnn_feat)
