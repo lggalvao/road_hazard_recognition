@@ -66,7 +66,7 @@ EXPERIMENTS_1 = [
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
-        "dropout_pre_attention": None,
+        "dropout_pre_attention": 0.0,
         "dropout_fc": 0.5,
         "backbone_lr": 4e-4,
         "head_lr": None,
