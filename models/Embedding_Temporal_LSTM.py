@@ -65,7 +65,9 @@ class TemporalAttention(nn.Module):
         # Apply temporal mask if provided
         if mask is not None:
             mask = (mask > 0).unsqueeze(-1)       # (B, T, 1), boolean
+            scores = scores.float()
             scores = scores.masked_fill(~mask, -1e9)
+            scores = scores.to(original_dtype)
 
         # Normalize over time
         attn_weights = torch.softmax(scores, dim=1)  # (B, T, 1)
