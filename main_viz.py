@@ -8,9 +8,15 @@ from visualization.feature_viz import (
     plot_corr_between_numeric_features_and_continuous_targets,
     plot_corr_between_categorical_features_and_categorical_targets,
     plot_corr_between_numeric_features_and_binary_target,
-
+    
     cramers_v_plot,
     plot_feature_vs_hazard,
+)
+from visualization.collect_dataset_statistics import (
+    get_hazard_classes_stat,
+    get_object_classes_stat,
+    get_object_visible_side_classes_stat,
+    get_rear_light_status_classes_stat
 )
 from visualization.image_viz import (
     show_image_with_bbox
@@ -77,6 +83,58 @@ dataset_df = keep_target_objects(dataset_df)
 #----------------------------#
 
 with PdfPages("./output/visualizations/eda_correlation_report.pdf") as pdf:
+    
+    stat = get_hazard_classes_stat(dataset_df)
+    
+    latex = stat.to_latex(
+        index=False,
+        float_format="%.1f",
+        caption="Distribution of hazard classes at video level.",
+        label="tab:number_of_samples_per_classes",
+        column_format="lcc"
+    )
+    
+    with open("C:/Manuscripts/Hazard Recognition Paper/tab_hazard_classes_samples.tex", "w") as f:
+        f.write(latex)
+    
+    stat = get_object_classes_stat(dataset_df)
+    
+    latex = stat.to_latex(
+        index=False,
+        float_format="%.1f",
+        caption="Distribution of object classes.",
+        label="tab:number_of_samples_per_object_classes",
+        column_format="lcc"
+    )
+    
+    with open("C:/Manuscripts/Hazard Recognition Paper/tab_target_objects_classes_samples.tex", "w") as f:
+        f.write(latex)
+    
+    stat = get_object_visible_side_classes_stat(dataset_df)
+    
+    latex = stat.to_latex(
+        index=False,
+        float_format="%.1f",
+        caption="Number of samples per available classes for the target's object visible side datasets.",
+        label="tab:THD:ObjectVisibleSide_Samples_per_class",
+        column_format="lcc"
+    )
+    
+    with open("C:/Manuscripts/Hazard Recognition Paper/tab_object_visible_side_samples.tex", "w") as f:
+        f.write(latex)
+        
+    stat = get_rear_light_status_classes_stat(dataset_df)
+    
+    latex = stat.to_latex(
+        index=False,
+        #float_format="%.1f",
+        caption="Number of samples per available classes for the RVSR-6 and RVSR-10 datasets.",
+        label="tab:THD:Samples_per_class",
+        column_format="lccc"
+    )
+    
+    with open("C:/Manuscripts/Hazard Recognition Paper/tab_rear_light_status_samples.tex", "w") as f:
+        f.write(latex)
     
     fig1, ax = plot_hazard_distribution(dataset_df)
     pdf.savefig(fig1)
