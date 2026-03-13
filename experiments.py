@@ -368,7 +368,7 @@ EXPERIMENTS_1 = [
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "focal_loss_gamma": 1,
-        "amp_enabled": False,
+        "amp_enabled": True,
         "batch_size": 32,
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
@@ -406,7 +406,7 @@ EXPERIMENTS_1 = [
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "focal_loss_gamma": 1,
-        "amp_enabled": False,
+        "amp_enabled": True,
         "batch_size": 32,
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
@@ -444,7 +444,7 @@ EXPERIMENTS_1 = [
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "focal_loss_gamma": 1.2,
-        "amp_enabled": False,
+        "amp_enabled": True,
         "batch_size": 32,
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
@@ -482,7 +482,7 @@ EXPERIMENTS_1 = [
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "focal_loss_gamma": 1.4,
-        "amp_enabled": False,
+        "amp_enabled": True,
         "batch_size": 32,
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": 0.0,

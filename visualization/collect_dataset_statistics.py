@@ -186,6 +186,12 @@ def get_rear_light_status_classes_stat(df):
         )
     )
 
+    stat["RVSR-6 Samples"] = (
+        stat["RVSR-6 Samples"]
+        .fillna(0)
+        .astype(int)
+    )
+
     # optional: nicer column ordering
     stat = stat[["RVSR-10", "RVSR-10 Samples", "RVSR-6 Samples"]]
 
