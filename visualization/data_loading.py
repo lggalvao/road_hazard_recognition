@@ -10,7 +10,9 @@ from pathlib import Path
 
 
 def load_dataset(csv_path: str) -> pd.DataFrame:
-    df = pd.read_csv(csv_path)
+    #df = pd.read_csv(csv_path)
+    dtype_dict = {43: str}  #43 is clip_source
+    df = pd.read_csv(csv_path, dtype=dtype_dict, low_memory=False)
     return df
 
 def keep_target_objects(df):

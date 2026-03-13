@@ -149,6 +149,8 @@ if __name__ == '__main__':
         cfg.model.enc_layers_num = exp_config.enc_layers_num
         cfg.model.lstm_dropout = exp_config.lstm_dropout
         cfg.loss.focal_loss_gamma = exp_config.focal_loss_gamma
+        cfg.model.enc_hidden_size = exp_config.enc_hidden_size
+        
 
         #results_csv = pd.read_csv(cfg.logging.results_csv_file_path)
         
