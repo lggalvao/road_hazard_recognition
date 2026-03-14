@@ -16,7 +16,8 @@ from visualization.collect_dataset_statistics import (
     get_hazard_classes_stat,
     get_object_classes_stat,
     get_object_visible_side_classes_stat,
-    get_rear_light_status_classes_stat
+    get_rear_light_status_classes_stat,
+    get_frame_statistics
 )
 from visualization.image_viz import (
     show_image_with_bbox
@@ -94,6 +95,17 @@ with PdfPages("./output/visualizations/eda_correlation_report.pdf") as pdf:
         column_format="lcc"
     )
     
+    
+    latex = latex.replace(
+        r"\centering",
+        r"\centering" + "\n\\begin{small}"
+    )
+    
+    latex = latex.replace(
+        r"\end{tabular}",
+        r"\end{tabular}" + "\n\\end{small}"
+    )
+    
     with open("C:/Manuscripts/Hazard Recognition Paper/tab_hazard_classes_samples.tex", "w") as f:
         f.write(latex)
     
@@ -105,6 +117,16 @@ with PdfPages("./output/visualizations/eda_correlation_report.pdf") as pdf:
         caption="Distribution of object classes.",
         label="tab:number_of_samples_per_object_classes",
         column_format="lcc"
+    )
+    
+    latex = latex.replace(
+        r"\centering",
+        r"\centering" + "\n\\begin{small}"
+    )
+    
+    latex = latex.replace(
+        r"\end{tabular}",
+        r"\end{tabular}" + "\n\\end{small}"
     )
     
     with open("C:/Manuscripts/Hazard Recognition Paper/tab_target_objects_classes_samples.tex", "w") as f:
@@ -120,6 +142,16 @@ with PdfPages("./output/visualizations/eda_correlation_report.pdf") as pdf:
         column_format="lcc"
     )
     
+    latex = latex.replace(
+        r"\centering",
+        r"\centering" + "\n\\begin{small}"
+    )
+    
+    latex = latex.replace(
+        r"\end{tabular}",
+        r"\end{tabular}" + "\n\\end{small}"
+    )
+    
     with open("C:/Manuscripts/Hazard Recognition Paper/tab_object_visible_side_samples.tex", "w") as f:
         f.write(latex)
         
@@ -133,8 +165,24 @@ with PdfPages("./output/visualizations/eda_correlation_report.pdf") as pdf:
         column_format="lccc"
     )
     
+    latex = latex.replace(
+        r"\centering",
+        r"\centering" + "\n\\begin{small}"
+    )
+    
+    latex = latex.replace(
+        r"\end{tabular}",
+        r"\end{tabular}" + "\n\\end{small}"
+    )
+    
     with open("C:/Manuscripts/Hazard Recognition Paper/tab_rear_light_status_samples.tex", "w") as f:
         f.write(latex)
+    
+    
+    avg_class, overall = get_frame_statistics(dataset_df)
+
+    print(avg_class)
+    print(overall)
     
     fig1, ax = plot_hazard_distribution(dataset_df)
     pdf.savefig(fig1)
