@@ -385,7 +385,7 @@ EXPERIMENTS_1 = [
         "input_feature_type": "single_img_input",
         "use_object_visible_side": None,
         "use_rear_light_status": None,
-        "model": "CNN_Transformer",
+        "model": "CNN_LSTM",
     
         "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
