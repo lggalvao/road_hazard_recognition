@@ -385,17 +385,17 @@ EXPERIMENTS_1 = [
         "input_feature_type": "single_img_input",
         "use_object_visible_side": None,
         "use_rear_light_status": None,
-        "model": "CNN_LSTM",
+        "model": "CNN_Transformer",
     
         "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
     
-        "enc_input_seq_length": 20,
+        "enc_input_seq_length": 16,
         "enc_layers_num": 2,
         "enc_hidden_size": 128,
-        "lstm_dropout": 0.3,
+        "lstm_dropout": 0.0,
     
-        "classes_type": "literature_classes",
+        "classes_type": "all_classes",
     
         "stage": 0,
         "run_epoch_profile": False,
@@ -403,10 +403,10 @@ EXPERIMENTS_1 = [
         "lr_scheduler": "CosineAnnealingLRWarmUp",
         "step_size": 20,
         "gamma": 0.01,
-        "lr_cosine_t_max": 30,
+        "lr_cosine_t_max": 1,
         "lr_cosine_eta_min": 5e-7,
     
-        "num_epochs": 30,
+        "num_epochs": 12,
         "global_lr": False,
     
         "optimizer": "AdamW",
@@ -415,252 +415,63 @@ EXPERIMENTS_1 = [
         "focal_loss_gamma": 2,
     
         "amp_enabled": True,
-        "batch_size": 24,
+        "batch_size": 16,
     
         "freeze_strategy": None,
     
         "dropout_cnn_dynamic": 0.1,
         "dropout_cnn": 0.5,
-        "dropout_pre_attention": 0.0,
+        "dropout_pre_attention": 0.2,
         "dropout_fc": 0.5,
     
         "backbone_lr": 8e-5,
         "head_lr": 3e-4,
-        "weight_decay": 5e-4,
+        "weight_decay": 4e-4,
     
         "sequence_stride": 4,
         "cached_dataset": False,
     
-        "comments": "deeper_lstm + correct_cosine + adamw + longer_seq"
-    },
-    {
-        "input_feature_type": "single_img_input",
-        "use_object_visible_side": None,
-        "use_rear_light_status": None,
-        "model": "CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
-        "input_img_type1": "img_local_context_ROI_1",
-        "input_img_type2": None,
-        "enc_input_seq_length": 16,
-        "enc_layers_num": 1,
-        "enc_hidden_size": 128,
-        "lstm_dropout": 0.0,
-        "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
-        "stage": 0,
-        "run_epoch_profile": False,
-        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
-        "step_size": 20,
-        "gamma": 0.01,
-        "lr_cosine_t_max": 1.5,
-        "lr_cosine_eta_min": 1e-6,
-        "num_epochs": 30,
-        "global_lr": False, 
-        "optimizer": "SGD",  #SGD, Adam, AdamW
-        "loss_function": "FocalLoss",
-        "focal_loss_gamma": 1,
-        "amp_enabled": True,
-        "batch_size": 16,
-        "freeze_strategy": None,  #head, partial, full
-        "dropout_cnn_dynamic": 0.0,
-        "dropout_cnn": 0.5,
-        "dropout_pre_attention": 0.0,
-        "dropout_fc": 0.5,
-        "backbone_lr": 2e-4,
-        "head_lr": 2e-5,
-        "weight_decay": 0.00018,
-        "sequence_stride": 4, 
-        "cached_dataset": False,
-        "comments": "batch_size"
-    },
-    {
-        "input_feature_type": "single_img_input",
-        "use_object_visible_side": None,
-        "use_rear_light_status": None,
-        "model": "CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
-        "input_img_type1": "img_local_context_ROI_1",
-        "input_img_type2": None,
-        "enc_input_seq_length": 16,
-        "enc_layers_num": 1,
-        "enc_hidden_size": 128,
-        "lstm_dropout": 0.0,
-        "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
-        "stage": 0,
-        "run_epoch_profile": False,
-        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
-        "step_size": 20,
-        "gamma": 0.01,
-        "lr_cosine_t_max": 1.5,
-        "lr_cosine_eta_min": 1e-5,
-        "num_epochs": 30,
-        "global_lr": False, 
-        "optimizer": "SGD",  #SGD, Adam, AdamW
-        "loss_function": "FocalLoss",
-        "focal_loss_gamma": 1,
-        "amp_enabled": True,
-        "batch_size": 32,
-        "freeze_strategy": None,  #head, partial, full
-        "dropout_cnn_dynamic": 0.0,
-        "dropout_cnn": 0.5,
-        "dropout_pre_attention": 0.0,
-        "dropout_fc": 0.5,
-        "backbone_lr": 2e-4,
-        "head_lr": 2e-5,
-        "weight_decay": 0.00018,
-        "sequence_stride": 4, 
-        "cached_dataset": False,
-        "comments": "lr_cosine_eta_min"
-    },
-    {
-        "input_feature_type": "single_img_input",
-        "use_object_visible_side": None,
-        "use_rear_light_status": None,
-        "model": "CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
-        "input_img_type1": "img_local_context_ROI_1",
-        "input_img_type2": None,
-        "enc_input_seq_length": 16,
-        "enc_layers_num": 1,
-        "enc_hidden_size": 128,
-        "lstm_dropout": 0.0,
-        "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
-        "stage": 0,
-        "run_epoch_profile": False,
-        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
-        "step_size": 20,
-        "gamma": 0.01,
-        "lr_cosine_t_max": 1.5,
-        "lr_cosine_eta_min": 1e-6,
-        "num_epochs": 30,
-        "global_lr": False, 
-        "optimizer": "SGD",  #SGD, Adam, AdamW
-        "loss_function": "FocalLoss",
-        "focal_loss_gamma": 1.5,
-        "amp_enabled": True,
-        "batch_size": 32,
-        "freeze_strategy": None,  #head, partial, full
-        "dropout_cnn_dynamic": 0.0,
-        "dropout_cnn": 0.5,
-        "dropout_pre_attention": 0.0,
-        "dropout_fc": 0.5,
-        "backbone_lr": 2e-4,
-        "head_lr": 2e-5,
-        "weight_decay": 0.00018,
-        "sequence_stride": 4, 
-        "cached_dataset": False,
-        "comments": "focal_loss_gamma"
-    },
-    {
-        "input_feature_type": "single_img_input",
-        "use_object_visible_side": None,
-        "use_rear_light_status": None,
-        "model": "CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
-        "input_img_type1": "img_local_context_ROI_1",
-        "input_img_type2": None,
-        "enc_input_seq_length": 16,
-        "enc_layers_num": 1,
-        "enc_hidden_size": 128,
-        "lstm_dropout": 0.0,
-        "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
-        "stage": 0,
-        "run_epoch_profile": False,
-        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
-        "step_size": 20,
-        "gamma": 0.01,
-        "lr_cosine_t_max": 1.5,
-        "lr_cosine_eta_min": 1e-6,
-        "num_epochs": 30,
-        "global_lr": False, 
-        "optimizer": "SGD",  #SGD, Adam, AdamW
-        "loss_function": "FocalLoss",
-        "focal_loss_gamma": 1.6,
-        "amp_enabled": True,
-        "batch_size": 32,
-        "freeze_strategy": None,  #head, partial, full
-        "dropout_cnn_dynamic": 0.0,
-        "dropout_cnn": 0.5,
-        "dropout_pre_attention": 0.0,
-        "dropout_fc": 0.5,
-        "backbone_lr": 2e-4,
-        "head_lr": 2e-5,
-        "weight_decay": 0.00018,
-        "sequence_stride": 4, 
-        "cached_dataset": False,
-        "comments": "focal_loss_gamma"
-    },
-    {
-        "input_feature_type": "single_img_input",
-        "use_object_visible_side": None,
-        "use_rear_light_status": None,
-        "model": "CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
-        "input_img_type1": "img_local_context_ROI_1",
-        "input_img_type2": None,
-        "enc_input_seq_length": 16,
-        "enc_layers_num": 1,
-        "enc_hidden_size": 128,
-        "lstm_dropout": 0.0,
-        "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
-        "stage": 0,
-        "run_epoch_profile": False,
-        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
-        "step_size": 20,
-        "gamma": 0.01,
-        "lr_cosine_t_max": 1.5,
-        "lr_cosine_eta_min": 1e-6,
-        "num_epochs": 30,
-        "global_lr": False, 
-        "optimizer": "SGD",  #SGD, Adam, AdamW
-        "loss_function": "FocalLoss",
-        "focal_loss_gamma": 1.8,
-        "amp_enabled": True,
-        "batch_size": 32,
-        "freeze_strategy": None,  #head, partial, full
-        "dropout_cnn_dynamic": 0.0,
-        "dropout_cnn": 0.5,
-        "dropout_pre_attention": 0.0,
-        "dropout_fc": 0.5,
-        "backbone_lr": 2e-4,
-        "head_lr": 2e-5,
-        "weight_decay": 0.00018,
-        "sequence_stride": 4, 
-        "cached_dataset": False,
-        "comments": "focal_loss_gamma"
-    },
-    {
-        "input_feature_type": "single_img_input",
-        "use_object_visible_side": None,
-        "use_rear_light_status": None,
-        "model": "CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
-        "input_img_type1": "img_local_context_ROI_1",
-        "input_img_type2": None,
-        "enc_input_seq_length": 16,
-        "enc_layers_num": 1,
-        "enc_hidden_size": 128,
-        "lstm_dropout": 0.0,
-        "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
-        "stage": 0,
-        "run_epoch_profile": False,
-        "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
-        "step_size": 20,
-        "gamma": 0.01,
-        "lr_cosine_t_max": 1.5,
-        "lr_cosine_eta_min": 1e-6,
-        "num_epochs": 30,
-        "global_lr": False, 
-        "optimizer": "SGD",  #SGD, Adam, AdamW
-        "loss_function": "FocalLoss",
-        "focal_loss_gamma": 2.0,
-        "amp_enabled": True,
-        "batch_size": 32,
-        "freeze_strategy": None,  #head, partial, full
-        "dropout_cnn_dynamic": 0.0,
-        "dropout_cnn": 0.5,
-        "dropout_pre_attention": 0.0,
-        "dropout_fc": 0.5,
-        "backbone_lr": 2e-4,
-        "head_lr": 2e-5,
-        "weight_decay": 0.00018,
-        "sequence_stride": 4, 
-        "cached_dataset": False,
-        "comments": "focal_loss_gamma"
-    },
+        "comments": "test_attention_temporal_encoder"
+    }
+    #{
+    #    "input_feature_type": "single_img_input",
+    #    "use_object_visible_side": None,
+    #    "use_rear_light_status": None,
+    #    "model": "CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
+    #    "input_img_type1": "img_local_context_ROI_1",
+    #    "input_img_type2": None,
+    #    "enc_input_seq_length": 16,
+    #    "enc_layers_num": 1,
+    #    "enc_hidden_size": 128,
+    #    "lstm_dropout": 0.0,
+    #    "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
+    #    "stage": 0,
+    #    "run_epoch_profile": False,
+    #    "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
+    #    "step_size": 20,
+    #    "gamma": 0.01,
+    #    "lr_cosine_t_max": 1.5,
+    #    "lr_cosine_eta_min": 1e-6,
+    #    "num_epochs": 30,
+    #    "global_lr": False, 
+    #    "optimizer": "SGD",  #SGD, Adam, AdamW
+    #    "loss_function": "FocalLoss",
+    #    "focal_loss_gamma": 1,
+    #    "amp_enabled": True,
+    #    "batch_size": 16,
+    #    "freeze_strategy": None,  #head, partial, full
+    #    "dropout_cnn_dynamic": 0.0,
+    #    "dropout_cnn": 0.5,
+    #    "dropout_pre_attention": 0.0,
+    #    "dropout_fc": 0.5,
+    #    "backbone_lr": 2e-4,
+    #    "head_lr": 2e-5,
+    #    "weight_decay": 0.00018,
+    #    "sequence_stride": 4, 
+    #    "cached_dataset": False,
+    #    "comments": "batch_size"
+    #},
+
 ]
 
 
