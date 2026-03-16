@@ -173,7 +173,7 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
         
         print("targets_min", targets.min())
         print("targets_max", targets.max())
-        print("num_classes", targets.shape[1])
+        print("num_classes", targets.shape)
         
         for k, v in inputs.items():
             if isinstance(v, list):
