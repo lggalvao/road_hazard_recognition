@@ -362,7 +362,7 @@ EXPERIMENTS_1 = [
         "stage": 0,
         "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
-        "step_size": 0.0,
+        "step_size": 20,
         "gamma": 0.01,
         "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-6,
@@ -372,7 +372,7 @@ EXPERIMENTS_1 = [
         "loss_function": "FocalLoss",
         "focal_loss_gamma": 0,
         "amp_enabled": True,
-        "batch_size": 30,
+        "batch_size": 28,
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
