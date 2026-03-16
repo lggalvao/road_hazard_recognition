@@ -372,7 +372,7 @@ EXPERIMENTS_1 = [
         "loss_function": "FocalLoss",
         "focal_loss_gamma": 0,
         "amp_enabled": True,
-        "batch_size": 24,
+        "batch_size": 32,
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
