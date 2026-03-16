@@ -367,7 +367,7 @@ EXPERIMENTS_1 = [
         "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
-        "global_lr": True, 
+        "global_lr": False, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "focal_loss_gamma": 0,
@@ -443,7 +443,7 @@ EXPERIMENTS_1 = [
         "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
-        "global_lr": True, 
+        "global_lr": False, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "focal_loss_gamma": 0.3,
@@ -481,7 +481,7 @@ EXPERIMENTS_1 = [
         "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
-        "global_lr": True, 
+        "global_lr": False, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "focal_loss_gamma": 0.6,
@@ -519,7 +519,7 @@ EXPERIMENTS_1 = [
         "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
-        "global_lr": True, 
+        "global_lr": False, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "focal_loss_gamma": 0.8,
@@ -557,7 +557,7 @@ EXPERIMENTS_1 = [
         "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
-        "global_lr": True, 
+        "global_lr": False, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "focal_loss_gamma": 2,
@@ -595,7 +595,7 @@ EXPERIMENTS_1 = [
         "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
-        "global_lr": True, 
+        "global_lr": False, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "focal_loss_gamma": 2,

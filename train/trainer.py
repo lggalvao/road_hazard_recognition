@@ -171,10 +171,6 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
         t1 = time.time()
         targets = targets.to(cfg.system.device, non_blocking=True)
         
-        print("targets_min", targets.min())
-        print("targets_max", targets.max())
-        print("num_classes", targets.shape)
-        
         for k, v in inputs.items():
             if isinstance(v, list):
                 inputs[k] = [t.to(cfg.system.device, non_blocking=True) for t in v]
