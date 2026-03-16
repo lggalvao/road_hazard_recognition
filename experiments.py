@@ -347,7 +347,7 @@ EXPERIMENTS_0 = [
 
 
 EXPERIMENTS_1 = [
-    {
+        {
         "input_feature_type": "single_img_input",
         "use_object_visible_side": None,
         "use_rear_light_status": None,
@@ -370,7 +370,7 @@ EXPERIMENTS_1 = [
         "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
-        "focal_loss_gamma": 1,
+        "focal_loss_gamma": 0,
         "amp_enabled": True,
         "batch_size": 24,
         "freeze_strategy": None,  #head, partial, full
@@ -405,10 +405,10 @@ EXPERIMENTS_1 = [
         "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-6,
         "num_epochs": 30,
-        "global_lr": True, 
+        "global_lr": False, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
-        "focal_loss_gamma": 0,
+        "focal_loss_gamma": 1,
         "amp_enabled": True,
         "batch_size": 24,
         "freeze_strategy": None,  #head, partial, full
