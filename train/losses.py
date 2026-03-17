@@ -46,43 +46,6 @@ def get_loss_function(cfg):
     logger.info(f"Class weights: {class_weights}")
     assert class_weights.shape[0] == cfg.model.num_classes
     assert class_weights.device == cfg.system.device
-    
-    #logits = torch.tensor([
-    #    [5.0, 0.1, 0.1],  # predicts class 0
-    #    [0.1, 0.1, 5.0],  # predicts class 2
-    #], requires_grad=True)
-    #
-    #targets = torch.tensor([0, 2])
-    #
-    #weights = torch.tensor([10.0, 1.0, 1.0])
-    #
-    #criterion = torch.nn.CrossEntropyLoss(weight=weights, reduction="none")
-    #loss = criterion(logits, targets)
-    #print("Weighted CEL", loss)
-    #
-    #criterion = torch.nn.CrossEntropyLoss(reduction="none")
-    #loss = criterion(logits, targets)
-    #print("CEL", loss)
-    #
-    #criterion = FocalLossMultiClass(
-    #        gamma=2,
-    #        alpha=weights,
-    #        use_class_weights=False,
-    #        reduction=None,
-    #    )
-    #loss = criterion(logits, targets)
-    #print("Focal Loss", loss)
-    #
-    #criterion = FocalLossMultiClass(
-    #        gamma=2,
-    #        alpha=weights,
-    #        use_class_weights=True,
-    #        reduction=None,
-    #    )
-    #loss = criterion(logits, targets)
-    #print("Weighted Focal Loss", loss)
-    #
-    #exit()
 
     if cfg.model.model == "Trajectory_Embedding_LSTM":
         return nn.MSELoss()

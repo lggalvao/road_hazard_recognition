@@ -347,11 +347,12 @@ EXPERIMENTS_0 = [
 
 
 EXPERIMENTS_1 = [
-        {
+
+    {
         "input_feature_type": "single_img_input",
         "use_object_visible_side": None,
         "use_rear_light_status": None,
-        "model": "CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
+        "model": "TimeSformerNet",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
         "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
@@ -362,7 +363,7 @@ EXPERIMENTS_1 = [
         "stage": 0,
         "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
-        "step_size": 20,
+        "step_size": 0.0,
         "gamma": 0.01,
         "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-6,
@@ -370,9 +371,9 @@ EXPERIMENTS_1 = [
         "global_lr": False, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
-        "focal_loss_gamma": 0,
+        "focal_loss_gamma": 1,
         "amp_enabled": True,
-        "batch_size": 16,
+        "batch_size": 24,
         "freeze_strategy": None,  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
@@ -389,7 +390,7 @@ EXPERIMENTS_1 = [
         "input_feature_type": "single_img_input",
         "use_object_visible_side": None,
         "use_rear_light_status": None,
-        "model": "CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
+        "model": "VideoMAENet",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
         "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
