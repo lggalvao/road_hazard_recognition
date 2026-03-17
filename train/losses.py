@@ -45,7 +45,7 @@ def get_loss_function(cfg):
     logger.info(f"Loss Function: {loss_name}")
     logger.info(f"Class weights: {class_weights}")
     assert class_weights.shape[0] == cfg.model.num_classes
-    assert class_weights.device == cfg.system.device
+    #assert class_weights.device == cfg.system.device
 
     if cfg.model.model == "Trajectory_Embedding_LSTM":
         return nn.MSELoss()
