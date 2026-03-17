@@ -374,7 +374,7 @@ EXPERIMENTS_1 = [
         "focal_loss_gamma": 1,
         "amp_enabled": True,
         "batch_size": 24,
-        "freeze_strategy": None,  #head, partial, full
+        "freeze_strategy": "partial",  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
@@ -412,7 +412,7 @@ EXPERIMENTS_1 = [
         "focal_loss_gamma": 1,
         "amp_enabled": True,
         "batch_size": 24,
-        "freeze_strategy": None,  #head, partial, full
+        "freeze_strategy": "partial",  #head, partial, full
         "dropout_cnn_dynamic": 0.0,
         "dropout_cnn": 0.5,
         "dropout_pre_attention": 0.0,
