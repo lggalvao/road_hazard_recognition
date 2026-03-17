@@ -77,7 +77,7 @@ if __name__ == '__main__':
     visible_side_arr = ['front_side', 'front_left_side', 'front_right_side', 'rear_side', 'rear_right_side', 'rear_left_side', 'left_side', 'right_side', 'UNK']
     rear_light_status_arr = ['BOO', 'OLO', 'OLR', 'OOO', 'OOR', 'BLO', 'BLR', 'BOR', 'REVERSE', 'UNK']
 
-    cfg.system.multi_gpu = False
+    cfg.system.multi_gpu = True
     cfg.data.with_no_hazard_samples_flag = True
     cfg.data.sequence_stride = 1
     cfg.data.dataset_trim = 400
