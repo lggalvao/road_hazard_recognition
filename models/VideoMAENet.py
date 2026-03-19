@@ -16,7 +16,7 @@ class VideoMAENet(nn.Module):
         config.num_frames = self.num_frames
 
         self.model = VideoMAEForVideoClassification.from_pretrained(
-            "MCG-NJU/videomae-base-finetuned-kinetics",
+            "MCG-NJU/videomae-base",
             config=config,
             ignore_mismatched_sizes=True
         )
