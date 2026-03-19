@@ -9,14 +9,14 @@ from train.losses import compute_loss
 import torch.nn as nn
 from pathlib import Path
 from utils.timing import timeit
-from train.trainer import move_to_device, GPUTransform
+from train.trainer import move_to_device, VideoAugmentation
 
 @timeit
 def test_model(cfg, net, allsetDataloader, run_wandb, log_file_path):
     
     print('Performing Testing')
     # Clear GPU memory
-    gpu_transform = GPUTransform().to(cfg.system.device)
+    spatial_temporal_aug = VideoAugmentation().to(cfg.system.device)
     torch.cuda.empty_cache()
 
     best_paths = get_best_weights(log_file_path)
@@ -36,7 +36,6 @@ def test_model(cfg, net, allsetDataloader, run_wandb, log_file_path):
         test_trues_np = []
         
         for i, data in enumerate(tqdm(allsetDataloader['test'], desc="Testing...")):
-            #inputs, targets = prepare_inputs(data, cfg)
             inputs, targets = data
             
             targets = targets.to(cfg.system.device, non_blocking=True)
@@ -46,10 +45,8 @@ def test_model(cfg, net, allsetDataloader, run_wandb, log_file_path):
                 else:
                     inputs[k] = v.to(cfg.system.device, non_blocking=True)
                 
-            #targets = move_to_device(targets, cfg.system.device)
-            #inputs = move_to_device(inputs, cfg.system.device)
             if cfg.data.input_feature_type != "explicit_feature":
-                inputs["images"] = gpu_transform(inputs["images"], is_train)
+                inputs["images"], inputs['missing_object_mask']= spatial_temporal_aug(inputs["images"], inputs['missing_object_mask'], is_train)
             
             with torch.no_grad():
                 preds = forward_pass(net, inputs)

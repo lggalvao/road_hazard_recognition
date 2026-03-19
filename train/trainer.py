@@ -14,55 +14,160 @@ import torch.profiler
 import logging
 from torch.cuda.amp import autocast
 from torch.cuda.amp import GradScaler
+import torch.nn.functional as F
+import random
 
 logger = logging.getLogger("hazard_recognition")
 
 
-class GPUTransform(torch.nn.Module):
-    def __init__(self):
+class VideoAugmentation(nn.Module):
+    """
+    Spatio-temporal augmentation for CNN-LSTM video input.
+
+    Expected input:
+        x    : [B, T, C, H, W]
+        mask : [B, T]  (1 = valid frame)
+
+    Returns:
+        x_aug, mask_aug
+    """
+
+    def __init__(
+        self,
+        p_flip=0.5,
+        p_color=0.8,
+        brightness=0.15,
+        contrast=0.15,
+        saturation=0.1,
+        hue=0.02,
+        frame_dropout=0.15,
+        speed_min=0.8,
+        speed_max=1.25,
+        normalize=True,
+    ):
         super().__init__()
 
-        self.augs = torch.nn.Sequential(
-            K.RandomHorizontalFlip(p=0.5),
+        # sequence-consistent spatial aug (applied per sequence)
+        self.spatial_aug = nn.Sequential(
+            K.RandomHorizontalFlip(p=p_flip),
             K.ColorJitter(
-                brightness=0.15,
-                contrast=0.15,
-                saturation=0.1,
-                hue=0.02,
-                p=0.8
+                brightness=brightness,
+                contrast=contrast,
+                saturation=saturation,
+                hue=hue,
+                p=p_color,
             ),
         )
 
-        self.normalize = K.Normalize(
-            mean=torch.tensor([0.485,0.456,0.406]),
-            std=torch.tensor([0.229,0.224,0.225])
-        )
+        self.frame_dropout = frame_dropout
+        self.speed_min = speed_min
+        self.speed_max = speed_max
 
-    def forward(self, x, is_train=True):
+        if normalize:
+            self.normalize = K.Normalize(
+                mean=torch.tensor([0.485, 0.456, 0.406]),
+                std=torch.tensor([0.229, 0.224, 0.225]),
+            )
+        else:
+            self.normalize = None
+
+    # --------------------------------------------------
+    # temporal augmentation
+    # --------------------------------------------------
+    def temporal_aug(self, x, mask):
 
         B, T, C, H, W = x.shape
-        x = x.float() / 255.0
+        device = x.device
+
+        # ----- speed perturbation (vectorised) -----
+        speed = torch.empty(B, device=device).uniform_(
+            self.speed_min, self.speed_max
+        )
+
+        base_idx = torch.linspace(0, T - 1, T, device=device)
+
+        new_idx = base_idx.unsqueeze(0) / speed.unsqueeze(1)
+        new_idx = new_idx.clamp(0, T - 1)
+
+        idx0 = new_idx.floor().long()
+        idx1 = torch.clamp(idx0 + 1, max=T - 1)
+
+        w = (new_idx - idx0).view(B, T, 1, 1, 1)
+
+        x = (1 - w) * x.gather(
+            1, idx0.view(B, T, 1, 1, 1).expand(-1, -1, C, H, W)
+        ) + w * x.gather(
+            1, idx1.view(B, T, 1, 1, 1).expand(-1, -1, C, H, W)
+        )
+
+        if mask is not None:
+            mask = mask.gather(1, idx0)
+
+        # ----- frame dropout -----
+        drop = torch.rand(B, T, device=device) < self.frame_dropout
+        x[drop] = 0.0
+        if mask is not None:
+            mask[drop] = 0
+
+        return x, mask
+
+    # --------------------------------------------------
+    # spatial augmentation
+    # --------------------------------------------------
+    def spatial_aug_per_sequence(self, x):
+
+        B, T, C, H, W = x.shape
         x = x.view(B * T, C, H, W)
 
-        if is_train:
-            x = self.augs(x)
+        out = []
 
-        x = self.normalize(x)
+        # apply same transform inside each sequence
+        for b in range(B):
+            seq = x[b * T:(b + 1) * T]
+            seq = self.spatial_aug(seq)
+            out.append(seq)
 
+        x = torch.cat(out, dim=0)
         x = x.view(B, T, C, H, W)
+
         return x
 
+    # --------------------------------------------------
+    # forward
+    # --------------------------------------------------
+    def forward(self, x, mask=None, is_train=True):
 
+        x = x.float() / 255.0
+
+        if is_train:
+            x, mask = self.temporal_aug(x, mask)
+            x = self.spatial_aug_per_sequence(x)
+
+        if self.normalize is not None:
+            B, T, C, H, W = x.shape
+            x = self.normalize(x.view(B * T, C, H, W))
+            x = x.view(B, T, C, H, W)
+
+        return x, mask
 
 # -------------------------
 # Main Training Loop
 # -------------------------
 @timeit
-def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criterion, early_stopping, run_wandb, log_file_path):
+def train_model(
+    cfg,
+    net,
+    allsetDataloader,
+    optimizer,
+    exp_lr_scheduler,
+    criterion,
+    early_stopping,
+    run_wandb,
+    log_file_path):
 
     scaler = GradScaler(enabled=cfg.training.amp_enabled)
     logger.info(f"AMP enabled: {scaler.is_enabled()}")
-    gpu_transform = GPUTransform().to(cfg.system.device)
+    spatial_temporal_aug= VideoAugmentation().to(cfg.system.device)
     previous_train_F1 = None
     best_val_f1 = 0
     f1_train_val_gap = 0
@@ -84,7 +189,7 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
                     criterion,
                     cfg,
                     is_train,
-                    gpu_transform,
+                    spatial_temporal_aug,
                     exp_lr_scheduler,
                     scaler
                 )
@@ -97,7 +202,7 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
                 criterion,
                 cfg,
                 is_train,
-                gpu_transform,
+                spatial_temporal_aug,
                 exp_lr_scheduler,
                 scaler
             )
@@ -145,7 +250,16 @@ def train_model(cfg, net, allsetDataloader, optimizer, exp_lr_scheduler, criteri
             break 
 
 @timeit
-def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transform, exp_lr_scheduler, scaler):
+def run_epoch(
+    net,
+    dataloader,
+    optimizer,
+    criterion,
+    cfg,
+    is_train,
+    spatial_temporal_aug,
+    exp_lr_scheduler,
+    scaler):
 
     net.train() if is_train else net.eval()
     
@@ -162,7 +276,6 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
     for data in tqdm(dataloader, desc="Training..." if is_train else "Validating..."):
    
         t1 = time.time()
-        #inputs, targets = prepare_inputs(data, cfg)
         inputs, targets = data
         t2 =time.time()
         
@@ -176,19 +289,23 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
                 inputs[k] = [t.to(cfg.system.device, non_blocking=True) for t in v]
             else:
                 inputs[k] = v.to(cfg.system.device, non_blocking=True)
-        #targets = move_to_device(targets, cfg.system.device)
-        #inputs = move_to_device(inputs, cfg.system.device)
+
         t2 =time.time()
         move_to_device_time += (t2 - t1)
 
         if cfg.data.input_feature_type != "explicit_feature":
             t1 = time.time()
-            inputs["images"] = gpu_transform(inputs["images"], is_train)
+            
+            inputs["images"], inputs['missing_object_mask']= spatial_temporal_aug(
+                inputs["images"],
+                inputs['missing_object_mask'],
+                is_train
+            )
+            
             t2 =time.time()
             gpu_transform_time += (t2 - t1)
 
         if is_train:
-            #optimizer.zero_grad()
             optimizer.zero_grad(set_to_none=True)
 
         with torch.set_grad_enabled(is_train):
@@ -257,7 +374,16 @@ def run_epoch(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transfor
     return avg_loss, epoch_targets, epoch_preds
 
 
-def run_epoch_profile(net, dataloader, optimizer, criterion, cfg, is_train, gpu_transform, exp_lr_scheduler, scaler):
+def run_epoch_profile(
+    net,
+    dataloader,
+    optimizer,
+    criterion,
+    cfg,
+    is_train,
+    spatial_temporal_aug,
+    exp_lr_scheduler,
+    scaler):
 
     net.train() if is_train else net.eval()
 
@@ -293,7 +419,11 @@ def run_epoch_profile(net, dataloader, optimizer, criterion, cfg, is_train, gpu_
                     inputs[k] = v.to(cfg.system.device, non_blocking=True)
 
             if cfg.data.input_feature_type != "explicit_feature":
-                inputs["images"] = gpu_transform(inputs["images"], is_train)
+                inputs["images"], inputs['missing_object_mask']= spatial_temporal_aug(
+                inputs["images"],
+                inputs['missing_object_mask'],
+                is_train
+            )
 
             if is_train:
                 optimizer.zero_grad()
