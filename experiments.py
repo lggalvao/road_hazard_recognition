@@ -10,7 +10,7 @@ EXPERIMENTS_0 = [
         "enc_layers_num": 2,
         "enc_hidden_size": 112, 
         "lstm_dropout": 0, 
-        "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
+        "classes_type": "all_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
         "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
@@ -48,7 +48,7 @@ EXPERIMENTS_0 = [
         "enc_layers_num": 2,
         "enc_hidden_size": 128, 
         "lstm_dropout": 0, 
-        "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
+        "classes_type": "all_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
         "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
@@ -75,12 +75,13 @@ EXPERIMENTS_0 = [
         "cached_dataset": False,
         "comments": "best"
     },
+    {
 
 ]
 
 
 EXPERIMENTS_1 = [
-    {
+     {
         "input_feature_type": "explicit_feature",  # explicit_feature, single_img_input, multi_img_input, explicit_and_single_img_input, explicit_and_multi_img_input
         "use_object_visible_side": False,
         "use_rear_light_status": True,
@@ -91,7 +92,7 @@ EXPERIMENTS_1 = [
         "enc_layers_num": 2,
         "enc_hidden_size": 128, 
         "lstm_dropout": 0.2, 
-        "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
+        "classes_type": "all_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
         "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
@@ -129,7 +130,7 @@ EXPERIMENTS_1 = [
         "enc_layers_num": 2,
         "enc_hidden_size": 128, 
         "lstm_dropout": 0.2, 
-        "classes_type": "literature_classes",  #motion_towards, all_classes, literature_classes
+        "classes_type": "all_classes",  #motion_towards, all_classes, literature_classes
         "stage": 0,
         "run_epoch_profile": False,
         "lr_scheduler": "CosineAnnealingLRWarmUp",  #StepLR, CosineAnnealingLR, CosineAnnealingLRWarmUp
