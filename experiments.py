@@ -75,7 +75,6 @@ EXPERIMENTS_0 = [
         "cached_dataset": False,
         "comments": "best"
     },
-    {
 
 ]
 
