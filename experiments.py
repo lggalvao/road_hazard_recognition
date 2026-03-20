@@ -18,7 +18,7 @@ EXPERIMENTS_0 = [
         "gamma": 0.01,
         "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-5,
-        "num_epochs": 30,
+        "num_epochs": 15,
         "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
@@ -56,7 +56,7 @@ EXPERIMENTS_0 = [
         "gamma": 0.01,
         "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-5,
-        "num_epochs": 30,
+        "num_epochs": 15,
         "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
@@ -94,7 +94,7 @@ EXPERIMENTS_0 = [
         "gamma": 0.01,
         "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-5,
-        "num_epochs": 30,
+        "num_epochs": 15,
         "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
@@ -132,7 +132,7 @@ EXPERIMENTS_0 = [
         "gamma": 0.01,
         "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-5,
-        "num_epochs": 30,
+        "num_epochs": 15,
         "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
