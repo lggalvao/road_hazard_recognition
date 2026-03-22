@@ -21,7 +21,7 @@ EXPERIMENTS_0 = [
         "lr_cosine_t_max": 1.5,
         "lr_cosine_eta_min": 1e-5,
         "num_epochs": 30,
-        "global_lr": False, 
+        "global_lr": True, 
         "optimizer": "SGD",  #SGD, Adam, AdamW
         "loss_function": "FocalLoss",
         "focal_loss_gamma": 2,
