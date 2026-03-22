@@ -395,7 +395,7 @@ EXPERIMENTS_1 = [
         "use_object_visible_side": False,
         "use_rear_light_status": False,
         "model": "Embedding_CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
-        "input_img_type1": None,
+        "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "enc_layers_num": 1,
@@ -433,7 +433,7 @@ EXPERIMENTS_1 = [
         "use_object_visible_side": True,
         "use_rear_light_status": False,
         "model": "Embedding_CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
-        "input_img_type1": None,
+        "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "enc_layers_num": 1,
@@ -471,7 +471,7 @@ EXPERIMENTS_1 = [
         "use_object_visible_side": True,
         "use_rear_light_status": True,
         "model": "Embedding_CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
-        "input_img_type1": None,
+        "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "enc_layers_num": 1,
@@ -511,7 +511,7 @@ EXPERIMENTS_1 = [
         "use_object_visible_side": False,
         "use_rear_light_status": False,
         "model": "Embedding_CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
-        "input_img_type1": None,
+        "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "enc_layers_num": 1,
@@ -549,7 +549,7 @@ EXPERIMENTS_1 = [
         "use_object_visible_side": True,
         "use_rear_light_status": False,
         "model": "Embedding_CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
-        "input_img_type1": None,
+        "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "enc_layers_num": 1,
@@ -588,7 +588,7 @@ EXPERIMENTS_1 = [
         "use_object_visible_side": True,
         "use_rear_light_status": False,
         "model": "Embedding_CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
-        "input_img_type1": None,
+        "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "enc_layers_num": 1,
@@ -626,7 +626,7 @@ EXPERIMENTS_1 = [
         "use_object_visible_side": False,
         "use_rear_light_status": True,
         "model": "Embedding_CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
-        "input_img_type1": None,
+        "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "enc_layers_num": 1,
@@ -664,7 +664,7 @@ EXPERIMENTS_1 = [
         "use_object_visible_side": True,
         "use_rear_light_status": True,
         "model": "Embedding_CNN_LSTM",  # Embedding_Temporal_LSTM, Embedding_Transformer, CNN_LSTM, Embedding_CNN_LSTM, CNN_Transformer, TimeSformerNet, VideoMAENet
-        "input_img_type1": None,
+        "input_img_type1": "img_local_context_ROI_1",
         "input_img_type2": None,
         "enc_input_seq_length": 16,
         "enc_layers_num": 1,
