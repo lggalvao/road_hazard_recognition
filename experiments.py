@@ -390,7 +390,6 @@ EXPERIMENTS_0 = [
 
 
 EXPERIMENTS_1 = [
-    # Explicit + single image literature classes
     {
         "input_feature_type": "explicit_and_single_img_input",  # explicit_feature, single_img_input, multi_img_input, explicit_and_single_img_input, explicit_and_multi_img_input
         "use_object_visible_side": False,
